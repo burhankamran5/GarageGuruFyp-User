@@ -1,7 +1,5 @@
 package com.bkcoding.garagegurufyp_user.navigation
 
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -10,7 +8,11 @@ import androidx.navigation.compose.rememberNavController
 import com.bkcoding.garagegurufyp_user.ui.login.LoginScreen
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
 import com.bkcoding.garagegurufyp_user.ui.onboarding.OnBoardingScreen
-import com.bkcoding.garagegurufyp_user.ui.signup.SignUpScreen
+import com.bkcoding.garagegurufyp_user.ui.signup.AdditionalSignUpFields
+import com.bkcoding.garagegurufyp_user.ui.signup.ChooseSignUp
+import com.bkcoding.garagegurufyp_user.ui.signup.GarageSignUpScreen
+import com.bkcoding.garagegurufyp_user.ui.signup.UserSignUpScreen
+import com.bkcoding.garagegurufyp_user.ui.signup.VerifyOtpScreen
 
 @Composable
 fun Navigation() {
@@ -27,8 +29,21 @@ fun Navigation() {
         composable("LoginScreen") {
             LoginScreen(navController)
         }
-        composable("SignUpScreen") {
-            SignUpScreen()
+        composable("ChooseSignUp") {
+            ChooseSignUp(navController)
+        }
+        composable("UserSignUpScreen") {
+            UserSignUpScreen(navController)
+        }
+        composable("GarageSignUpScreen") {
+            GarageSignUpScreen()
+        }
+
+        composable("AdditionalSignUpFields") {
+            AdditionalSignUpFields()
+        }
+        composable("VerifyOtpScreen") {
+            VerifyOtpScreen()
         }
     }
 }

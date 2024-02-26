@@ -22,6 +22,7 @@ import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
@@ -71,7 +72,7 @@ fun LoginScreen(navController: NavController) {
         Text(
             text = "Car cries, Guru replies",
             textAlign = TextAlign.Center,
-            fontFamily = FontFamily.Cursive,
+            fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.ExtraBold,
             fontSize = 25.sp,
             color = Color.Black,
@@ -84,7 +85,7 @@ fun LoginScreen(navController: NavController) {
         Text(
             text = "Log-in",
             textAlign = TextAlign.Center,
-            fontFamily = FontFamily.Cursive,
+            fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.ExtraBold,
             fontSize = 45.sp,
             color = Color.Black,
@@ -96,7 +97,7 @@ fun LoginScreen(navController: NavController) {
         Text(
             text = "Email",
             fontSize = 18.sp,
-            fontFamily = FontFamily.Cursive,
+            fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.ExtraBold,
             textAlign = TextAlign.Start,
             color = colorResource(id = R.color.black),
@@ -112,7 +113,7 @@ fun LoginScreen(navController: NavController) {
             placeholder = {
                 Text(
                     text = "Enter Your Email",
-                    fontFamily = FontFamily.Cursive,
+                    fontFamily = FontFamily.Serif,
                     fontWeight = FontWeight.ExtraBold
                 )
             },
@@ -131,7 +132,7 @@ fun LoginScreen(navController: NavController) {
         Text(
             text = "Password",
             fontSize = 18.sp,
-            fontFamily = FontFamily.Cursive,
+            fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.ExtraBold,
             textAlign = TextAlign.Start,
             color = colorResource(id = R.color.black),
@@ -145,9 +146,10 @@ fun LoginScreen(navController: NavController) {
             onValueChange = {},
             singleLine = true,
             placeholder = { Text(text = "Enter Your Password",
-                fontFamily = FontFamily.Cursive,
+                fontFamily = FontFamily.Serif,
                 fontWeight = FontWeight.ExtraBold) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            leadingIcon = { Icon(Icons.Filled.Lock, "", ) },
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = Color.Transparent,
                 cursorColor = Color.Black,
@@ -183,7 +185,7 @@ fun LoginScreen(navController: NavController) {
         Text(
             text = "Don't have a account?",
             fontSize = 22.sp,
-            fontFamily = FontFamily.Cursive,
+            fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.Normal,
             textAlign = TextAlign.Start,
             color = colorResource(id = R.color.black),
@@ -192,13 +194,13 @@ fun LoginScreen(navController: NavController) {
         Text(
             text = "Sign-Up",
             fontSize = 22.sp,
-            fontFamily = FontFamily.Cursive,
+            fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.ExtraBold,
             textAlign = TextAlign.Start,
             color = colorResource(id = R.color.orange50),
             modifier = Modifier
                 .clickable(
-                   onClick = {navController.navigate("SignUpScreen")},
+                   onClick = {navController.navigate("ChooseSignUp"){ launchSingleTop = true} },
                     indication = null,
                     interactionSource = interactionSource)
         )

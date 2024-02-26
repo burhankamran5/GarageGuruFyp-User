@@ -7,5 +7,6 @@ data class User(
     val name: String = "",
     val email: String = "",
     val city: String = "",
+    val phoneNumber: Int = 0,
     @Exclude val password: String = "",
 )
