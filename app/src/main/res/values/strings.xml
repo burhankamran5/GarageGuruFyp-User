@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">GarageGuruFyp-User</string>
+    <string name="good_bye_cars">Goodbye Car Worries, Hello Garage Guru!</string>
+    <string name="find_compare_book">Find, compare, and book trusted garages with the tap of a finger. Get competitive quotes, chat with mechanics, and get your car fixed fast and fair.</string>
+    <string name="competitive_offers">Get Competitive Offers</string>
+    <string name="relax_garages_bid">Relax, garages will bid for your job, offering different prices and timelines. Choose the best fit for your budget and needs.</string>
+    <string name="connect_clarify">Connect &amp; Clarify</string>
+    <string name="chat_directly">Chat directly with mechanics to ask questions, discuss quotes, and schedule appointments. No more confusing jargon, just clear communication.</string>
+    <string name="sign_up_user">Get maintenance and repair services for you vehicle</string>
+</resources>

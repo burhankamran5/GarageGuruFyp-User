@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1007345836455",
+    "project_id": "garageguru-4528e",
+    "storage_bucket": "garageguru-4528e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1007345836455:android:b8d9cdbd5935a2035b5682",
+        "android_client_info": {
+          "package_name": "com.bkcoding.garagegurufyp_admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDaixhoEdZ_o3BAbFw7NGIjuUNQFrQgz8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1007345836455:android:14896f2600919d875b5682",
+        "android_client_info": {
+          "package_name": "com.bkcoding.garagegurufyp_user"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDaixhoEdZ_o3BAbFw7NGIjuUNQFrQgz8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
