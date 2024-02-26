@@ -168,15 +168,15 @@ fun LoginScreen(navController: NavController) {
                 .padding(10.dp),
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(id = R.color.white)
+                containerColor = colorResource(id = R.color.orange)
             ),
-            border = BorderStroke(color = colorResource(id = R.color.orange), width = 2.dp),
+            border = BorderStroke(color = colorResource(id = R.color.white), width = 2.dp),
             elevation = ButtonDefaults.buttonElevation(8.dp)
         ) {
             Text(
                 text = "LOGIN",
-                color = colorResource(id = R.color.black),
-                fontSize = 12.sp,
+                color = colorResource(id = R.color.white),
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
