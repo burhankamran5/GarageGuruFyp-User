@@ -13,7 +13,6 @@ import androidx.navigation.compose.rememberNavController
 import com.bkcoding.garagegurufyp_user.ui.login.LoginScreen
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
 import com.bkcoding.garagegurufyp_user.ui.onboarding.OnBoardingScreen
-import com.bkcoding.garagegurufyp_user.ui.signup.AdditionalSignUpFields
 import com.bkcoding.garagegurufyp_user.ui.signup.ChooseSignUp
 import com.bkcoding.garagegurufyp_user.ui.signup.GarageSignUpScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.SignUpConfirmationScreen
@@ -56,11 +55,6 @@ fun Navigation() {
             GarageSignUpScreen(navController)
         }
 
-        composable("AdditionalSignUpFields",
-            enterTransition = { slideInHorizontally(initialOffsetX = { it / 2 },   animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing)) },
-            exitTransition = {slideOutHorizontally(targetOffsetX = { it / 2 },  animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing))}) {
-            AdditionalSignUpFields()
-        }
         composable("VerifyOtpScreen",
             enterTransition = { slideInHorizontally(initialOffsetX = { it / 2 },   animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing)) },
             exitTransition = {slideOutHorizontally(targetOffsetX = { it / 2 },  animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing))}) {
