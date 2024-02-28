@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -24,6 +25,7 @@ import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
@@ -41,6 +43,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -51,6 +54,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.utils.isValidEmail
+import com.bkcoding.garagegurufyp_user.utils.isValidText
 
 @Composable
 fun UserSignUpScreen(navController: NavController) {
@@ -95,7 +99,11 @@ fun UserSignUpScreen(navController: NavController) {
 
         TextField(
             value = name,
-            onValueChange = { name = it },
+            onValueChange = { newName ->
+                if (isValidText(newName)) {
+                    name = newName
+                }
+            },
             placeholder = {
                 Text(
                     text = "Enter Your Name",
@@ -109,11 +117,12 @@ fun UserSignUpScreen(navController: NavController) {
                 focusedIndicatorColor = Color.White,
                 unfocusedIndicatorColor = Color.White
             ),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-            leadingIcon = { Icon(Icons.Filled.Create, "") },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
+            leadingIcon = { Icon(Icons.Filled.Person, "") },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(.9f)
         )
+
 
 
         TextField(

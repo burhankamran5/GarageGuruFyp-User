@@ -5,3 +5,6 @@ fun isValidEmail(email: String): Boolean {
     return email.matches(emailRegex)
 }
 
+fun isValidText(text: String): Boolean {
+    return text.matches(Regex("[a-zA-Z ]+"))
+}

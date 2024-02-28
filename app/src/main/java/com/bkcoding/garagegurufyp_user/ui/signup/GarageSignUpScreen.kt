@@ -31,7 +31,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
@@ -60,6 +62,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.utils.isValidEmail
+import com.bkcoding.garagegurufyp_user.utils.isValidText
 
 
 @Composable
@@ -72,6 +75,7 @@ fun GarageSignUpScreen(navController: NavController) {
     var phoneNumber by remember { mutableStateOf("") }
     var garageLocation by remember { mutableStateOf("") }
     var garageEmployeeCount by remember { mutableStateOf("") }
+    var city by remember { mutableStateOf("") }
     var passwordVisibility: Boolean by remember { mutableStateOf(false) }
     var isEmailValid by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -105,13 +109,30 @@ fun GarageSignUpScreen(navController: NavController) {
                 .fillMaxWidth()
         )
 
-        TextField(value = garageName, onValueChange = { garageName = it }, placeholder = {
-            Text(
-                text = "Enter Garage Name", fontFamily = FontFamily.Serif, fontWeight = FontWeight.ExtraBold
-            )
-        }, colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = Color.Transparent, cursorColor = Color.Black, focusedIndicatorColor = Color.White, unfocusedIndicatorColor = Color.White
-        ), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email), leadingIcon = { Icon(Icons.Filled.Create, "") }, singleLine = true, modifier = Modifier.fillMaxWidth(.9f)
+        TextField(
+            value = garageName,
+            onValueChange = { newName ->
+                if (isValidText(newName)) {
+                    garageName = newName
+                }
+            },
+            placeholder = {
+                Text(
+                    text = "Enter Garage Name",
+                    fontFamily = FontFamily.Serif,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            },
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                cursorColor = Color.Black,
+                focusedIndicatorColor = Color.White,
+                unfocusedIndicatorColor = Color.White
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
+            leadingIcon = { Icon(Icons.Filled.Person, "") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(.9f)
         )
 
 
@@ -156,6 +177,34 @@ fun GarageSignUpScreen(navController: NavController) {
             }
         }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password), singleLine = true, modifier = Modifier.fillMaxWidth(.9f)
         )
+
+        TextField(
+            value = city,
+            onValueChange = { newCity ->
+                if (isValidText(city)) {
+                    city = newCity
+                }
+            },
+            placeholder = {
+                Text(
+                    text = "Enter Garage City",
+                    fontFamily = FontFamily.Serif,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            },
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                cursorColor = Color.Black,
+                focusedIndicatorColor = Color.White,
+                unfocusedIndicatorColor = Color.White
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
+            leadingIcon = { Icon(Icons.Filled.Home, "") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(.9f)
+        )
+
+
 
         TextField(value = phoneNumber, onValueChange = { phoneNumber = it }, placeholder = {
             Text(
@@ -219,7 +268,9 @@ fun GarageSignUpScreen(navController: NavController) {
 
         OutlinedButton(
             onClick = {
-                if (garageName.isEmpty() || garageEmail.isEmpty() || garageLocation.isEmpty() || garageEmployeeCount.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || phoneNumber.isEmpty()) {
+                if (garageName.isEmpty() || garageEmail.isEmpty() || garageLocation.isEmpty() || garageEmployeeCount.isEmpty()
+                    || password.isEmpty() || confirmPassword.isEmpty() ||
+                    phoneNumber.isEmpty() || city.isEmpty()) {
                     Toast.makeText(context, "Something is Missing", Toast.LENGTH_LONG).show()
 
                 } else if (!isEmailValid) {
