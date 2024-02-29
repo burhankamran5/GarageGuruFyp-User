@@ -6,5 +6,8 @@
     <string name="relax_garages_bid">Relax, garages will bid for your job, offering different prices and timelines. Choose the best fit for your budget and needs.</string>
     <string name="connect_clarify">Connect &amp; Clarify</string>
     <string name="chat_directly">Chat directly with mechanics to ask questions, discuss quotes, and schedule appointments. No more confusing jargon, just clear communication.</string>
-    <string name="sign_up_user">Get maintenance and repair services for you vehicle</string>
+    <string name="sign_up_user">Get maintenance and repair services for your vehicle</string>
+    <string name="grow_your_business">Grow your business,reach new customers</string>
+    <string name="high_fives">"High fives! Your car just found its new best friend - GarageGuru."</string>
+
 </resources>

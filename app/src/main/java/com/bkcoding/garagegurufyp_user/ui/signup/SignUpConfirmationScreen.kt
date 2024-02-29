@@ -1,17 +1,13 @@
 package com.bkcoding.garagegurufyp_user.ui.signup
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material3.ButtonDefaults
@@ -19,22 +15,20 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bkcoding.garagegurufyp_user.R
 
+
 @Composable
-fun SignUpScreen() {
+fun SignUpConfirmationScreen() {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -47,61 +41,43 @@ fun SignUpScreen() {
                         Color(0xFFFFFFFF)
                     )
                 )
-            )
-    ) {
+            )) {
+
+
         Text(
-            text = "Create an account to get started.",
+            text = stringResource(id = R.string.high_fives),
             color = colorResource(id = R.color.black),
-            fontSize = 35.sp,
-            fontFamily = FontFamily.Cursive,
+            fontSize = 30.sp,
+            fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             modifier = Modifier
-                .padding(8.dp)
+                .padding(horizontal = 20.dp, vertical = 30.dp)
                 .fillMaxWidth()
         )
 
-        Column {
-            Image(painter = painterResource(id = R.drawable.ic_signup_user),
-                contentDescription ="",
-                modifier = Modifier
-                    .height(150.dp)
-                    .fillMaxWidth()
-                    .clipToBounds()
-            )
-
+        OutlinedButton(
+            onClick = { },
+            modifier = Modifier
+                .height(70.dp)
+                .fillMaxWidth(.6f)
+                .padding(10.dp),
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colorResource(id = R.color.orange)
+            ),
+            border = BorderStroke(color = colorResource(id = R.color.white), width = 2.dp),
+            elevation = ButtonDefaults.buttonElevation(8.dp)
+        ) {
             Text(
-                text = "Signup as User",
-                color = colorResource(id = R.color.black),
-                fontSize = 25.sp,
-                fontFamily = FontFamily.Cursive,
+                text = "Welcome",
+                color = colorResource(id = R.color.white),
+                fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Start,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
+                textAlign = TextAlign.Center
             )
-
-            Row {
-                Text(
-                    text = stringResource(id = R.string.sign_up_user),
-                    color = colorResource(id = R.color.black),
-                    fontSize = 15.sp,
-                    fontFamily = FontFamily.Cursive,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                )
-            }
-
         }
-    }
-}
 
-@Preview
-@Composable
-fun SignUpPreview() {
-    SignUpScreen()
+
+    }
 }

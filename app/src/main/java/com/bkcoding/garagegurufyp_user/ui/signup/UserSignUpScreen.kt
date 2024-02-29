@@ -1,12 +1,9 @@
-package com.bkcoding.garagegurufyp_user.ui.login
-
+package com.bkcoding.garagegurufyp_user.ui.signup
 
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,17 +12,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
@@ -42,6 +43,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -52,16 +54,20 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.utils.isValidEmail
-
+import com.bkcoding.garagegurufyp_user.utils.isValidText
 
 @Composable
-fun LoginScreen(navController: NavController) {
-    val context = LocalContext.current
-    val interactionSource = remember { MutableInteractionSource() }
+fun UserSignUpScreen(navController: NavController) {
+
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var phoneNumber by remember { mutableStateOf("") }
+    var city by remember { mutableStateOf("") }
     var passwordVisibility: Boolean by remember { mutableStateOf(false) }
     var isEmailValid by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
 
     Column(
@@ -77,52 +83,46 @@ fun LoginScreen(navController: NavController) {
                     )
                 )
             )
-            .verticalScroll(rememberScrollState())
-            .padding(15.dp)
     ) {
 
-        Image(
-            painter = painterResource(id = R.drawable.mechanic_icon_com),
-            contentDescription = "",
-            modifier = Modifier.size(130.dp)
-        )
-
         Text(
-            text = "Car cries, Guru replies",
-            textAlign = TextAlign.Center,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.ExtraBold,
-            fontSize = 25.sp,
-            color = Color.Black,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(5.dp)
-        )
-
-
-        Text(
-            text = "Log-in",
-            textAlign = TextAlign.Center,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.ExtraBold,
-            fontSize = 45.sp,
-            color = Color.Black,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(15.dp)
-        )
-
-        Text(
-            text = "Email",
-            fontSize = 18.sp,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.ExtraBold,
-            textAlign = TextAlign.Start,
+            text = "Create your account",
             color = colorResource(id = R.color.black),
+            fontSize = 23.sp,
+            fontFamily = FontFamily.Serif,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
             modifier = Modifier
+                .padding(horizontal = 20.dp, vertical = 30.dp)
                 .fillMaxWidth()
-                .padding(10.dp)
         )
+
+        TextField(
+            value = name,
+            onValueChange = { newName ->
+                if (isValidText(newName)) {
+                    name = newName
+                }
+            },
+            placeholder = {
+                Text(
+                    text = "Enter Your Name",
+                    fontFamily = FontFamily.Serif,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            },
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                cursorColor = Color.Black,
+                focusedIndicatorColor = Color.White,
+                unfocusedIndicatorColor = Color.White
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
+            leadingIcon = { Icon(Icons.Filled.Person, "") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(.9f)
+        )
+
 
 
         TextField(
@@ -131,7 +131,6 @@ fun LoginScreen(navController: NavController) {
                 email = it
                 isEmailValid = isValidEmail(it)
             },
-            isError = email.isNotEmpty() && !isValidEmail(email),
             placeholder = {
                 Text(
                     text = "Enter Your Email",
@@ -139,6 +138,7 @@ fun LoginScreen(navController: NavController) {
                     fontWeight = FontWeight.ExtraBold
                 )
             },
+            isError = email.isNotEmpty() && !isValidEmail(email),
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = Color.Transparent,
                 cursorColor = Color.Black,
@@ -151,34 +151,23 @@ fun LoginScreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth(.9f)
         )
 
-        Text(
-            text = "Password",
-            fontSize = 18.sp,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.ExtraBold,
-            textAlign = TextAlign.Start,
-            color = colorResource(id = R.color.black),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp)
-        )
-
         TextField(
             value = password,
+            onValueChange = { password = it },
             visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-            onValueChange = {
-                password = it
-                isValidEmail(email)
-            },
-            singleLine = true,
             placeholder = {
                 Text(
-                    text = "Enter Your Password",
+                    text = "Enter Password",
                     fontFamily = FontFamily.Serif,
                     fontWeight = FontWeight.ExtraBold
                 )
             },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                cursorColor = Color.Black,
+                focusedIndicatorColor = Color.White,
+                unfocusedIndicatorColor = Color.White
+            ),
             trailingIcon = {
                 IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
                     if (passwordVisibility) {
@@ -187,23 +176,102 @@ fun LoginScreen(navController: NavController) {
                         Image(painter = painterResource(id = R.drawable.ic_hide), contentDescription = "")
                 }
             },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(.9f)
+        )
+
+        TextField(
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
+            visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+            placeholder = {
+                Text(
+                    text = "Confirm Password",
+                    fontFamily = FontFamily.Serif,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            },
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = Color.Transparent,
                 cursorColor = Color.Black,
                 focusedIndicatorColor = Color.White,
                 unfocusedIndicatorColor = Color.White
             ),
+            trailingIcon = {
+                IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
+                    if (passwordVisibility) {
+                        Image(painter = painterResource(id = R.drawable.ic_show), contentDescription = "", modifier = Modifier.size(25.dp))
+                    } else
+                        Image(painter = painterResource(id = R.drawable.ic_hide), contentDescription = "")
+                }
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            singleLine = true,
             modifier = Modifier.fillMaxWidth(.9f)
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        TextField(
+            value = phoneNumber,
+            onValueChange = { phoneNumber = it },
+            placeholder = {
+                Text(
+                    text = "Enter Phone-Number",
+                    fontFamily = FontFamily.Serif,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            },
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                cursorColor = Color.Black,
+                focusedIndicatorColor = Color.White,
+                unfocusedIndicatorColor = Color.White
+            ),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            leadingIcon = { Icon(Icons.Filled.Phone, "") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(.9f)
+        )
+
+        TextField(
+            value = city,
+            onValueChange = { city = it },
+            placeholder = {
+                Text(
+                    text = "Enter Your City",
+                    fontFamily = FontFamily.Serif,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            },
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                cursorColor = Color.Black,
+                focusedIndicatorColor = Color.White,
+                unfocusedIndicatorColor = Color.White
+            ),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            leadingIcon = { Icon(Icons.Filled.Home, "") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(.9f)
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
         OutlinedButton(
             onClick = {
-                if (email.isEmpty() || password.isEmpty()) {
+                if (name.isEmpty() || email.isEmpty() || password.isEmpty() ||
+                    confirmPassword.isEmpty() || city.isEmpty() || phoneNumber.isEmpty()
+                ) {
                     Toast.makeText(context, "Something is Missing", Toast.LENGTH_LONG).show()
                 } else if (!isEmailValid) {
                     Toast.makeText(context, "Invalid Email", Toast.LENGTH_LONG).show()
+                } else if (password != confirmPassword) {
+                    Toast.makeText(context, "Password does't match", Toast.LENGTH_LONG).show()
+                }  else if (password.length<6){
+                    Toast.makeText(context, "Password too short", Toast.LENGTH_LONG).show()
                 }
+                else navController.navigate("VerifyOtpScreen") { launchSingleTop = true }
+
             },
             modifier = Modifier
                 .height(70.dp)
@@ -217,44 +285,22 @@ fun LoginScreen(navController: NavController) {
             elevation = ButtonDefaults.buttonElevation(8.dp)
         ) {
             Text(
-                text = "LOGIN",
+                text = "Continue",
                 color = colorResource(id = R.color.white),
-                fontSize = 14.sp,
+                fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
         }
 
-        Text(
-            text = "Don't have a account?",
-            fontSize = 22.sp,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.Normal,
-            textAlign = TextAlign.Start,
-            color = colorResource(id = R.color.black),
-        )
 
-        Text(
-            text = "Sign-Up",
-            fontSize = 22.sp,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.ExtraBold,
-            textAlign = TextAlign.Start,
-            color = colorResource(id = R.color.orange50),
-            modifier = Modifier
-                .clickable(
-                    onClick = { navController.navigate("ChooseSignUp") { launchSingleTop = true } },
-                    indication = null,
-                    interactionSource = interactionSource
-                )
-        )
     }
-
 }
 
 
-@Preview(device = "spec:parent=Nexus 4")
+@Preview(device = "id:Nexus 4")
+@Preview(device = "id:pixel_6_pro")
 @Composable
-fun LoginScreenPreview() {
-//    LoginScreen()
+fun PreviewSignUp() {
+//    UserSignUpScreen()
 }
