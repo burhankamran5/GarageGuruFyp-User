@@ -1,6 +1,7 @@
 package com.bkcoding.garagegurufyp_user.ui.login
 
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -51,7 +52,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.bkcoding.garagegurufyp_user.R
+import com.bkcoding.garagegurufyp_user.extensions.getActivity
 import com.bkcoding.garagegurufyp_user.utils.isValidEmail
+import com.google.firebase.FirebaseException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthOptions
+import com.google.firebase.auth.PhoneAuthProvider
+import java.util.concurrent.TimeUnit
 
 
 @Composable
@@ -62,7 +70,27 @@ fun LoginScreen(navController: NavController) {
     var password by remember { mutableStateOf("") }
     var passwordVisibility: Boolean by remember { mutableStateOf(false) }
     var isEmailValid by remember { mutableStateOf(false) }
+    val testPhoneNumbers = mapOf(
+        "burhan" to "+923334825710",
+        "hanzla" to "+923427991399",
+        "waqas" to "+923045593294",
+        "naveed" to "+923337291332"
+    )
 
+    val verificationCallbacks by lazy { initVerificationCallbacks() }
+    val firebaseAuth = FirebaseAuth.getInstance()
+    var firebaseOtp : String?  = null
+    var verificationId: String? = null
+
+    fun sendVerificationCode(phoneNumber: String = testPhoneNumbers["naveed"].orEmpty()){
+        val options = PhoneAuthOptions.newBuilder(firebaseAuth)
+            .setPhoneNumber(phoneNumber)
+            .setTimeout(60L, TimeUnit.SECONDS)
+            .apply { context.getActivity()?.let { setActivity(it) } }
+            .setCallbacks(verificationCallbacks)
+            .build()
+        PhoneAuthProvider.verifyPhoneNumber(options)
+    }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -199,11 +227,12 @@ fun LoginScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedButton(
             onClick = {
-                if (email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(context, "Something is Missing", Toast.LENGTH_LONG).show()
-                } else if (!isEmailValid) {
-                    Toast.makeText(context, "Invalid Email", Toast.LENGTH_LONG).show()
-                }
+//                if (email.isEmpty() || password.isEmpty()) {
+//                    Toast.makeText(context, "Something is Missing", Toast.LENGTH_LONG).show()
+//                } else if (!isEmailValid) {
+//                    Toast.makeText(context, "Invalid Email", Toast.LENGTH_LONG).show()
+//                }
+                sendVerificationCode()
             },
             modifier = Modifier
                 .height(70.dp)
@@ -221,7 +250,7 @@ fun LoginScreen(navController: NavController) {
                 color = colorResource(id = R.color.white),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
         }
 
@@ -251,6 +280,23 @@ fun LoginScreen(navController: NavController) {
     }
 
 }
+
+private fun initVerificationCallbacks() = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+    override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+        Log.d("YOMO", "onVerificationCompleted: ")
+    }
+
+    override fun onVerificationFailed(e: FirebaseException) {
+        Log.d("YOMO", "onVerificationFailed: ${e.localizedMessage}")
+    }
+
+    override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
+        super.onCodeSent(verificationId, token)
+        Log.d("YOMO", "onCodeSent")
+    }
+
+}
+
 
 
 @Preview(device = "spec:parent=Nexus 4")
