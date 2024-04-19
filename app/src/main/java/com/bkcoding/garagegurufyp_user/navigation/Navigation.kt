@@ -1,7 +1,6 @@
 package com.bkcoding.garagegurufyp_user.navigation
 
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
@@ -26,42 +25,42 @@ fun Navigation() {
 
     NavHost(
         navController = navController,
-        startDestination = if (userStorageVM.isFirstLaunch()) "OnBoardingScreen" else "LoginScreen"
+        startDestination = if (userStorageVM.isFirstLaunch()) Screen.OnBoarding.route else Screen.LoginScreen.route
     ) {
-        composable("OnBoardingScreen",
+        composable(Screen.OnBoarding.route,
             enterTransition = { slideInHorizontally(initialOffsetX = { it / 2 },   animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing)) },
             exitTransition = {slideOutHorizontally(targetOffsetX = { it / 2 },  animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing))}) {
             OnBoardingScreen(navController)
         }
-        composable("LoginScreen",
+        composable(Screen.LoginScreen.route,
             enterTransition = { slideInHorizontally(initialOffsetX = { it / 2 },   animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing)) },
             exitTransition = {slideOutHorizontally(targetOffsetX = { it / 2 },  animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing))}) {
             LoginScreen(navController)
         }
-        composable("ChooseSignUp",
+        composable(Screen.ChooseSignUpScreen.route,
             enterTransition = { slideInHorizontally(initialOffsetX = { it / 2 },   animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing)) },
             exitTransition = {slideOutHorizontally(targetOffsetX = { it / 2 },  animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing))}) {
             ChooseSignUp(navController)
         }
-        composable("UserSignUpScreen",
+        composable(Screen.UserSignUpScreen.route,
             enterTransition = { slideInHorizontally(initialOffsetX = { it / 2 },   animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing)) },
             exitTransition = {slideOutHorizontally(targetOffsetX = { it / 2 },  animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing))}) {
             UserSignUpScreen(navController
             )
         }
-        composable("GarageSignUpScreen",
+        composable(Screen.GarageSignUpScreen.route,
             enterTransition = { slideInHorizontally(initialOffsetX = { it / 2 },   animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing)) },
             exitTransition = {slideOutHorizontally(targetOffsetX = { it / 2 },  animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing))}) {
             GarageSignUpScreen(navController)
         }
 
-        composable("VerifyOtpScreen",
+        composable(Screen.VerifyOtpScreen.route,
             enterTransition = { slideInHorizontally(initialOffsetX = { it / 2 },   animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing)) },
             exitTransition = {slideOutHorizontally(targetOffsetX = { it / 2 },  animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing))}) {
             VerifyOtpScreen(navController)
         }
 
-        composable("SignUpConfirmationScreen",
+        composable(Screen.SignUpConfirmationScreen.route,
             enterTransition = { slideInHorizontally(initialOffsetX = { it / 2 },   animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing)) },
             exitTransition = {slideOutHorizontally(targetOffsetX = { it / 2 },  animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing))}) {
             SignUpConfirmationScreen()
