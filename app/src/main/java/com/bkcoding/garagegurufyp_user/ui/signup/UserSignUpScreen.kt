@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
@@ -53,13 +52,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.bkcoding.garagegurufyp_user.R
+import com.bkcoding.garagegurufyp_user.ui.AuthViewModel
 import com.bkcoding.garagegurufyp_user.utils.isValidEmail
 import com.bkcoding.garagegurufyp_user.utils.isValidText
 
 @Composable
-fun UserSignUpScreen(navController: NavController) {
+fun UserSignUpScreen(
+    navController: NavController,
+    viewModel: AuthViewModel = hiltViewModel()
+) {
 
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
