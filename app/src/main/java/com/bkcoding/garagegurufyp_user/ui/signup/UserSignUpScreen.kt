@@ -334,35 +334,6 @@ private fun isInputValid(context: Context, user: User): Boolean {
     return isInputValid
 }
 
-sealed class VerificationStatus {
-    data class VerificationCompleted(val credential: PhoneAuthCredential) : VerificationStatus()
-    data class VerificationFailed(val e: FirebaseException) : VerificationStatus()
-    data class VerificationCodeSent(val verificationId: String, val token: PhoneAuthProvider.ForceResendingToken) : VerificationStatus()
-
-}
-
-fun initVerificationCallbacks(onAction: (verificationStatus: VerificationStatus) -> Unit) = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-    override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-        onAction(VerificationStatus.VerificationCompleted(credential))
-    }
-
-    override fun onVerificationFailed(e: FirebaseException) {
-//        context.showToast(e.message.toString())
-        onAction(VerificationStatus.VerificationFailed(e))
-    }
-
-    override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
-        super.onCodeSent(verificationId, token)
-        onAction(VerificationStatus.VerificationCodeSent(verificationId, token))
-//        verificationId = verificationId
-//        context.showToast("A verification code has been sent to your phone")
-    }
-
-}
-
-
-
-
 @Preview(device = "id:Nexus 4")
 @Preview(device = "id:pixel_6_pro")
 @Composable
