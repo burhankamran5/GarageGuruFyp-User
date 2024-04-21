@@ -10,7 +10,9 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.PhoneAuthProvider.ForceResendingToken
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
+import java.lang.Exception
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -20,7 +22,7 @@ class AuthRepositoryImpl @Inject constructor(
     private val testPhoneNumber = "3001234567"
     private lateinit var verificationCode: String
     private var forceResendToken: ForceResendingToken? = null
-
+    private var lastOtpSentTime = 0L
     override fun sendOtp(phone: String, activity: Activity?): Flow<Result<String>> = callbackFlow {
         trySend(Result.Loading)
         val verificationCallbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -33,9 +35,10 @@ class AuthRepositoryImpl @Inject constructor(
 
             override fun onCodeSent(verificationCode: String, forceResendToken: ForceResendingToken) {
                 super.onCodeSent(verificationCode, forceResendToken)
-                trySend(Result.Success("A verification code has been sent to your phone"))
                 this@AuthRepositoryImpl.verificationCode = verificationCode
                 this@AuthRepositoryImpl.forceResendToken = forceResendToken
+                lastOtpSentTime = System.currentTimeMillis()
+                trySend(Result.Success("A verification code has been sent to your phone"))
             }
         }
 
@@ -46,7 +49,13 @@ class AuthRepositoryImpl @Inject constructor(
             .apply { forceResendToken?.let { setForceResendingToken(it) } }
             .setCallbacks(verificationCallbacks)
             .build()
-        PhoneAuthProvider.verifyPhoneNumber(options)
+
+        if (System.currentTimeMillis() - lastOtpSentTime < 60_000L){
+            trySend(Result.Failure(Exception("Please wait 60 secs before requesting an OTP again")))
+        } else {
+            PhoneAuthProvider.verifyPhoneNumber(options)
+        }
+
         awaitClose {
             close()
         }
