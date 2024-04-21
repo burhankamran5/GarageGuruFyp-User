@@ -54,14 +54,14 @@ fun Navigation() {
         }
 
         composable(
-            route = Screen.VerifyOtpScreen.route + "/{otp}",
+            route = Screen.VerifyOtpScreen.route + "/{phone}",
             arguments = listOf(
-                navArgument("otp"){type = NavType.StringType}
+                navArgument("phone"){type = NavType.StringType}
             ),
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None })
         {backStackEntry ->
-            val phone = backStackEntry.arguments?.getString("otp")
+            val phone = backStackEntry.arguments?.getString("phone")
             VerifyOtpScreen(navController, phone)
         }
 

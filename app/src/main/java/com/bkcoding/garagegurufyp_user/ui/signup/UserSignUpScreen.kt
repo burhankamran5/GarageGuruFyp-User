@@ -60,6 +60,7 @@ import com.bkcoding.garagegurufyp_user.extensions.getActivity
 import com.bkcoding.garagegurufyp_user.extensions.isVisible
 import com.bkcoding.garagegurufyp_user.extensions.progressBar
 import com.bkcoding.garagegurufyp_user.extensions.showToast
+import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.utils.isValidEmail
 import com.bkcoding.garagegurufyp_user.utils.isValidText
@@ -281,20 +282,20 @@ fun UserSignUpScreen(
         OutlinedButton(
             onClick = {
                 val user = User(0, name, email, city, phoneNumber, password, confirmPassword)
-                progressBar.show()
                 if (isInputValid(context, user)) {
                     scope.launch {
                         authViewModel.sendOtp(phoneNumber, context.getActivity()).collect{ result ->
                             progressBar.isVisible(result is Result.Loading)
                             when(result){
                                 is Result.Failure -> context.showToast(result.exception.message.toString())
-                                is Result.Success -> context.showToast(result.data)
+                                is Result.Success -> {
+                                    context.showToast(result.data)
+                                    navController.navigate(Screen.VerifyOtpScreen.route + "/${user.phoneNumber}") { launchSingleTop = true }
+                                }
                                 else -> {}
                             }
                         }
                     }
-
-//                    navController.navigate(Screen.VerifyOtpScreen.route + "/${user.phoneNumber}") { launchSingleTop = true }
                 }
             },
             modifier = Modifier

@@ -9,6 +9,7 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.auth.PhoneAuthProvider.ForceResendingToken
 import kotlinx.coroutines.channels.awaitClose
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -16,14 +17,9 @@ import javax.inject.Inject
 class AuthRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth
 ): AuthRepository {
-    private val testPhoneNumbers = mapOf(
-        "burhan" to "+923334825710",
-        "hanzla" to "+923427991399",
-        "waqas" to "+923045593294",
-        "naveed" to "+923337291332",
-        "mazhar" to "+923041537702"
-    )
+    private val testPhoneNumber = "3001234567"
     private lateinit var verificationCode: String
+    private var forceResendToken: ForceResendingToken? = null
 
     override fun sendOtp(phone: String, activity: Activity?): Flow<Result<String>> = callbackFlow {
         trySend(Result.Loading)
@@ -35,17 +31,19 @@ class AuthRepositoryImpl @Inject constructor(
                 trySend(Result.Failure(excpetion))
             }
 
-            override fun onCodeSent(verificationCode: String, forceResendToken: PhoneAuthProvider.ForceResendingToken) {
+            override fun onCodeSent(verificationCode: String, forceResendToken: ForceResendingToken) {
                 super.onCodeSent(verificationCode, forceResendToken)
                 trySend(Result.Success("A verification code has been sent to your phone"))
                 this@AuthRepositoryImpl.verificationCode = verificationCode
+                this@AuthRepositoryImpl.forceResendToken = forceResendToken
             }
         }
 
         val options = PhoneAuthOptions.newBuilder(firebaseAuth)
-            .setPhoneNumber("+92$phone")
+            .setPhoneNumber("+92$testPhoneNumber")
             .setTimeout(60L, TimeUnit.SECONDS)
             .apply { activity?.let { setActivity(it) } }
+            .apply { forceResendToken?.let { setForceResendingToken(it) } }
             .setCallbacks(verificationCallbacks)
             .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
