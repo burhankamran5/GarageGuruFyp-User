@@ -7,6 +7,7 @@ data class Garage(
     val name: String = "",
     val email: String = "",
     @Exclude val password: String = "",
+    @Exclude val confirmPassword: String = "",
     val images: List<String> = emptyList(),
     val city: String = "",
     val phoneNumber: Int = 0,

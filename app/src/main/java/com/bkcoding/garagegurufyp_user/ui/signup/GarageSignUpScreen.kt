@@ -30,7 +30,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
@@ -42,7 +41,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -63,6 +62,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.bkcoding.garagegurufyp_user.R
+import com.bkcoding.garagegurufyp_user.dto.Garage
+import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.utils.isValidEmail
 import com.bkcoding.garagegurufyp_user.utils.isValidText
 
@@ -70,19 +71,19 @@ import com.bkcoding.garagegurufyp_user.utils.isValidText
 @Composable
 fun GarageSignUpScreen(navController: NavController) {
 
-    var garageName by remember { mutableStateOf("") }
-    var garageEmail by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var phoneNumber by remember { mutableStateOf("") }
-    var garageLocation by remember { mutableStateOf("") }
-    var garageEmployeeCount by remember { mutableStateOf("") }
-    var city by remember { mutableStateOf("") }
-    var passwordVisibility: Boolean by remember { mutableStateOf(false) }
-    var isEmailValid by remember { mutableStateOf(false) }
+    var garageName by rememberSaveable { mutableStateOf("") }
+    var garageEmail by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var confirmPassword by rememberSaveable { mutableStateOf("") }
+    var phoneNumber by rememberSaveable { mutableStateOf("") }
+    var garageLocation by rememberSaveable { mutableStateOf("") }
+    var garageEmployeeCount by rememberSaveable { mutableStateOf("") }
+    var garageCity by rememberSaveable { mutableStateOf("") }
+    var passwordVisibility: Boolean by rememberSaveable { mutableStateOf(false) }
+    var isEmailValid by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
 
-    var selectImages by remember { mutableStateOf(listOf<Uri>()) }
+    var selectImages by rememberSaveable { mutableStateOf(listOf<Uri>()) }
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetMultipleContents()) {
         selectImages = it
     }
@@ -182,11 +183,8 @@ fun GarageSignUpScreen(navController: NavController) {
         )
 
         TextField(
-            value = city,
-            onValueChange = { newCity ->
-                if (isValidText(city)) {
-                    city = newCity
-                }
+            value = garageCity,
+            onValueChange = {garageCity = it
             },
             placeholder = {
                 Text(
@@ -271,9 +269,10 @@ fun GarageSignUpScreen(navController: NavController) {
 
         OutlinedButton(
             onClick = {
+                val garage = Garage()
                 if (garageName.isEmpty() || garageEmail.isEmpty() || garageLocation.isEmpty() || garageEmployeeCount.isEmpty()
                     || password.isEmpty() || confirmPassword.isEmpty() ||
-                    phoneNumber.isEmpty() || city.isEmpty()) {
+                    phoneNumber.isEmpty() || garageCity.isEmpty()) {
                     Toast.makeText(context, "Something is Missing", Toast.LENGTH_LONG).show()
 
                 } else if (!isEmailValid) {
@@ -285,7 +284,7 @@ fun GarageSignUpScreen(navController: NavController) {
                 } else if (selectImages.isEmpty()){
                     Toast.makeText(context, "Please add garage pictures", Toast.LENGTH_LONG).show()
                 }
-                else navController.navigate("VerifyOtpScreen") { launchSingleTop = true }
+                else navController.navigate(Screen.VerifyOtpScreen.route + "/${garage.phoneNumber}") { launchSingleTop = true }
             }, modifier = Modifier
                 .height(70.dp)
                 .fillMaxWidth(.6f)
