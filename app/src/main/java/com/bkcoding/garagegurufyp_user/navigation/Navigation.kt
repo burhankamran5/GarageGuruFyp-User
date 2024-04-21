@@ -1,9 +1,7 @@
 package com.bkcoding.garagegurufyp_user.navigation
 
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -28,46 +26,43 @@ fun Navigation() {
         startDestination = if (userStorageVM.isFirstLaunch()) Screen.OnBoarding.route else Screen.LoginScreen.route
     ) {
         composable(Screen.OnBoarding.route,
-            enterTransition = { slideInHorizontally(initialOffsetX = { it / 2 },   animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing)) },
-            exitTransition = {slideOutHorizontally(targetOffsetX = { it / 2 },  animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing))}) {
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }) {
             OnBoardingScreen(navController)
         }
         composable(Screen.LoginScreen.route,
-            enterTransition = { slideInHorizontally(initialOffsetX = { it / 2 },   animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing)) },
-            exitTransition = {slideOutHorizontally(targetOffsetX = { it / 2 },  animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing))}) {
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None } ) {
             LoginScreen(navController)
         }
         composable(Screen.ChooseSignUpScreen.route,
-            enterTransition = { slideInHorizontally(initialOffsetX = { it / 2 },   animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing)) },
-            exitTransition = {slideOutHorizontally(targetOffsetX = { it / 2 },  animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing))}) {
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }) {
             ChooseSignUp(navController)
         }
         composable(Screen.UserSignUpScreen.route,
-            enterTransition = { slideInHorizontally(initialOffsetX = { it / 2 },   animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing)) },
-            exitTransition = {slideOutHorizontally(targetOffsetX = { it / 2 },  animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing))}) {
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }) {
             UserSignUpScreen(navController
             )
         }
         composable(Screen.GarageSignUpScreen.route,
-            enterTransition = { slideInHorizontally(initialOffsetX = { it / 2 },   animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing)) },
-            exitTransition = {slideOutHorizontally(targetOffsetX = { it / 2 },  animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing))}) {
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }) {
             GarageSignUpScreen(navController)
         }
 
         composable(Screen.VerifyOtpScreen.route,
-            enterTransition = { slideInHorizontally(initialOffsetX = { it / 2 },   animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing)) },
-            exitTransition = {slideOutHorizontally(targetOffsetX = { it / 2 },  animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing))}) {
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }) {
             VerifyOtpScreen(navController)
         }
 
         composable(Screen.SignUpConfirmationScreen.route,
-            enterTransition = { slideInHorizontally(initialOffsetX = { it / 2 },   animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing)) },
-            exitTransition = {slideOutHorizontally(targetOffsetX = { it / 2 },  animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing))}) {
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }) {
             SignUpConfirmationScreen()
         }
-
-
-
     }
 }
 
