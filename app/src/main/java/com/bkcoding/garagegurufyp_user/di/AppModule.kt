@@ -23,5 +23,4 @@ class AppModule {
         return PreferencesManager(context)
     }
 
-
 }
