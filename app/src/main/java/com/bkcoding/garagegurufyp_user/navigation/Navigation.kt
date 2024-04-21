@@ -6,9 +6,11 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.bkcoding.garagegurufyp_user.ui.login.LoginScreen
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
 import com.bkcoding.garagegurufyp_user.ui.onboarding.OnBoardingScreen
@@ -45,8 +47,7 @@ fun Navigation() {
         composable(Screen.UserSignUpScreen.route,
             enterTransition = { slideInHorizontally(initialOffsetX = { it / 2 },   animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing)) },
             exitTransition = {slideOutHorizontally(targetOffsetX = { it / 2 },  animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing))}) {
-            UserSignUpScreen(navController
-            )
+            UserSignUpScreen(navController)
         }
         composable(Screen.GarageSignUpScreen.route,
             enterTransition = { slideInHorizontally(initialOffsetX = { it / 2 },   animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing)) },
@@ -54,10 +55,16 @@ fun Navigation() {
             GarageSignUpScreen(navController)
         }
 
-        composable(Screen.VerifyOtpScreen.route,
+        composable(
+            route = Screen.VerifyOtpScreen.route + "/{otp}",
+            arguments = listOf(
+                navArgument("otp"){type = NavType.StringType}
+            ),
             enterTransition = { slideInHorizontally(initialOffsetX = { it / 2 },   animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing)) },
-            exitTransition = {slideOutHorizontally(targetOffsetX = { it / 2 },  animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing))}) {
-            VerifyOtpScreen(navController)
+            exitTransition = {slideOutHorizontally(targetOffsetX = { it / 2 },  animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing))})
+        {backStackEntry ->
+            val phone = backStackEntry.arguments?.getString("otp")
+            VerifyOtpScreen(navController, phone)
         }
 
         composable(Screen.SignUpConfirmationScreen.route,
@@ -65,8 +72,6 @@ fun Navigation() {
             exitTransition = {slideOutHorizontally(targetOffsetX = { it / 2 },  animationSpec = tween(durationMillis = 700, easing =  FastOutSlowInEasing))}) {
             SignUpConfirmationScreen()
         }
-
-
 
     }
 }

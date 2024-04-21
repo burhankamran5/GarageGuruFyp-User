@@ -70,27 +70,6 @@ fun LoginScreen(navController: NavController) {
     var password by remember { mutableStateOf("") }
     var passwordVisibility: Boolean by remember { mutableStateOf(false) }
     var isEmailValid by remember { mutableStateOf(false) }
-    val testPhoneNumbers = mapOf(
-        "burhan" to "+923334825710",
-        "hanzla" to "+923427991399",
-        "waqas" to "+923045593294",
-        "naveed" to "+923337291332"
-    )
-
-    val verificationCallbacks by lazy { initVerificationCallbacks() }
-    val firebaseAuth = FirebaseAuth.getInstance()
-    var firebaseOtp : String?  = null
-    var verificationId: String? = null
-
-    fun sendVerificationCode(phoneNumber: String = testPhoneNumbers["naveed"].orEmpty()){
-        val options = PhoneAuthOptions.newBuilder(firebaseAuth)
-            .setPhoneNumber(phoneNumber)
-            .setTimeout(60L, TimeUnit.SECONDS)
-            .apply { context.getActivity()?.let { setActivity(it) } }
-            .setCallbacks(verificationCallbacks)
-            .build()
-        PhoneAuthProvider.verifyPhoneNumber(options)
-    }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -227,12 +206,12 @@ fun LoginScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedButton(
             onClick = {
-//                if (email.isEmpty() || password.isEmpty()) {
-//                    Toast.makeText(context, "Something is Missing", Toast.LENGTH_LONG).show()
-//                } else if (!isEmailValid) {
-//                    Toast.makeText(context, "Invalid Email", Toast.LENGTH_LONG).show()
-//                }
-                sendVerificationCode()
+                if (email.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(context, "Something is Missing", Toast.LENGTH_LONG).show()
+                } else if (!isEmailValid) {
+                    Toast.makeText(context, "Invalid Email", Toast.LENGTH_LONG).show()
+                }
+//                sendVerificationCode()
             },
             modifier = Modifier
                 .height(70.dp)
@@ -277,22 +256,6 @@ fun LoginScreen(navController: NavController) {
                     interactionSource = interactionSource
                 )
         )
-    }
-
-}
-
-private fun initVerificationCallbacks() = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-    override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-        Log.d("YOMO", "onVerificationCompleted: ")
-    }
-
-    override fun onVerificationFailed(e: FirebaseException) {
-        Log.d("YOMO", "onVerificationFailed: ${e.localizedMessage}")
-    }
-
-    override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
-        super.onCodeSent(verificationId, token)
-        Log.d("YOMO", "onCodeSent")
     }
 
 }

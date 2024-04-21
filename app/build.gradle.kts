@@ -117,4 +117,5 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.5.0")
     implementation ("androidx.compose.material:material:1.6.2")
     implementation("androidx.browser:browser:1.8.0")
+    implementation ("io.github.rupinderjeet:kprogresshud:1.0.0")
 }

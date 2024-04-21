@@ -10,8 +10,8 @@ import javax.inject.Inject
 class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
-    fun createUserWithPhone(
-        mobile: String,
-        activity: Activity
-    ) = authRepository.createUserWithPhone(mobile, activity)
+    fun sendOtp(
+        phoneNo: String,
+        activity: Activity?
+    ) = authRepository.sendOtp(phoneNo, activity)
 }

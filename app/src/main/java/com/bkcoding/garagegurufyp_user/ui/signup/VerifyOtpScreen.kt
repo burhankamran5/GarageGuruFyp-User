@@ -1,5 +1,6 @@
 package com.bkcoding.garagegurufyp_user.ui.signup
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +23,8 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -37,8 +40,8 @@ import androidx.navigation.NavController
 import com.bkcoding.garagegurufyp_user.R
 
 @Composable
-fun VerifyOtpScreen(navController: NavController) {
-
+fun VerifyOtpScreen(navController: NavController, phoneNo: String?) {
+    Log.d("YOMO", "VerifyOtpScreen: $phoneNo")
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
