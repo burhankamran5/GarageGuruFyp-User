@@ -1,6 +1,6 @@
 package com.bkcoding.garagegurufyp_user.ui.signup
 
-import android.widget.Toast
+import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,10 +22,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.ButtonDefaults
@@ -34,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,7 +43,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -57,13 +55,27 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.ui.AuthViewModel
+import com.bkcoding.garagegurufyp_user.dto.User
+import com.bkcoding.garagegurufyp_user.extensions.getActivity
+import com.bkcoding.garagegurufyp_user.extensions.isVisible
+import com.bkcoding.garagegurufyp_user.extensions.progressBar
+import com.bkcoding.garagegurufyp_user.extensions.showToast
+import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.utils.isValidEmail
 import com.bkcoding.garagegurufyp_user.utils.isValidText
+import com.google.firebase.FirebaseException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthOptions
+import com.google.firebase.auth.PhoneAuthProvider
+import io.github.rupinderjeet.kprogresshud.KProgressHUD
+import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 @Composable
 fun UserSignUpScreen(
     navController: NavController,
-    viewModel: AuthViewModel = hiltViewModel()
+    authViewModel: AuthViewModel = hiltViewModel()
 ) {
 
     var name by remember { mutableStateOf("") }
@@ -75,7 +87,8 @@ fun UserSignUpScreen(
     var passwordVisibility: Boolean by remember { mutableStateOf(false) }
     var isEmailValid by remember { mutableStateOf(false) }
     val context = LocalContext.current
-
+    val scope = rememberCoroutineScope()
+    val progressBar: KProgressHUD = remember { context.progressBar() }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -224,7 +237,7 @@ fun UserSignUpScreen(
             onValueChange = { phoneNumber = it },
             placeholder = {
                 Text(
-                    text = "Enter Phone-Number",
+                    text = "3XXXXXXXXX",
                     fontFamily = FontFamily.Serif,
                     fontWeight = FontWeight.ExtraBold
                 )
@@ -267,19 +280,22 @@ fun UserSignUpScreen(
 
         OutlinedButton(
             onClick = {
-                if (name.isEmpty() || email.isEmpty() || password.isEmpty() ||
-                    confirmPassword.isEmpty() || city.isEmpty() || phoneNumber.isEmpty()
-                ) {
-                    Toast.makeText(context, "Something is Missing", Toast.LENGTH_LONG).show()
-                } else if (!isEmailValid) {
-                    Toast.makeText(context, "Invalid Email", Toast.LENGTH_LONG).show()
-                } else if (password != confirmPassword) {
-                    Toast.makeText(context, "Password does't match", Toast.LENGTH_LONG).show()
-                }  else if (password.length<6){
-                    Toast.makeText(context, "Password too short", Toast.LENGTH_LONG).show()
-                }
-                else navController.navigate("VerifyOtpScreen") { launchSingleTop = true }
+                val user = User(0, name, email, city, phoneNumber, password, confirmPassword)
+                progressBar.show()
+                if (isInputValid(context, user)) {
+                    scope.launch {
+                        authViewModel.sendOtp(phoneNumber, context.getActivity()).collect{ result ->
+                            progressBar.isVisible(result is Result.Loading)
+                            when(result){
+                                is Result.Failure -> context.showToast(result.exception.message.toString())
+                                is Result.Success -> context.showToast(result.data)
+                                else -> {}
+                            }
+                        }
+                    }
 
+//                    navController.navigate(Screen.VerifyOtpScreen.route + "/${user.phoneNumber}") { launchSingleTop = true }
+                }
             },
             modifier = Modifier
                 .height(70.dp)
@@ -300,11 +316,23 @@ fun UserSignUpScreen(
                 textAlign = TextAlign.Center
             )
         }
-
-
     }
 }
 
+private fun isInputValid(context: Context, user: User): Boolean {
+    var isInputValid = false
+    when {
+        user.name.isEmpty() || user.email.isEmpty() || user.password.isEmpty() || user.confirmPassword.isEmpty() || user.city.isEmpty() || user.phoneNumber.isEmpty() -> {
+           context.showToast("Something is Missing")
+        }
+        !isValidEmail(user.email) -> context.showToast("Invalid Email")
+        user.password != user.confirmPassword -> context.showToast("Password doesn't match")
+        user.password.length < 6 -> context.showToast("Password too short")
+        user.phoneNumber.length != 10 ->context.showToast("Phone# length should be 10 excluding 0")
+        else -> isInputValid = true
+    }
+    return isInputValid
+}
 
 @Preview(device = "id:Nexus 4")
 @Preview(device = "id:pixel_6_pro")
