@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bkcoding.garagegurufyp_user.R
+import com.bkcoding.garagegurufyp_user.dto.User
 import com.bkcoding.garagegurufyp_user.extensions.getActivity
 import com.bkcoding.garagegurufyp_user.extensions.isVisible
 import com.bkcoding.garagegurufyp_user.extensions.progressBar
@@ -59,7 +60,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun VerifyOtpScreen(
     navController: NavController?,
-    phoneNo: String?,
+    user: User,
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
@@ -170,23 +171,19 @@ fun VerifyOtpScreen(
                 .padding(top = 10.dp)
                 .clickable {
                     scope.launch {
-                        if (phoneNo != null) {
-                            authViewModel
-                                .sendOtp(phoneNo, context.getActivity())
-                                .collect { result ->
-                                    progressBar.isVisible(result is Result.Loading)
-                                    when (result) {
-                                        is Result.Failure -> context.showToast(result.exception.message.toString())
-                                        is Result.Success -> {
-                                            context.showToast(result.data)
-                                        }
-
-                                        else -> {}
+                        authViewModel
+                            .sendOtp(user.phoneNumber, context.getActivity())
+                            .collect { result ->
+                                progressBar.isVisible(result is Result.Loading)
+                                when (result) {
+                                    is Result.Failure -> context.showToast(result.exception.message.toString())
+                                    is Result.Success -> {
+                                        context.showToast(result.data)
                                     }
+
+                                    else -> {}
                                 }
-                        } else {
-                            context.showToast("Empty PhoneNumber!")
-                        }
+                            }
                     }
                 }
         )
@@ -199,5 +196,5 @@ fun VerifyOtpScreen(
 @Preview(device = "id:pixel_6_pro")
 @Composable
 fun VerifyOTPScreenPreview() {
-    VerifyOtpScreen(navController = null,"")
+    VerifyOtpScreen(navController = null, User())
 }

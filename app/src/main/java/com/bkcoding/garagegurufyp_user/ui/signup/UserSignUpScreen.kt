@@ -77,7 +77,8 @@ import java.util.concurrent.TimeUnit
 @Composable
 fun UserSignUpScreen(
     navController: NavController,
-    authViewModel: AuthViewModel = hiltViewModel()
+    authViewModel: AuthViewModel = hiltViewModel(),
+    onChangeUser: (User) -> Unit
 ) {
 
     var name by rememberSaveable { mutableStateOf("") }
@@ -291,7 +292,8 @@ fun UserSignUpScreen(
                                 is Result.Failure -> context.showToast(result.exception.message.toString())
                                 is Result.Success -> {
                                     context.showToast(result.data)
-                                    navController.navigate(Screen.VerifyOtpScreen.route + "/${user.phoneNumber}") { launchSingleTop = true }
+                                    onChangeUser(user)
+                                    navController.navigate(Screen.VerifyOtpScreen.route) { launchSingleTop = true }
                                 }
                                 else -> {}
                             }

@@ -42,7 +42,7 @@ class AuthRepositoryImpl @Inject constructor(
         }
 
         val options = PhoneAuthOptions.newBuilder(firebaseAuth)
-            .setPhoneNumber("+92$testPhoneNumber")
+            .setPhoneNumber("+92$phone")
             .setTimeout(60L, TimeUnit.SECONDS)
             .apply { activity?.let { setActivity(it) } }
             .apply { forceResendToken?.let { setForceResendingToken(it) } }

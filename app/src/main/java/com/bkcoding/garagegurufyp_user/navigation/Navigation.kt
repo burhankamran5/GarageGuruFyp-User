@@ -4,11 +4,9 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.bkcoding.garagegurufyp_user.ui.login.LoginScreen
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
 import com.bkcoding.garagegurufyp_user.ui.onboarding.OnBoardingScreen
@@ -45,7 +43,7 @@ fun Navigation() {
         composable(Screen.UserSignUpScreen.route,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }) {
-            UserSignUpScreen(navController)
+            UserSignUpScreen(navController, onChangeUser = { userStorageVM.user = it })
         }
         composable(Screen.GarageSignUpScreen.route,
             enterTransition = { EnterTransition.None },
@@ -54,15 +52,11 @@ fun Navigation() {
         }
 
         composable(
-            route = Screen.VerifyOtpScreen.route + "/{phone}",
-            arguments = listOf(
-                navArgument("phone"){type = NavType.StringType}
-            ),
+            route = Screen.VerifyOtpScreen.route,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None })
-        {backStackEntry ->
-            val phone = backStackEntry.arguments?.getString("phone")
-            VerifyOtpScreen(navController, phone)
+        {
+            VerifyOtpScreen(navController, userStorageVM.user)
         }
 
         composable(Screen.SignUpConfirmationScreen.route,
