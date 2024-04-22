@@ -14,4 +14,6 @@ class AuthViewModel @Inject constructor(
         phoneNo: String,
         activity: Activity?
     ) = authRepository.sendOtp(phoneNo, activity)
+
+    fun verifyOtp(otp: String) = authRepository.createFirebaseUser(otp)
 }

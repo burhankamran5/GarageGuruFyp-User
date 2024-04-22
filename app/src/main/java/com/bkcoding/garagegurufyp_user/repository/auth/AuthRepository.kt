@@ -9,4 +9,6 @@ interface AuthRepository {
         phone:String,
         activity: Activity?
     ) : Flow<Result<String>>
+
+    fun createFirebaseUser(otp: String): Flow<Result<String>>
 }

@@ -62,7 +62,6 @@ fun VerifyOtpScreen(
     phoneNo: String?,
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
-    Log.d("YOMO", "VerifyOtpScreen: $phoneNo")
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val progressBar: KProgressHUD = remember { context.progressBar() }
@@ -123,7 +122,18 @@ fun VerifyOtpScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         OutlinedButton(
-            onClick = {navController?.navigate("SignUpConfirmationScreen"){launchSingleTop = true} },
+            onClick = {
+                scope.launch {
+                    authViewModel.verifyOtp(otp).collect {
+                        progressBar.isVisible(it is Result.Loading)
+                        if (it is Result.Success){
+                            context.showToast(it.data)
+                        } else if (it is Result.Failure){
+                            context.showToast(it.exception.message.toString())
+                        }
+                    }
+                }
+            },
             modifier = Modifier
                 .height(70.dp)
                 .fillMaxWidth(.6f)

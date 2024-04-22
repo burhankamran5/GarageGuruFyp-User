@@ -10,7 +10,6 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.PhoneAuthProvider.ForceResendingToken
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import java.lang.Exception
 import java.util.concurrent.TimeUnit
@@ -20,7 +19,7 @@ class AuthRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth
 ): AuthRepository {
     private val testPhoneNumber = "3001234567"
-    private lateinit var verificationCode: String
+    private lateinit var verificationId: String
     private var forceResendToken: ForceResendingToken? = null
     private var lastOtpSentTime = 0L
     override fun sendOtp(phone: String, activity: Activity?): Flow<Result<String>> = callbackFlow {
@@ -35,7 +34,7 @@ class AuthRepositoryImpl @Inject constructor(
 
             override fun onCodeSent(verificationCode: String, forceResendToken: ForceResendingToken) {
                 super.onCodeSent(verificationCode, forceResendToken)
-                this@AuthRepositoryImpl.verificationCode = verificationCode
+                this@AuthRepositoryImpl.verificationId = verificationCode
                 this@AuthRepositoryImpl.forceResendToken = forceResendToken
                 lastOtpSentTime = System.currentTimeMillis()
                 trySend(Result.Success("A verification code has been sent to your phone"))
@@ -56,6 +55,26 @@ class AuthRepositoryImpl @Inject constructor(
             PhoneAuthProvider.verifyPhoneNumber(options)
         }
 
+        awaitClose {
+            close()
+        }
+    }
+
+    override fun createFirebaseUser(otp: String): Flow<Result<String>> = callbackFlow {
+        trySend(Result.Loading)
+        val credential = PhoneAuthProvider.getCredential(verificationId,otp)
+        firebaseAuth.signInWithCredential(credential)
+            .addOnCompleteListener { task ->
+                if(task.isSuccessful) {
+                    // A hacky way to immediately delete the created user and just use this
+                    // method for otp verification
+                    task.result.user?.delete()
+                    firebaseAuth.signOut()
+                    trySend(Result.Success("User created"))
+                }
+            }.addOnFailureListener {
+                trySend(Result.Failure(it))
+            }
         awaitClose {
             close()
         }
