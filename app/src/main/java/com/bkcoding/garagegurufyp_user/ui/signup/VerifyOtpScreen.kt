@@ -24,8 +24,12 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -62,6 +66,7 @@ fun VerifyOtpScreen(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val progressBar: KProgressHUD = remember { context.progressBar() }
+    var otp by rememberSaveable { mutableStateOf("") }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -94,8 +99,8 @@ fun VerifyOtpScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         TextField(
-            value = "",
-            onValueChange = {},
+            value = otp,
+            onValueChange = { otp = it },
             singleLine = true,
             placeholder = {
                 Text(
@@ -151,26 +156,29 @@ fun VerifyOtpScreen(
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = 10.dp)
+            modifier = Modifier
+                .padding(top = 10.dp)
                 .clickable {
                     scope.launch {
                         if (phoneNo != null) {
-                            authViewModel.sendOtp(phoneNo, context.getActivity()).collect{ result ->
-                                progressBar.isVisible(result is Result.Loading)
-                                when(result){
-                                    is Result.Failure -> context.showToast(result.exception.message.toString())
-                                    is Result.Success -> {
-                                        context.showToast(result.data)
-                                    }
+                            authViewModel
+                                .sendOtp(phoneNo, context.getActivity())
+                                .collect { result ->
+                                    progressBar.isVisible(result is Result.Loading)
+                                    when (result) {
+                                        is Result.Failure -> context.showToast(result.exception.message.toString())
+                                        is Result.Success -> {
+                                            context.showToast(result.data)
+                                        }
 
-                                    else -> {}
+                                        else -> {}
+                                    }
                                 }
-                            }
-                        }else{
+                        } else {
                             context.showToast("Empty PhoneNumber!")
                         }
                     }
-            }
+                }
         )
     }
 
