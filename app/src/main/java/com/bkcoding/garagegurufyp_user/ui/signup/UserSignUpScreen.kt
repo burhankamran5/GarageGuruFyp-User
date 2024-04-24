@@ -283,7 +283,7 @@ fun UserSignUpScreen(
 
         OutlinedButton(
             onClick = {
-                val user = User(0, name, email, city, phoneNumber, password, confirmPassword)
+                val user = User("", name, email, city, phoneNumber, password, confirmPassword)
                 if (isInputValid(context, user)) {
                     scope.launch {
                         authViewModel.sendOtp(phoneNumber, context.getActivity()).collect{ result ->

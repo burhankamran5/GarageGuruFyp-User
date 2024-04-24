@@ -53,19 +53,33 @@ import com.bkcoding.garagegurufyp_user.extensions.progressBar
 import com.bkcoding.garagegurufyp_user.extensions.showToast
 import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.ui.AuthViewModel
+import com.bkcoding.garagegurufyp_user.ui.UserViewModel
 import io.github.rupinderjeet.kprogresshud.KProgressHUD
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @Composable
 fun VerifyOtpScreen(
     navController: NavController?,
     user: User,
-    authViewModel: AuthViewModel = hiltViewModel()
+    authViewModel: AuthViewModel = hiltViewModel(),
+    userViewModel: UserViewModel = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val progressBar: KProgressHUD = remember { context.progressBar() }
     var otp by rememberSaveable { mutableStateOf("") }
+
+    suspend fun saveUserToDb(user: User){
+        userViewModel.storeUserToDb(user).collect{ result ->
+            progressBar.isVisible(result is Result.Loading)
+            when (result) {
+                is Result.Failure -> context.showToast(result.exception.message.toString())
+                is Result.Success ->  context.showToast(result.data)
+                else -> {}
+            }
+        }
+    }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -124,11 +138,12 @@ fun VerifyOtpScreen(
         OutlinedButton(
             onClick = {
                 scope.launch {
+                    progressBar.show()
                     authViewModel.createUser(otp, user).collect {
-                        progressBar.isVisible(it is Result.Loading)
                         if (it is Result.Success){
-                            context.showToast(it.data)
+                            saveUserToDb(user.copy(id = it.data))
                         } else if (it is Result.Failure){
+                            progressBar.dismiss()
                             context.showToast(it.exception.message.toString())
                         }
                     }
@@ -187,7 +202,6 @@ fun VerifyOtpScreen(
                 }
         )
     }
-
 }
 
 

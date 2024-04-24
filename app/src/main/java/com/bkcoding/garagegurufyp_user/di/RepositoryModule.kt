@@ -2,6 +2,8 @@ package com.bkcoding.garagegurufyp_user.di
 
 import com.bkcoding.garagegurufyp_user.repository.auth.AuthRepository
 import com.bkcoding.garagegurufyp_user.repository.auth.AuthRepositoryImpl
+import com.bkcoding.garagegurufyp_user.repository.user.UserRepository
+import com.bkcoding.garagegurufyp_user.repository.user.UserRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,4 +17,7 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun providesFirebaseAuthRepository(repo: AuthRepositoryImpl): AuthRepository
+    @Binds
+    @Singleton
+    abstract fun providesUserRepository(repo: UserRepositoryImpl): UserRepository
 }

@@ -72,7 +72,7 @@ class AuthRepositoryImpl @Inject constructor(
                     firebaseAuth.currentUser!!.linkWithCredential(emailCredential)
                         .addOnCompleteListener { authResultTask ->
                             if (authResultTask.isSuccessful) {
-                                trySend(Result.Success("User created successfully"))
+                                trySend(Result.Success(authResultTask.result.user?.uid.orEmpty()))
                             } else {
                                 trySend(Result.Failure(authResultTask.exception ?: Exception("Unable to create user")))
                             }
