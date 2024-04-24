@@ -1,11 +1,13 @@
 package com.bkcoding.garagegurufyp_user.repository.auth
 
 import android.app.Activity
+import com.bkcoding.garagegurufyp_user.dto.User
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import com.bkcoding.garagegurufyp_user.repository.Result
 import com.google.firebase.FirebaseException
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
@@ -60,17 +62,21 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun createFirebaseUser(otp: String): Flow<Result<String>> = callbackFlow {
+    override fun createFirebaseUser(otp: String, user: User): Flow<Result<String>> = callbackFlow {
         trySend(Result.Loading)
-        val credential = PhoneAuthProvider.getCredential(verificationId,otp)
+        val credential = PhoneAuthProvider.getCredential(verificationId, otp)
         firebaseAuth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
-                if(task.isSuccessful) {
-                    // A hacky way to immediately delete the created user and just use this
-                    // method for otp verification
-                    task.result.user?.delete()
-                    firebaseAuth.signOut()
-                    trySend(Result.Success("User created"))
+                if (task.isSuccessful) {
+                    val emailCredential = EmailAuthProvider.getCredential(user.email, user.password)
+                    firebaseAuth.currentUser!!.linkWithCredential(emailCredential)
+                        .addOnCompleteListener { authResultTask ->
+                            if (authResultTask.isSuccessful) {
+                                trySend(Result.Success("User created successfully"))
+                            } else {
+                                trySend(Result.Failure(authResultTask.exception ?: Exception("Unable to create user")))
+                            }
+                        }
                 }
             }.addOnFailureListener {
                 trySend(Result.Failure(it))

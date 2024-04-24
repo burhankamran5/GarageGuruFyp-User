@@ -1,6 +1,5 @@
 package com.bkcoding.garagegurufyp_user.ui.signup
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -125,7 +124,7 @@ fun VerifyOtpScreen(
         OutlinedButton(
             onClick = {
                 scope.launch {
-                    authViewModel.verifyOtp(otp).collect {
+                    authViewModel.createUser(otp, user).collect {
                         progressBar.isVisible(it is Result.Loading)
                         if (it is Result.Success){
                             context.showToast(it.data)
