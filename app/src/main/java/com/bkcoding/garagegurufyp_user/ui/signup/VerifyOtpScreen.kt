@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bkcoding.garagegurufyp_user.R
+import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.dto.User
 import com.bkcoding.garagegurufyp_user.extensions.getActivity
 import com.bkcoding.garagegurufyp_user.extensions.isVisible
@@ -62,6 +63,7 @@ import kotlinx.coroutines.launch
 fun VerifyOtpScreen(
     navController: NavController?,
     user: User,
+    garage: Garage,
     authViewModel: AuthViewModel = hiltViewModel(),
     userViewModel: UserViewModel = hiltViewModel()
 ) {
@@ -80,6 +82,31 @@ fun VerifyOtpScreen(
             }
         }
     }
+
+    suspend fun saveGarageToDb(garage: Garage){
+        userViewModel.storeGarageToDb(garage).collect{ result ->
+            progressBar.isVisible(result is Result.Loading)
+            when (result) {
+                is Result.Failure -> context.showToast(result.exception.message.toString())
+                is Result.Success ->  context.showToast(result.data)
+                else -> {}
+            }
+        }
+    }
+
+    suspend fun uploadGarageImages(garage: Garage) {
+        userViewModel.uploadGarageImages(garage).collect{ result ->
+            when (result) {
+                is Result.Failure -> {
+                    progressBar.dismiss()
+                    context.showToast(result.exception.message.toString())
+                }
+                is Result.Success -> saveGarageToDb(garage.copy(images = result.data))
+                else -> {}
+            }
+        }
+    }
+
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -139,10 +166,10 @@ fun VerifyOtpScreen(
             onClick = {
                 scope.launch {
                     progressBar.show()
-                    authViewModel.createUser(otp, user).collect {
-                        if (it is Result.Success){
-                            saveUserToDb(user.copy(id = it.data))
-                        } else if (it is Result.Failure){
+                    authViewModel.createUser(otp, user, garage).collect {
+                        if (it is Result.Success) {
+                            if (user.name.isNotEmpty()) saveUserToDb(user.copy(id = it.data)) else uploadGarageImages(garage.copy(id = it.data))
+                        } else if (it is Result.Failure) {
                             progressBar.dismiss()
                             context.showToast(it.exception.message.toString())
                         }
@@ -209,5 +236,5 @@ fun VerifyOtpScreen(
 @Preview(device = "id:pixel_6_pro")
 @Composable
 fun VerifyOTPScreenPreview() {
-    VerifyOtpScreen(navController = null, User())
+    VerifyOtpScreen(navController = null, User(), Garage())
 }

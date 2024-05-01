@@ -48,7 +48,7 @@ fun Navigation() {
         composable(Screen.GarageSignUpScreen.route,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }) {
-            GarageSignUpScreen(navController)
+            GarageSignUpScreen(navController, onChangeGarage = {userStorageVM.garage = it})
         }
 
         composable(
@@ -56,7 +56,7 @@ fun Navigation() {
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None })
         {
-            VerifyOtpScreen(navController, userStorageVM.user)
+            VerifyOtpScreen(navController, userStorageVM.user, userStorageVM.garage )
         }
 
         composable(Screen.SignUpConfirmationScreen.route,

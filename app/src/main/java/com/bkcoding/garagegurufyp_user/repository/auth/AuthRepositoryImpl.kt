@@ -1,6 +1,7 @@
 package com.bkcoding.garagegurufyp_user.repository.auth
 
 import android.app.Activity
+import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.dto.User
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.Flow
@@ -62,13 +63,15 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun createFirebaseUser(otp: String, user: User): Flow<Result<String>> = callbackFlow {
+    override fun createFirebaseUser(otp: String, user: User?, garage: Garage?): Flow<Result<String>> = callbackFlow {
         trySend(Result.Loading)
         val credential = PhoneAuthProvider.getCredential(verificationId, otp)
         firebaseAuth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val emailCredential = EmailAuthProvider.getCredential(user.email, user.password)
+                    val email = if (user?.email?.isNotEmpty() == true) user.email else garage?.email.orEmpty()
+                    val password = if (user?.password?.isNotEmpty() == true) user.password else garage?.password.orEmpty()
+                    val emailCredential = EmailAuthProvider.getCredential(email, password)
                     firebaseAuth.currentUser!!.linkWithCredential(emailCredential)
                         .addOnCompleteListener { authResultTask ->
                             if (authResultTask.isSuccessful) {
