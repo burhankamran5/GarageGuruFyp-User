@@ -66,8 +66,7 @@ fun VerifyOtpScreen(
     user: User,
     garage: Garage,
     authViewModel: AuthViewModel = hiltViewModel(),
-    userViewModel: UserViewModel = hiltViewModel(),
-    onClick: () -> Unit
+    userViewModel: UserViewModel = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -83,8 +82,6 @@ fun VerifyOtpScreen(
                     navController?.navigate(Screen.SignUpConfirmationScreen.route+"/${false}"){
                         popUpTo(navController.graph.id)
                     }
-                    context.showToast(result.data)
-                    onClick()
                 }
                 else -> {}
             }
@@ -246,5 +243,5 @@ fun VerifyOtpScreen(
 @Preview(device = "id:pixel_6_pro")
 @Composable
 fun VerifyOTPScreenPreview() {
-    VerifyOtpScreen(navController = null, User(), Garage()){}
+    VerifyOtpScreen(navController = null, User(), Garage())
 }
