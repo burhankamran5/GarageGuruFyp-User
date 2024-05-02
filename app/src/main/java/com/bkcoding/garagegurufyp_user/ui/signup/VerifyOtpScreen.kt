@@ -52,6 +52,7 @@ import com.bkcoding.garagegurufyp_user.extensions.getActivity
 import com.bkcoding.garagegurufyp_user.extensions.isVisible
 import com.bkcoding.garagegurufyp_user.extensions.progressBar
 import com.bkcoding.garagegurufyp_user.extensions.showToast
+import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.ui.AuthViewModel
 import com.bkcoding.garagegurufyp_user.ui.UserViewModel
@@ -77,7 +78,11 @@ fun VerifyOtpScreen(
             progressBar.isVisible(result is Result.Loading)
             when (result) {
                 is Result.Failure -> context.showToast(result.exception.message.toString())
-                is Result.Success ->  context.showToast(result.data)
+                is Result.Success -> {
+                    navController?.navigate(Screen.SignUpConfirmationScreen.route+"/${false}"){
+                        popUpTo(navController.graph.id)
+                    }
+                }
                 else -> {}
             }
         }
@@ -88,7 +93,9 @@ fun VerifyOtpScreen(
             progressBar.isVisible(result is Result.Loading)
             when (result) {
                 is Result.Failure -> context.showToast(result.exception.message.toString())
-                is Result.Success ->  context.showToast(result.data)
+                is Result.Success -> {
+                    navController?.navigate(Screen.SignUpConfirmationScreen.route+"/${true}")
+                }
                 else -> {}
             }
         }
