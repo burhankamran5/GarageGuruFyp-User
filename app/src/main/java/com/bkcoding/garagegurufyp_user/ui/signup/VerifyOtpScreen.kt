@@ -2,6 +2,7 @@ package com.bkcoding.garagegurufyp_user.ui.signup
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,22 +23,98 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bkcoding.garagegurufyp_user.R
+import com.bkcoding.garagegurufyp_user.dto.Garage
+import com.bkcoding.garagegurufyp_user.dto.User
+import com.bkcoding.garagegurufyp_user.extensions.getActivity
+import com.bkcoding.garagegurufyp_user.extensions.isVisible
+import com.bkcoding.garagegurufyp_user.extensions.progressBar
+import com.bkcoding.garagegurufyp_user.extensions.showToast
+import com.bkcoding.garagegurufyp_user.navigation.Screen
+import com.bkcoding.garagegurufyp_user.repository.Result
+import com.bkcoding.garagegurufyp_user.ui.AuthViewModel
+import com.bkcoding.garagegurufyp_user.ui.UserViewModel
+import io.github.rupinderjeet.kprogresshud.KProgressHUD
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @Composable
-fun VerifyOtpScreen(navController: NavController) {
+fun VerifyOtpScreen(
+    navController: NavController?,
+    user: User,
+    garage: Garage,
+    authViewModel: AuthViewModel = hiltViewModel(),
+    userViewModel: UserViewModel = hiltViewModel()
+) {
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val progressBar: KProgressHUD = remember { context.progressBar() }
+    var otp by rememberSaveable { mutableStateOf("") }
+
+    suspend fun saveUserToDb(user: User){
+        userViewModel.storeUserToDb(user).collect{ result ->
+            progressBar.isVisible(result is Result.Loading)
+            when (result) {
+                is Result.Failure -> context.showToast(result.exception.message.toString())
+                is Result.Success -> {
+                    navController?.navigate(Screen.SignUpConfirmationScreen.route+"/${false}"){
+                        popUpTo(navController.graph.id)
+                    }
+                }
+                else -> {}
+            }
+        }
+    }
+
+    suspend fun saveGarageToDb(garage: Garage){
+        userViewModel.storeGarageToDb(garage).collect{ result ->
+            progressBar.isVisible(result is Result.Loading)
+            when (result) {
+                is Result.Failure -> context.showToast(result.exception.message.toString())
+                is Result.Success -> {
+                    navController?.navigate(Screen.SignUpConfirmationScreen.route+"/${true}")
+                    authViewModel.signOutFirebaseUser()
+                }
+                else -> {}
+            }
+        }
+    }
+
+    suspend fun uploadGarageImages(garage: Garage) {
+        userViewModel.uploadGarageImages(garage).collect{ result ->
+            when (result) {
+                is Result.Failure -> {
+                    progressBar.dismiss()
+                    context.showToast(result.exception.message.toString())
+                }
+                is Result.Success -> saveGarageToDb(garage.copy(images = result.data))
+                else -> {}
+            }
+        }
+    }
+
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -70,8 +147,8 @@ fun VerifyOtpScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(20.dp))
 
         TextField(
-            value = "",
-            onValueChange = {},
+            value = otp,
+            onValueChange = { otp = it },
             singleLine = true,
             placeholder = {
                 Text(
@@ -94,7 +171,19 @@ fun VerifyOtpScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(20.dp))
 
         OutlinedButton(
-            onClick = {navController.navigate("SignUpConfirmationScreen"){launchSingleTop = true} },
+            onClick = {
+                scope.launch {
+                    progressBar.show()
+                    authViewModel.createUser(otp, user, garage).collect {
+                        if (it is Result.Success) {
+                            if (user.name.isNotEmpty()) saveUserToDb(user.copy(id = it.data)) else uploadGarageImages(garage.copy(id = it.data))
+                        } else if (it is Result.Failure) {
+                            progressBar.dismiss()
+                            context.showToast(it.exception.message.toString())
+                        }
+                    }
+                }
+            },
             modifier = Modifier
                 .height(70.dp)
                 .fillMaxWidth(.6f)
@@ -114,15 +203,46 @@ fun VerifyOtpScreen(navController: NavController) {
                 textAlign = TextAlign.Center
             )
         }
+        Text(
+            text = stringResource(id = R.string.not_received_code),
+            color = colorResource(id = R.color.black),
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center
+        )
+        Text(
+            text = stringResource(id = R.string.resend_code),
+            color = colorResource(id = R.color.teal_200),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .padding(top = 10.dp)
+                .clickable {
+                    scope.launch {
+                        authViewModel
+                            .sendOtp(user.phoneNumber, context.getActivity())
+                            .collect { result ->
+                                progressBar.isVisible(result is Result.Loading)
+                                when (result) {
+                                    is Result.Failure -> context.showToast(result.exception.message.toString())
+                                    is Result.Success -> {
+                                        context.showToast(result.data)
+                                    }
 
+                                    else -> {}
+                                }
+                            }
+                    }
+                }
+        )
     }
-
 }
 
 
-//@Preview(device = "id:Nexus 4")
-//@Preview(device = "id:pixel_6_pro")
-//@Composable
-//fun VerifyOTPScreenPreview() {
-//    VerifyOtpScreen()
-//}
+@Preview(device = "id:Nexus 4")
+@Preview(device = "id:pixel_6_pro")
+@Composable
+fun VerifyOTPScreenPreview() {
+    VerifyOtpScreen(navController = null, User(), Garage())
+}

@@ -4,9 +4,12 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.ui.login.LoginScreen
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
 import com.bkcoding.garagegurufyp_user.ui.onboarding.OnBoardingScreen
@@ -43,26 +46,29 @@ fun Navigation() {
         composable(Screen.UserSignUpScreen.route,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }) {
-            UserSignUpScreen(navController
-            )
+            UserSignUpScreen(navController, onChangeUser = { userStorageVM.user = it })
         }
         composable(Screen.GarageSignUpScreen.route,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }) {
-            GarageSignUpScreen(navController)
+            GarageSignUpScreen(navController, onChangeGarage = {userStorageVM.garage = it})
         }
 
-        composable(Screen.VerifyOtpScreen.route,
+        composable(
+            route = Screen.VerifyOtpScreen.route,
             enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None }) {
-            VerifyOtpScreen(navController)
+            exitTransition = { ExitTransition.None })
+        {
+            VerifyOtpScreen(navController, userStorageVM.user, userStorageVM.garage )
         }
 
-        composable(Screen.SignUpConfirmationScreen.route,
+        composable(Screen.SignUpConfirmationScreen.route + "/{isGarage}",
+            arguments = listOf(navArgument("isGarage") { type = NavType.BoolType }),
             enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None }) {
-            SignUpConfirmationScreen()
+            exitTransition = { ExitTransition.None }) {backStackEntry ->
+            SignUpConfirmationScreen(navController, backStackEntry.arguments?.getBoolean("isGarage") ?: false)
         }
+
     }
 }
 

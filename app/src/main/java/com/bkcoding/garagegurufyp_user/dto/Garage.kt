@@ -1,17 +1,20 @@
 package com.bkcoding.garagegurufyp_user.dto
 
+import android.net.Uri
 import com.google.firebase.database.Exclude
 
 data class Garage(
-    val id: Int = 0,
+    val id: String = "",
     val name: String = "",
     val email: String = "",
-    @Exclude val password: String = "",
+    @get:Exclude val password: String = "",
+    @get:Exclude val confirmPassword: String = "",
+    @get:Exclude val imageUris: List<Uri> = emptyList(),
     val images: List<String> = emptyList(),
     val city: String = "",
-    val phoneNumber: Int = 0,
+    val phoneNumber: String = "",
     val location: String = "",
     val rating: String = "",
-    val employeeCount: Int = 0,
+    val employeeCount: String = "",
     val isApproved: Boolean = false,
 )

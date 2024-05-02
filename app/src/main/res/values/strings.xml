@@ -8,6 +8,8 @@
     <string name="chat_directly">Chat directly with mechanics to ask questions, discuss quotes, and schedule appointments. No more confusing jargon, just clear communication.</string>
     <string name="sign_up_user">Get maintenance and repair services for your vehicle</string>
     <string name="grow_your_business">Grow your business,reach new customers</string>
+    <string name="approval_pending">"Welcome to GarageGuru. Your account is pending approval. You can use it once it's approved"</string>
     <string name="high_fives">"High fives! Your car just found its new best friend - GarageGuru."</string>
-
+    <string name="not_received_code">Not received code?</string>
+    <string name="resend_code">Resend Code</string>
 </resources>

@@ -1,6 +1,8 @@
 package com.bkcoding.garagegurufyp_user.ui.login
 
 import androidx.lifecycle.ViewModel
+import com.bkcoding.garagegurufyp_user.dto.Garage
+import com.bkcoding.garagegurufyp_user.dto.User
 import com.bkcoding.garagegurufyp_user.sharedpref.PreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -9,7 +11,8 @@ import javax.inject.Inject
 class UserStorageVM @Inject constructor(private val preferencesManager: PreferencesManager) :
     ViewModel() {
 
-
+    var user = User()
+    var garage = Garage()
     fun isFirstLaunch() = preferencesManager.isFirstLaunch
 
     fun setIsFirstLaunch() {
