@@ -1,7 +1,6 @@
 package com.bkcoding.garagegurufyp_user.ui.login
 
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -52,14 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.bkcoding.garagegurufyp_user.R
-import com.bkcoding.garagegurufyp_user.extensions.getActivity
 import com.bkcoding.garagegurufyp_user.utils.isValidEmail
-import com.google.firebase.FirebaseException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthOptions
-import com.google.firebase.auth.PhoneAuthProvider
-import java.util.concurrent.TimeUnit
 
 
 @Composable
