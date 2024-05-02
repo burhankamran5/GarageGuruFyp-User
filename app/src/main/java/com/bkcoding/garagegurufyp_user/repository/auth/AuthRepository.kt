@@ -13,4 +13,6 @@ interface AuthRepository {
     ) : Flow<Result<String>>
 
     fun createFirebaseUser(otp: String,  user: User?, garage: Garage?): Flow<Result<String>>
+
+    fun signOutFirebaseUser()
 }

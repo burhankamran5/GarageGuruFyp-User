@@ -18,4 +18,6 @@ class AuthViewModel @Inject constructor(
     ) = authRepository.sendOtp(phoneNo, activity)
 
     fun createUser(otp: String,  user: User?, garage: Garage?) = authRepository.createFirebaseUser(otp, user, garage)
+
+    fun signOutFirebaseUser() = authRepository.signOutFirebaseUser()
 }
