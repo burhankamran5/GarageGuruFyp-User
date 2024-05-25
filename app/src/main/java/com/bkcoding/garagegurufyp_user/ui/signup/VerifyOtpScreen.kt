@@ -47,7 +47,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.dto.Garage
-import com.bkcoding.garagegurufyp_user.dto.User
+import com.bkcoding.garagegurufyp_user.dto.Customer
 import com.bkcoding.garagegurufyp_user.extensions.getActivity
 import com.bkcoding.garagegurufyp_user.extensions.isVisible
 import com.bkcoding.garagegurufyp_user.extensions.progressBar
@@ -56,29 +56,32 @@ import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.ui.AuthViewModel
 import com.bkcoding.garagegurufyp_user.ui.UserViewModel
+import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
+import com.bkcoding.garagegurufyp_user.ui.login.UserType
 import io.github.rupinderjeet.kprogresshud.KProgressHUD
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @Composable
 fun VerifyOtpScreen(
     navController: NavController?,
-    user: User,
+    customer: Customer,
     garage: Garage,
     authViewModel: AuthViewModel = hiltViewModel(),
-    userViewModel: UserViewModel = hiltViewModel()
+    userViewModel: UserViewModel = hiltViewModel(),
+    userStorageVM: UserStorageVM = hiltViewModel(),
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val progressBar: KProgressHUD = remember { context.progressBar() }
     var otp by rememberSaveable { mutableStateOf("") }
 
-    suspend fun saveUserToDb(user: User){
-        userViewModel.storeUserToDb(user).collect{ result ->
+    suspend fun saveUserToDb(customer: Customer){
+        userViewModel.storeUserToDb(customer).collect{ result ->
             progressBar.isVisible(result is Result.Loading)
             when (result) {
                 is Result.Failure -> context.showToast(result.exception.message.toString())
                 is Result.Success -> {
+                    userStorageVM.saveUserType(UserType.Customer.name)
                     navController?.navigate(Screen.SignUpConfirmationScreen.route+"/${false}"){
                         popUpTo(navController.graph.id)
                     }
@@ -95,7 +98,7 @@ fun VerifyOtpScreen(
                 is Result.Failure -> context.showToast(result.exception.message.toString())
                 is Result.Success -> {
                     navController?.navigate(Screen.SignUpConfirmationScreen.route+"/${true}")
-                    authViewModel.signOutFirebaseUser()
+                    authViewModel.signOutUser()
                 }
                 else -> {}
             }
@@ -174,9 +177,9 @@ fun VerifyOtpScreen(
             onClick = {
                 scope.launch {
                     progressBar.show()
-                    authViewModel.createUser(otp, user, garage).collect {
+                    authViewModel.createUser(otp, customer, garage).collect {
                         if (it is Result.Success) {
-                            if (user.name.isNotEmpty()) saveUserToDb(user.copy(id = it.data)) else uploadGarageImages(garage.copy(id = it.data))
+                            if (customer.name.isNotEmpty()) saveUserToDb(customer.copy(id = it.data)) else uploadGarageImages(garage.copy(id = it.data))
                         } else if (it is Result.Failure) {
                             progressBar.dismiss()
                             context.showToast(it.exception.message.toString())
@@ -221,7 +224,7 @@ fun VerifyOtpScreen(
                 .clickable {
                     scope.launch {
                         authViewModel
-                            .sendOtp(user.phoneNumber, context.getActivity())
+                            .sendOtp(customer.phoneNumber, context.getActivity())
                             .collect { result ->
                                 progressBar.isVisible(result is Result.Loading)
                                 when (result) {
@@ -244,5 +247,5 @@ fun VerifyOtpScreen(
 @Preview(device = "id:pixel_6_pro")
 @Composable
 fun VerifyOTPScreenPreview() {
-    VerifyOtpScreen(navController = null, User(), Garage())
+    VerifyOtpScreen(navController = null, Customer(), Garage())
 }

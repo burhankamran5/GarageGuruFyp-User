@@ -52,11 +52,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.ui.AuthViewModel
-import com.bkcoding.garagegurufyp_user.dto.User
+import com.bkcoding.garagegurufyp_user.dto.Customer
 import com.bkcoding.garagegurufyp_user.extensions.getActivity
 import com.bkcoding.garagegurufyp_user.extensions.isVisible
 import com.bkcoding.garagegurufyp_user.extensions.progressBar
@@ -65,20 +64,14 @@ import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.utils.isValidEmail
 import com.bkcoding.garagegurufyp_user.utils.isValidText
-import com.google.firebase.FirebaseException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthOptions
-import com.google.firebase.auth.PhoneAuthProvider
 import io.github.rupinderjeet.kprogresshud.KProgressHUD
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 
 @Composable
 fun UserSignUpScreen(
     navController: NavController,
     authViewModel: AuthViewModel = hiltViewModel(),
-    onChangeUser: (User) -> Unit
+    onChangeUser: (Customer) -> Unit
 ) {
 
     var name by rememberSaveable { mutableStateOf("") }
@@ -283,8 +276,8 @@ fun UserSignUpScreen(
 
         OutlinedButton(
             onClick = {
-                val user = User("", name, email, city, phoneNumber, password, confirmPassword)
-                if (isInputValid(context, user)) {
+                val customer = Customer("", name, email, city, phoneNumber, password, confirmPassword)
+                if (isInputValid(context, customer)) {
                     scope.launch {
                         authViewModel.sendOtp(phoneNumber, context.getActivity()).collect{ result ->
                             progressBar.isVisible(result is Result.Loading)
@@ -292,7 +285,7 @@ fun UserSignUpScreen(
                                 is Result.Failure -> context.showToast(result.exception.message.toString())
                                 is Result.Success -> {
                                     context.showToast(result.data)
-                                    onChangeUser(user)
+                                    onChangeUser(customer)
                                     navController.navigate(Screen.VerifyOtpScreen.route) { launchSingleTop = true }
                                 }
                                 else -> {}
@@ -323,16 +316,16 @@ fun UserSignUpScreen(
     }
 }
 
-private fun isInputValid(context: Context, user: User): Boolean {
+private fun isInputValid(context: Context, customer: Customer): Boolean {
     var isInputValid = false
     when {
-        user.name.isEmpty() || user.email.isEmpty() || user.password.isEmpty() || user.confirmPassword.isEmpty() || user.city.isEmpty() || user.phoneNumber.isEmpty() -> {
+        customer.name.isEmpty() || customer.email.isEmpty() || customer.password.isEmpty() || customer.confirmPassword.isEmpty() || customer.city.isEmpty() || customer.phoneNumber.isEmpty() -> {
            context.showToast("Something is Missing")
         }
-        !isValidEmail(user.email) -> context.showToast("Invalid Email")
-        user.password != user.confirmPassword -> context.showToast("Password doesn't match")
-        user.password.length < 6 -> context.showToast("Password too short")
-        user.phoneNumber.length != 10 ->context.showToast("Phone# length should be 10 excluding 0")
+        !isValidEmail(customer.email) -> context.showToast("Invalid Email")
+        customer.password != customer.confirmPassword -> context.showToast("Password doesn't match")
+        customer.password.length < 6 -> context.showToast("Password too short")
+        customer.phoneNumber.length != 10 ->context.showToast("Phone# length should be 10 excluding 0")
         else -> isInputValid = true
     }
     return isInputValid

@@ -13,4 +13,6 @@ sealed class Screen(
     data object GarageSignUpScreen : Screen("GarageSignUpScreen")
     data object VerifyOtpScreen : Screen("VerifyOtpScreen")
     data object SignUpConfirmationScreen : Screen("SignUpConfirmationScreen")
+    data object CustomerHomeScreen : Screen("CustomerHomeScreen")
+    data object GarageHomeScreen : Screen("GarageHomeScreen")
 }

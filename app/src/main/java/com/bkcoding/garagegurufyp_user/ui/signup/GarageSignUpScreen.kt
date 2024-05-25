@@ -2,7 +2,6 @@ package com.bkcoding.garagegurufyp_user.ui.signup
 
 import android.content.Context
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
@@ -67,7 +66,6 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.dto.Garage
-import com.bkcoding.garagegurufyp_user.dto.User
 import com.bkcoding.garagegurufyp_user.extensions.getActivity
 import com.bkcoding.garagegurufyp_user.extensions.isVisible
 import com.bkcoding.garagegurufyp_user.extensions.progressBar
@@ -75,7 +73,6 @@ import com.bkcoding.garagegurufyp_user.extensions.showToast
 import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.ui.AuthViewModel
-import com.bkcoding.garagegurufyp_user.ui.UserViewModel
 import com.bkcoding.garagegurufyp_user.utils.isValidEmail
 import com.bkcoding.garagegurufyp_user.utils.isValidText
 import io.github.rupinderjeet.kprogresshud.KProgressHUD

@@ -16,5 +16,11 @@ data class Garage(
     val location: String = "",
     val rating: String = "",
     val employeeCount: String = "",
-    val isApproved: Boolean = false,
+    val approvalStatus: String = ApprovalStatus.PENDING.name
 )
+
+enum class ApprovalStatus{
+    PENDING,
+    APPROVED,
+    DECLINED
+}
