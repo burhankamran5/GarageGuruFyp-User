@@ -13,16 +13,18 @@ import com.bkcoding.garagegurufyp_user.ui.AuthViewModel
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
 
 @Composable
-fun UserHomeScreen(
+fun CustomerHomeScreen(
     navController: NavController,
     userStorageVM: UserStorageVM = hiltViewModel(),
     authViewModel: AuthViewModel = hiltViewModel()
 ){
     Column (modifier = Modifier.fillMaxSize()) {
-        Text(text = "User Home Screen")
+        Text(text = "Customer Home Screen")
         Button(onClick = {
             authViewModel.signOutUser()
-            navController.navigate(Screen.LoginScreen.route)
+            navController.navigate(Screen.LoginScreen.route){
+                popUpTo(navController.graph.id)
+            }
         }) {
             Text(text = "Logout")
         }

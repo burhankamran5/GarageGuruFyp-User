@@ -9,15 +9,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.bkcoding.garagegurufyp_user.ui.garage.GarageHomeScreen
 import com.bkcoding.garagegurufyp_user.ui.login.LoginScreen
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
+import com.bkcoding.garagegurufyp_user.ui.login.UserType
 import com.bkcoding.garagegurufyp_user.ui.onboarding.OnBoardingScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.ChooseSignUp
 import com.bkcoding.garagegurufyp_user.ui.signup.GarageSignUpScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.SignUpConfirmationScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.UserSignUpScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.VerifyOtpScreen
-import com.bkcoding.garagegurufyp_user.ui.user.UserHomeScreen
+import com.bkcoding.garagegurufyp_user.ui.user.CustomerHomeScreen
 
 @Composable
 fun Navigation() {
@@ -27,8 +29,12 @@ fun Navigation() {
     NavHost(
         navController = navController,
         startDestination = if (userStorageVM.isFirstLaunch()) Screen.OnBoarding.route else{
-            if (userStorageVM.getUserType() == "User"){
-                Screen.UserHomeScreen.route
+            if (userStorageVM.getUserType() != null){
+                if (userStorageVM.getUserType() == UserType.Customer.name) {
+                    Screen.CustomerHomeScreen.route
+                } else{
+                    Screen.GarageHomeScreen.route
+                }
             } else{
                 Screen.LoginScreen.route
             }
@@ -76,11 +82,19 @@ fun Navigation() {
         }
 
         composable(
-            route = Screen.UserHomeScreen.route,
+            route = Screen.CustomerHomeScreen.route,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }
         ){
-            UserHomeScreen(navController = navController)
+            CustomerHomeScreen(navController = navController)
+        }
+
+        composable(
+            route = Screen.GarageHomeScreen.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ){
+            GarageHomeScreen(navController = navController)
         }
 
     }

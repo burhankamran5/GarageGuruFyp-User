@@ -57,6 +57,7 @@ import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.ui.AuthViewModel
 import com.bkcoding.garagegurufyp_user.ui.UserViewModel
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
+import com.bkcoding.garagegurufyp_user.ui.login.UserType
 import io.github.rupinderjeet.kprogresshud.KProgressHUD
 import kotlinx.coroutines.launch
 
@@ -80,7 +81,7 @@ fun VerifyOtpScreen(
             when (result) {
                 is Result.Failure -> context.showToast(result.exception.message.toString())
                 is Result.Success -> {
-                    userStorageVM.saveUserType("User")
+                    userStorageVM.saveUserType(UserType.Customer.name)
                     navController?.navigate(Screen.SignUpConfirmationScreen.route+"/${false}"){
                         popUpTo(navController.graph.id)
                     }

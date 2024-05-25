@@ -1,7 +1,6 @@
 package com.bkcoding.garagegurufyp_user.ui.login
 
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -76,7 +75,8 @@ private const val TAG = "LoginScreen"
 fun LoginScreen(
     navController: NavController,
     authVM: AuthViewModel = hiltViewModel(),
-    userViewModel: UserViewModel = hiltViewModel()
+    userViewModel: UserViewModel = hiltViewModel(),
+    userStorageVM: UserStorageVM = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val interactionSource = remember { MutableInteractionSource() }
@@ -93,7 +93,12 @@ fun LoginScreen(
             userViewModel.getGarageFromDb(userId).collect { result ->
                 progressBar.isVisible(result is Result.Loading)
                 when (result) {
-                    is Result.Success -> { navController.navigate(Screen.UserHomeScreen.route) }
+                    is Result.Success -> {
+                        userStorageVM.saveUserType(UserType.Garage.name)
+                        navController.navigate(Screen.GarageHomeScreen.route) {
+                            popUpTo(navController.graph.id)
+                        }
+                    }
                     is Result.Failure -> {
                         authVM.signOutUser()
                         context.showToast(result.exception.message.toString())
@@ -110,8 +115,10 @@ fun LoginScreen(
                 progressBar.isVisible(result is Result.Loading)
                 when (result) {
                     is Result.Success -> {
-                        Log.d(TAG, "getCustomerFromDb: ${result.data.name}")
-                        navController.navigate(Screen.UserHomeScreen.route)
+                        userStorageVM.saveUserType(UserType.Customer.name)
+                        navController.navigate(Screen.CustomerHomeScreen.route){
+                            popUpTo(navController.graph.id)
+                        }
                     }
                     is Result.Failure -> {
                         context.showToast(result.exception.message.toString())
