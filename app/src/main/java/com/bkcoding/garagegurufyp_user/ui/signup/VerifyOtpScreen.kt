@@ -98,7 +98,7 @@ fun VerifyOtpScreen(
                 is Result.Failure -> context.showToast(result.exception.message.toString())
                 is Result.Success -> {
                     navController?.navigate(Screen.SignUpConfirmationScreen.route+"/${true}")
-                    authViewModel.signOutFirebaseUser()
+                    authViewModel.signOutUser()
                 }
                 else -> {}
             }

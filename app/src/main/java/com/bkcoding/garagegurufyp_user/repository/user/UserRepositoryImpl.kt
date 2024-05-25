@@ -1,5 +1,6 @@
 package com.bkcoding.garagegurufyp_user.repository.user
 
+import com.bkcoding.garagegurufyp_user.dto.ApprovalStatus
 import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.dto.Customer
 import com.bkcoding.garagegurufyp_user.repository.Result
@@ -12,7 +13,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
@@ -70,8 +70,8 @@ class UserRepositoryImpl @Inject constructor(
     override fun getCustomerFromDb(userId: String): Flow<Result<Customer>> = callbackFlow{
         databaseReference.child(FirebaseRef.CUSTOMERS).child(userId).get().addOnSuccessListener { dataSnapshot ->
             if (dataSnapshot.exists()){
-                val user = dataSnapshot.getValue(Customer::class.java)
-                user?.let { trySend(Result.Success(user)) }
+                val customer = dataSnapshot.getValue(Customer::class.java)
+                customer?.let { trySend(Result.Success(customer)) }
             } else{
                 trySend(Result.Failure(Exception("No Customer found with these details")))
             }
@@ -83,7 +83,29 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getGarageFromDb(userId: String): Flow<Result<Garage>> {
-       return flowOf(Result.Success(Garage()))
+    override fun getGarageFromDb(userId: String): Flow<Result<Garage>> = callbackFlow{
+        databaseReference.child(FirebaseRef.GARARAGES).child(userId).get().addOnSuccessListener { dataSnapshot ->
+            if (dataSnapshot.exists()){
+                val garage = dataSnapshot.getValue(Garage::class.java)
+                val errorMessage = when{
+                    garage == null -> "No Garage found with these details"
+                    garage.approvalStatus == ApprovalStatus.PENDING.name -> "Your approval is pending from Admin"
+                    garage.approvalStatus == ApprovalStatus.DECLINED.name -> "Your garage creation request was declined"
+                    else -> ""
+                }
+                if (errorMessage.isEmpty() && garage != null){
+                    trySend(Result.Success(garage))
+                } else{
+                    trySend(Result.Failure(Exception(errorMessage)))
+                }
+            } else{
+                trySend(Result.Failure(Exception("No Garage found with these details")))
+            }
+        }.addOnFailureListener {
+            Result.Failure(it)
+        }
+        awaitClose {
+            close()
+        }
     }
 }

@@ -21,5 +21,5 @@ class AuthViewModel @Inject constructor(
 
     fun login(email: String, password: String) = authRepository.login(email, password)
 
-    fun signOutFirebaseUser() = authRepository.signOutFirebaseUser()
+    fun signOutUser() = authRepository.signOutFirebaseUser()
 }

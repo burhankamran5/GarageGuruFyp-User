@@ -19,12 +19,7 @@ class UserStorageVM @Inject constructor(private val userPreferences: UserPrefere
         userPreferences.isFirstLaunch = false
     }
 
-    fun updateUserLocally(customer: Customer) = userPreferences.updateUser(customer)
-
     fun saveUserType(userType: String)  { userPreferences.userType = userType }
 
     fun getUserType() = userPreferences.userType
-    fun updateGarageLocally(garage: Garage) = userPreferences.updateGarage(garage)
-
-    fun signOut() = userPreferences.signOut()
 }

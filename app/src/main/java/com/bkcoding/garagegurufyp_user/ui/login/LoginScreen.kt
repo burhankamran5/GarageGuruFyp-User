@@ -94,7 +94,10 @@ fun LoginScreen(
                 progressBar.isVisible(result is Result.Loading)
                 when (result) {
                     is Result.Success -> { navController.navigate(Screen.UserHomeScreen.route) }
-                    is Result.Failure -> { context.showToast(result.exception.message.toString()) }
+                    is Result.Failure -> {
+                        authVM.signOutUser()
+                        context.showToast(result.exception.message.toString())
+                    }
                     else -> {}
                 }
             }
@@ -110,7 +113,9 @@ fun LoginScreen(
                         Log.d(TAG, "getCustomerFromDb: ${result.data.name}")
                         navController.navigate(Screen.UserHomeScreen.route)
                     }
-                    is Result.Failure -> { context.showToast(result.exception.message.toString()) }
+                    is Result.Failure -> {
+                        context.showToast(result.exception.message.toString())
+                    }
                     else -> {}
                 }
             }
@@ -274,7 +279,7 @@ fun LoginScreen(
                            when(result){
                                is Result.Failure -> {
                                    progressBar.dismiss()
-                                   authVM.signOutFirebaseUser()
+                                   authVM.signOutUser()
                                    context.showToast(result.exception.message.toString())
                                }
                                is Result.Loading -> {}
