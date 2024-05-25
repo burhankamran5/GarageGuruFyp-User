@@ -1,7 +1,7 @@
 package com.bkcoding.garagegurufyp_user.di
 import android.app.Application
 import android.content.Context
-import com.bkcoding.garagegurufyp_user.sharedpref.PreferencesManager
+import com.bkcoding.garagegurufyp_user.sharedpref.UserPreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,8 +19,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideSharedPref(context: Context): PreferencesManager {
-        return PreferencesManager(context)
+    fun provideSharedPref(context: Context): UserPreferences {
+        return UserPreferences(context)
     }
 
 }

@@ -2,21 +2,29 @@ package com.bkcoding.garagegurufyp_user.ui.login
 
 import androidx.lifecycle.ViewModel
 import com.bkcoding.garagegurufyp_user.dto.Garage
-import com.bkcoding.garagegurufyp_user.dto.User
-import com.bkcoding.garagegurufyp_user.sharedpref.PreferencesManager
+import com.bkcoding.garagegurufyp_user.dto.Customer
+import com.bkcoding.garagegurufyp_user.sharedpref.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class UserStorageVM @Inject constructor(private val preferencesManager: PreferencesManager) :
+class UserStorageVM @Inject constructor(private val userPreferences: UserPreferences) :
     ViewModel() {
 
-    var user = User()
+    var customer = Customer()
     var garage = Garage()
-    fun isFirstLaunch() = preferencesManager.isFirstLaunch
+    fun isFirstLaunch() = userPreferences.isFirstLaunch
 
     fun setIsFirstLaunch() {
-        preferencesManager.isFirstLaunch = false
+        userPreferences.isFirstLaunch = false
     }
 
+    fun updateUserLocally(customer: Customer) = userPreferences.updateUser(customer)
+
+    fun saveUserType(userType: String)  { userPreferences.userType = userType }
+
+    fun getUserType() = userPreferences.userType
+    fun updateGarageLocally(garage: Garage) = userPreferences.updateGarage(garage)
+
+    fun signOut() = userPreferences.signOut()
 }

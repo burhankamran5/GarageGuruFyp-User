@@ -7,7 +7,7 @@ data class Request(
     val description: String = "",
     val status: RequestStatus = RequestStatus.OPEN,
     val city: String = "",
-    val user: User = User(),
+    val customer: Customer = Customer(),
     val garage: Garage = Garage(),
     val bids: List<Bid> = emptyList(),
     ) {
