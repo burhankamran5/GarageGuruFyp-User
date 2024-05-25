@@ -93,8 +93,12 @@ class AuthRepositoryImpl @Inject constructor(
 
     override fun login(email: String, password: String): Flow<Result<String>> = callbackFlow {
         trySend(Result.Loading)
-        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
-            trySend(Result.Success(it.result.user?.uid.orEmpty()))
+        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                trySend(Result.Success(task.result.user?.uid.orEmpty()))
+            } else {
+                task.exception?.let { trySend(Result.Failure(it)) } ?: trySend(Result.Failure(Exception("Unknown Error")))
+            }
         }.addOnFailureListener {
             trySend(Result.Failure(it))
         }
