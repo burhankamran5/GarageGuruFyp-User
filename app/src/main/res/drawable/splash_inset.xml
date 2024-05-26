@@ -1,0 +1,4 @@
+<!--A work around for cropping round icon on splash screen-->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/mechanic_icon_com"
+    android:inset="72dp"/>

@@ -10,16 +10,29 @@ import javax.inject.Inject
 @HiltViewModel
 class UserStorageVM @Inject constructor(private val userPreferences: UserPreferences) :
     ViewModel() {
-
+    // Both are used for signup process. Should not be used to display user data
     var customer = Customer()
     var garage = Garage()
+
+    val userType get() = userPreferences.userType
+    val userId get() = userPreferences.userId
     fun isFirstLaunch() = userPreferences.isFirstLaunch
 
     fun setIsFirstLaunch() {
         userPreferences.isFirstLaunch = false
     }
 
-    fun saveUserType(userType: String)  { userPreferences.userType = userType }
+    fun getSavedCustomer() = userPreferences.getCustomer()
 
-    fun getUserType() = userPreferences.userType
+    fun getSavedGarage() = userPreferences.getGarage()
+
+    fun updateCustomerPref(customer: Customer) = userPreferences.updateCustomer(customer)
+
+    fun updateGaragePref(garage: Garage) = userPreferences.updateGarage(garage)
+
+    fun updateUserData(userType: String, userId: String)  {
+        userPreferences.userType = userType
+        userPreferences.userId = userId
+    }
+
 }

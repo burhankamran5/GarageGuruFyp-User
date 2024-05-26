@@ -109,5 +109,6 @@ class AuthRepositoryImpl @Inject constructor(
 
     override fun signOutFirebaseUser() {
         firebaseAuth.signOut()
+        userPreferences.signOut()
     }
 }

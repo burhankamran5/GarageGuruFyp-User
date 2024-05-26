@@ -19,7 +19,7 @@ fun CustomerHomeScreen(
     authViewModel: AuthViewModel = hiltViewModel()
 ){
     Column (modifier = Modifier.fillMaxSize()) {
-        Text(text = "Customer Home Screen")
+        Text(text = "Customer Home Screen: ${userStorageVM.getSavedCustomer()?.name}")
         Button(onClick = {
             authViewModel.signOutUser()
             navController.navigate(Screen.LoginScreen.route){

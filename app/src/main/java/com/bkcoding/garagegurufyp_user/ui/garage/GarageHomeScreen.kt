@@ -19,7 +19,7 @@ fun GarageHomeScreen(
     authViewModel: AuthViewModel = hiltViewModel()
 ){
     Column (modifier = Modifier.fillMaxSize()) {
-        Text(text = "Garage Home Screen")
+        Text(text = "Garage Home Screen: ${userStorageVM.getSavedGarage()?.name}")
         Button(onClick = {
             authViewModel.signOutUser()
             navController.navigate(Screen.LoginScreen.route){

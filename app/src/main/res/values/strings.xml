@@ -15,4 +15,6 @@
     <string name="customer">Customer\n</string>
     <string name="garage">Garage\n</string>
     <string name="user_type">Select user type</string>
+    <string name="no_customer_found_with_these_details">No Customer found with these details</string>
+    <string name="no_garage_found_with_these_details">No Garage found with these details</string>
 </resources>

@@ -1,5 +1,7 @@
 package com.bkcoding.garagegurufyp_user.repository.user
 
+import android.content.Context
+import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.dto.ApprovalStatus
 import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.dto.Customer
@@ -9,6 +11,7 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -19,6 +22,7 @@ import java.lang.Exception
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
+    @ApplicationContext val context: Context,
     private val databaseReference: DatabaseReference,
     private val storageReference: StorageReference
 ): UserRepository {
@@ -73,7 +77,7 @@ class UserRepositoryImpl @Inject constructor(
                 val customer = dataSnapshot.getValue(Customer::class.java)
                 customer?.let { trySend(Result.Success(customer)) }
             } else{
-                trySend(Result.Failure(Exception("No Customer found with these details")))
+                trySend(Result.Failure(Exception(context.getString(R.string.no_customer_found_with_these_details))))
             }
         }.addOnFailureListener {
             Result.Failure(it)
@@ -88,7 +92,7 @@ class UserRepositoryImpl @Inject constructor(
             if (dataSnapshot.exists()){
                 val garage = dataSnapshot.getValue(Garage::class.java)
                 val errorMessage = when{
-                    garage == null -> "No Garage found with these details"
+                    garage == null -> context.getString(R.string.no_garage_found_with_these_details)
                     garage.approvalStatus == ApprovalStatus.PENDING.name -> "Your approval is pending from Admin"
                     garage.approvalStatus == ApprovalStatus.DECLINED.name -> "Your garage creation request was declined"
                     else -> ""
