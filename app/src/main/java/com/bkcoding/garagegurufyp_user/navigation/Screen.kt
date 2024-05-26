@@ -7,7 +7,6 @@ sealed class Screen(
     val navArguments: List<NamedNavArgument> = emptyList()
 ) {
     data object OnBoarding : Screen("OnBoardingScreen")
-    data object SplashScreen : Screen("SplashScreen")
     data object LoginScreen : Screen("LoginScreen")
     data object ChooseSignUpScreen : Screen("ChooseSignUp")
     data object UserSignUpScreen : Screen("UserSignUpScreen")

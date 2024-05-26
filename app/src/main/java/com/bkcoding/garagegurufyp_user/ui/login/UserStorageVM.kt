@@ -10,11 +10,10 @@ import javax.inject.Inject
 @HiltViewModel
 class UserStorageVM @Inject constructor(private val userPreferences: UserPreferences) :
     ViewModel() {
-
+    // Both are used for signup process. Should not be used to display user data
     var customer = Customer()
     var garage = Garage()
 
-    var isDeterminingStartScreen: Boolean = true
     val userType get() = userPreferences.userType
     val userId get() = userPreferences.userId
     fun isFirstLaunch() = userPreferences.isFirstLaunch
@@ -22,6 +21,14 @@ class UserStorageVM @Inject constructor(private val userPreferences: UserPrefere
     fun setIsFirstLaunch() {
         userPreferences.isFirstLaunch = false
     }
+
+    fun getSavedCustomer() = userPreferences.getCustomer()
+
+    fun getSavedGarage() = userPreferences.getGarage()
+
+    fun updateCustomerPref(customer: Customer) = userPreferences.updateCustomer(customer)
+
+    fun updateGaragePref(garage: Garage) = userPreferences.updateGarage(garage)
 
     fun updateUserData(userType: String, userId: String)  {
         userPreferences.userType = userType

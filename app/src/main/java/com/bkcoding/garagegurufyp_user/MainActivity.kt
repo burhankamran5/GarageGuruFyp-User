@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     private val userStorageVM: UserStorageVM by viewModels()
     private val userViewModel: UserViewModel by viewModels()
     private val authViewModel: AuthViewModel by viewModels()
@@ -60,7 +59,7 @@ class MainActivity : ComponentActivity() {
     private suspend fun getCustomerData(){
         userViewModel.getCustomerFromDb(userStorageVM.userId.orEmpty()).collect { result ->
             if (result is Result.Success) {
-                userStorageVM.customer = result.data
+                userStorageVM.updateCustomerPref(result.data)
             } else if (result is Result.Failure) {
                 if (result.exception.message.toString() == getString(R.string.no_customer_found_with_these_details)) {
                     authViewModel.signOutUser()
@@ -73,7 +72,7 @@ class MainActivity : ComponentActivity() {
     private suspend fun getGarageData(){
         userViewModel.getGarageFromDb(userStorageVM.userId.orEmpty()).collect { result ->
             if (result is Result.Success) {
-                userStorageVM.garage = result.data
+                userStorageVM.updateGaragePref(result.data)
             } else if (result is Result.Failure) {
                 if (result.exception.message.toString() == getString(R.string.no_garage_found_with_these_details)) {
                     authViewModel.signOutUser()

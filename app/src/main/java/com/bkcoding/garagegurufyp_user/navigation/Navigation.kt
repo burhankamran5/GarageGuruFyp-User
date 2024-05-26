@@ -3,18 +3,16 @@ package com.bkcoding.garagegurufyp_user.navigation
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.bkcoding.garagegurufyp_user.ui.SplashScreen
+import com.bkcoding.garagegurufyp_user.dto.Customer
+import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.ui.garage.GarageHomeScreen
 import com.bkcoding.garagegurufyp_user.ui.login.LoginScreen
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
-import com.bkcoding.garagegurufyp_user.ui.login.UserType
 import com.bkcoding.garagegurufyp_user.ui.onboarding.OnBoardingScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.ChooseSignUp
 import com.bkcoding.garagegurufyp_user.ui.signup.GarageSignUpScreen
@@ -42,16 +40,10 @@ fun Navigation(
             OnBoardingScreen(navController)
         }
 
-        composable(Screen.SplashScreen.route,
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None }) {
-            SplashScreen(navController)
-        }
-
         composable(Screen.LoginScreen.route,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None } ) {
-            LoginScreen(navController)
+            LoginScreen(navController = navController, userStorageVM = userStorageVM)
         }
 
         composable(Screen.ChooseSignUpScreen.route,
@@ -92,7 +84,7 @@ fun Navigation(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }
         ){
-            CustomerHomeScreen(navController = navController)
+            CustomerHomeScreen(navController = navController, userStorageVM = userStorageVM)
         }
 
         composable(
@@ -100,7 +92,7 @@ fun Navigation(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }
         ){
-            GarageHomeScreen(navController = navController)
+            GarageHomeScreen(navController = navController, userStorageVM = userStorageVM)
         }
 
     }

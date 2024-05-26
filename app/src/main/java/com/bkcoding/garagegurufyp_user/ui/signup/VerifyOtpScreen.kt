@@ -82,6 +82,7 @@ fun VerifyOtpScreen(
                 is Result.Failure -> context.showToast(result.exception.message.toString())
                 is Result.Success -> {
                     userStorageVM.updateUserData(UserType.Customer.name, customer.id)
+                    userStorageVM.updateCustomerPref(customer)
                     navController?.navigate(Screen.SignUpConfirmationScreen.route+"/${false}"){
                         popUpTo(navController.graph.id)
                     }
