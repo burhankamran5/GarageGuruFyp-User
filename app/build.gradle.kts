@@ -120,4 +120,5 @@ dependencies {
     implementation("androidx.browser:browser:1.8.0")
     implementation ("io.github.rupinderjeet:kprogresshud:1.0.0")
     implementation ("com.google.code.gson:gson:2.8.7")
+    implementation("androidx.core:core-splashscreen:1.0.0")
 }

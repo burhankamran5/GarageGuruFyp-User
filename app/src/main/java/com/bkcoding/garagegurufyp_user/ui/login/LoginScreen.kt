@@ -94,7 +94,7 @@ fun LoginScreen(
                 progressBar.isVisible(result is Result.Loading)
                 when (result) {
                     is Result.Success -> {
-                        userStorageVM.saveUserType(UserType.Garage.name)
+                        userStorageVM.updateUserData(UserType.Garage.name, result.data.id)
                         navController.navigate(Screen.GarageHomeScreen.route) {
                             popUpTo(navController.graph.id)
                         }
@@ -115,7 +115,7 @@ fun LoginScreen(
                 progressBar.isVisible(result is Result.Loading)
                 when (result) {
                     is Result.Success -> {
-                        userStorageVM.saveUserType(UserType.Customer.name)
+                        userStorageVM.updateUserData(UserType.Customer.name, result.data.id)
                         navController.navigate(Screen.CustomerHomeScreen.route){
                             popUpTo(navController.graph.id)
                         }

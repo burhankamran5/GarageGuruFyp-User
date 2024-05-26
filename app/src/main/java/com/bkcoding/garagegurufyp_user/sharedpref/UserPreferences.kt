@@ -9,12 +9,11 @@ class UserPreferences(context: Context) {
     companion object{
         const val IS_FIRST_LAUNCH = "is_first_launch"
         const val USER_TYPE = "user_type"
+        const val USER_ID = "user_id"
     }
 
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-
-    private val gson by lazy {  Gson() }
 
     var isFirstLaunch: Boolean
         get() = sharedPreferences.getBoolean(IS_FIRST_LAUNCH, true)
@@ -24,8 +23,13 @@ class UserPreferences(context: Context) {
         get() = sharedPreferences.getString(USER_TYPE, null)
         set(value) = sharedPreferences.edit { putString(USER_TYPE, value) }
 
+    var userId: String?
+        get() = sharedPreferences.getString(USER_ID, null)
+        set(value) = sharedPreferences.edit { putString(USER_ID, value) }
 
-    fun signOut(){
-        sharedPreferences.edit().remove(USER_TYPE).apply()
+
+    fun signOut() {
+        userType = null
+        userId = null
     }
 }

@@ -13,13 +13,19 @@ class UserStorageVM @Inject constructor(private val userPreferences: UserPrefere
 
     var customer = Customer()
     var garage = Garage()
+
+    var isDeterminingStartScreen: Boolean = true
+    val userType get() = userPreferences.userType
+    val userId get() = userPreferences.userId
     fun isFirstLaunch() = userPreferences.isFirstLaunch
 
     fun setIsFirstLaunch() {
         userPreferences.isFirstLaunch = false
     }
 
-    fun saveUserType(userType: String)  { userPreferences.userType = userType }
+    fun updateUserData(userType: String, userId: String)  {
+        userPreferences.userType = userType
+        userPreferences.userId = userId
+    }
 
-    fun getUserType() = userPreferences.userType
 }
