@@ -1,22 +1,20 @@
 package com.bkcoding.garagegurufyp_user.navigation
 
-import UserHomeScreen
 import android.annotation.SuppressLint
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import androidx.navigation.NavHostController
-import com.bkcoding.garagegurufyp_user.dto.Garage
-import com.bkcoding.garagegurufyp_user.dto.User
-import com.bkcoding.garagegurufyp_user.ui.home.MobileScaffold
-import com.bkcoding.garagegurufyp_user.dto.Customer
-import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.ui.garage.GarageHomeScreen
+import com.bkcoding.garagegurufyp_user.ui.home.MobileScaffold
 import com.bkcoding.garagegurufyp_user.ui.login.LoginScreen
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
 import com.bkcoding.garagegurufyp_user.ui.onboarding.OnBoardingScreen
@@ -28,14 +26,21 @@ import com.bkcoding.garagegurufyp_user.ui.signup.VerifyOtpScreen
 import com.bkcoding.garagegurufyp_user.ui.user.CustomerHomeScreen
 
 @Composable
-fun GarageApp(navController: NavHostController, isGoToHomeScreen: Boolean,goToHomeScreen: () -> Unit) {
-    if (isGoToHomeScreen) {
+fun GarageNavigation(
+    navController: NavHostController,
+    userStorageVM: UserStorageVM,
+    startDestination: String
+) {
+    var goToCustomerHomeScreen by rememberSaveable { mutableStateOf(startDestination == ScreenType.CUSTOMER_HOME_SCREEN.label) }
+    if(goToCustomerHomeScreen){
         MobileScaffold(navController = navController) {
-            BottomNavHost(navController)
+            BottomNavHost(navController, userStorageVM){
+                goToCustomerHomeScreen = false
+            }
         }
-    } else {
-        Navigation(navController){
-            goToHomeScreen()
+    }else{
+        Navigation(userStorageVM, navController, if(!userStorageVM.isFirstLaunch()) "LoginScreen" else startDestination){
+            goToCustomerHomeScreen = true
         }
     }
 }
@@ -45,14 +50,12 @@ fun GarageApp(navController: NavHostController, isGoToHomeScreen: Boolean,goToHo
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun Navigation(navController: NavHostController, goToHomeScreen: () -> Unit) {
-    val userStorageVM: UserStorageVM = hiltViewModel()
 fun Navigation(
     userStorageVM: UserStorageVM,
     navController: NavHostController,
     startDestination: String,
+    goToCustomerScreen: () -> Unit
 ) {
-
 
     NavHost(
         navController = navController,
@@ -68,7 +71,9 @@ fun Navigation(
         composable(Screen.LoginScreen.route,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None } ) {
-            LoginScreen(navController = navController, userStorageVM = userStorageVM)
+            LoginScreen(navController = navController, userStorageVM = userStorageVM){
+                goToCustomerScreen()
+            }
         }
 
         composable(Screen.ChooseSignUpScreen.route,
@@ -95,9 +100,6 @@ fun Navigation(
             exitTransition = { ExitTransition.None })
         {
             VerifyOtpScreen(navController, userStorageVM.customer, userStorageVM.garage )
-            VerifyOtpScreen(navController, userStorageVM.user, userStorageVM.garage ){
-                goToHomeScreen()
-            }
         }
 
         composable(Screen.SignUpConfirmationScreen.route + "/{isGarage}",
@@ -106,26 +108,8 @@ fun Navigation(
             exitTransition = { ExitTransition.None }) {backStackEntry ->
             SignUpConfirmationScreen(navController, backStackEntry.arguments?.getBoolean("isGarage") ?: false)
         }
-    }
-}
 
-@Composable
-fun BottomNavHost(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Screen.LoginScreen.route) {
-        composable(Screen.UserHomeScreen.route,
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None }) {
-            UserHomeScreen(navController)
-        }
-
-        composable(
-            route = Screen.CustomerHomeScreen.route,
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None }
-        ){
-            CustomerHomeScreen(navController = navController, userStorageVM = userStorageVM)
-        }
-
+        //garage
         composable(
             route = Screen.GarageHomeScreen.route,
             enterTransition = { EnterTransition.None },
@@ -133,20 +117,25 @@ fun BottomNavHost(navController: NavHostController) {
         ){
             GarageHomeScreen(navController = navController, userStorageVM = userStorageVM)
         }
+    }
+}
+
+@Composable
+fun BottomNavHost(
+    navController: NavHostController,
+    userStorageVM: UserStorageVM,
+    onLogout: () -> Unit
+) {
+    NavHost(navController = navController, startDestination = Screen.CustomerHomeScreen.route) {
 
         composable(
-            route = Screen.VerifyOtpScreen.route,
+            route = Screen.CustomerHomeScreen.route,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }
-        ) {
-            VerifyOtpScreen(navController, user = User(), garage = Garage()){}
-        }
-        composable(
-            route = Screen.LoginScreen.route,
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None }
-        ) {
-            LoginScreen(navController)
+        ){
+            CustomerHomeScreen(navController = navController, userStorageVM = userStorageVM){
+                onLogout()
+            }
         }
     }
 }

@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.ui.AuthViewModel
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
 
@@ -16,15 +15,14 @@ import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
 fun CustomerHomeScreen(
     navController: NavController,
     userStorageVM: UserStorageVM = hiltViewModel(),
-    authViewModel: AuthViewModel = hiltViewModel()
+    authViewModel: AuthViewModel = hiltViewModel(),
+    onLogOut: () -> Unit
 ){
     Column (modifier = Modifier.fillMaxSize()) {
         Text(text = "Customer Home Screen: ${userStorageVM.getSavedCustomer()?.name}")
         Button(onClick = {
             authViewModel.signOutUser()
-            navController.navigate(Screen.LoginScreen.route){
-                popUpTo(navController.graph.id)
-            }
+            onLogOut()
         }) {
             Text(text = "Logout")
         }

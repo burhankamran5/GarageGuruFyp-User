@@ -68,7 +68,7 @@ fun VerifyOtpScreen(
     garage: Garage,
     authViewModel: AuthViewModel = hiltViewModel(),
     userViewModel: UserViewModel = hiltViewModel(),
-    userStorageVM: UserStorageVM = hiltViewModel(),
+    userStorageVM: UserStorageVM = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -86,7 +86,6 @@ fun VerifyOtpScreen(
                     navController?.navigate(Screen.SignUpConfirmationScreen.route+"/${false}"){
                         popUpTo(navController.graph.id)
                     }
-
                 }
                 else -> {}
             }
