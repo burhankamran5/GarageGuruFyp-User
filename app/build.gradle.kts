@@ -99,7 +99,6 @@ dependencies {
     // Dagger - Hilt
     implementation("com.google.dagger:hilt-android:2.50")
     kapt("com.google.dagger:hilt-android-compiler:2.50")
-//    kapt("androidx.hilt:hilt-compiler:1.1.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
@@ -119,4 +118,6 @@ dependencies {
     implementation ("androidx.compose.material:material:1.6.2")
     implementation("androidx.browser:browser:1.8.0")
     implementation ("io.github.rupinderjeet:kprogresshud:1.0.0")
+    implementation ("com.google.code.gson:gson:2.8.7")
+    implementation("androidx.core:core-splashscreen:1.0.0")
 }

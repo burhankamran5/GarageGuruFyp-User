@@ -2,11 +2,12 @@ package com.bkcoding.garagegurufyp_user.repository.auth
 
 import android.app.Activity
 import com.bkcoding.garagegurufyp_user.dto.Garage
-import com.bkcoding.garagegurufyp_user.dto.User
+import com.bkcoding.garagegurufyp_user.dto.Customer
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import com.bkcoding.garagegurufyp_user.repository.Result
+import com.bkcoding.garagegurufyp_user.sharedpref.UserPreferences
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.PhoneAuthCredential
@@ -19,7 +20,8 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val userPreferences: UserPreferences
 ): AuthRepository {
     private val testPhoneNumber = "3001234567"
     private lateinit var verificationId: String
@@ -63,14 +65,14 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun createFirebaseUser(otp: String, user: User?, garage: Garage?): Flow<Result<String>> = callbackFlow {
+    override fun createFirebaseUser(otp: String, customer: Customer?, garage: Garage?): Flow<Result<String>> = callbackFlow {
         trySend(Result.Loading)
         val credential = PhoneAuthProvider.getCredential(verificationId, otp)
         firebaseAuth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val email = if (user?.email?.isNotEmpty() == true) user.email else garage?.email.orEmpty()
-                    val password = if (user?.password?.isNotEmpty() == true) user.password else garage?.password.orEmpty()
+                    val email = if (customer?.email?.isNotEmpty() == true) customer.email else garage?.email.orEmpty()
+                    val password = if (customer?.password?.isNotEmpty() == true) customer.password else garage?.password.orEmpty()
                     val emailCredential = EmailAuthProvider.getCredential(email, password)
                     firebaseAuth.currentUser!!.linkWithCredential(emailCredential)
                         .addOnCompleteListener { authResultTask ->
@@ -89,7 +91,24 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun login(email: String, password: String): Flow<Result<String>> = callbackFlow {
+        trySend(Result.Loading)
+        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                trySend(Result.Success(task.result.user?.uid.orEmpty()))
+            } else {
+                task.exception?.let { trySend(Result.Failure(it)) } ?: trySend(Result.Failure(Exception("Unknown Error")))
+            }
+        }.addOnFailureListener {
+            trySend(Result.Failure(it))
+        }
+        awaitClose {
+            close()
+        }
+    }
+
     override fun signOutFirebaseUser() {
         firebaseAuth.signOut()
+        userPreferences.signOut()
     }
 }
