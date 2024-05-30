@@ -26,7 +26,8 @@ import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
 fun CustomerHomeScreen(
     navController: NavController,
     userStorageVM: UserStorageVM = hiltViewModel(),
-    authViewModel: AuthViewModel = hiltViewModel()
+    authViewModel: AuthViewModel = hiltViewModel(),
+    onLogOut: () -> Unit
 ){
     val context = LocalContext.current
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -54,9 +55,7 @@ fun CustomerHomeScreen(
         Text(text = "Customer Home Screen: ${userStorageVM.getSavedCustomer()?.name}")
         Button(onClick = {
             authViewModel.signOutUser()
-            navController.navigate(Screen.LoginScreen.route){
-                popUpTo(navController.graph.id)
-            }
+            onLogOut()
         }) {
             Text(text = "Logout")
         }
