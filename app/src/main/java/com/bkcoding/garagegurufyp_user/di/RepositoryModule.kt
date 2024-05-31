@@ -2,6 +2,8 @@ package com.bkcoding.garagegurufyp_user.di
 
 import com.bkcoding.garagegurufyp_user.repository.auth.AuthRepository
 import com.bkcoding.garagegurufyp_user.repository.auth.AuthRepositoryImpl
+import com.bkcoding.garagegurufyp_user.repository.fcm.FcmRepository
+import com.bkcoding.garagegurufyp_user.repository.fcm.FcmRepositoryImpl
 import com.bkcoding.garagegurufyp_user.repository.user.UserRepository
 import com.bkcoding.garagegurufyp_user.repository.user.UserRepositoryImpl
 import dagger.Binds
@@ -20,4 +22,7 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun providesUserRepository(repo: UserRepositoryImpl): UserRepository
+    @Binds
+    @Singleton
+    abstract fun providesFcmRepository(repo: FcmRepositoryImpl): FcmRepository
 }

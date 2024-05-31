@@ -16,6 +16,7 @@ data class Garage(
     val location: String = "",
     val rating: String = "",
     val employeeCount: String = "",
+    val token: String = "",
     val approvalStatus: String = ApprovalStatus.PENDING.name
 )
 

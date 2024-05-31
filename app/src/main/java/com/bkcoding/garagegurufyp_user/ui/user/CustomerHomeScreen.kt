@@ -19,6 +19,7 @@ import androidx.navigation.NavController
 import com.bkcoding.garagegurufyp_user.extensions.showToast
 import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.ui.AuthViewModel
+import com.bkcoding.garagegurufyp_user.ui.UserViewModel
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -27,9 +28,13 @@ fun CustomerHomeScreen(
     navController: NavController,
     userStorageVM: UserStorageVM = hiltViewModel(),
     authViewModel: AuthViewModel = hiltViewModel(),
+    userViewModel: UserViewModel = hiltViewModel(),
     onLogOut: () -> Unit
 ){
     val context = LocalContext.current
+    LaunchedEffect(key1 = Unit) {
+        userViewModel.refreshFcmToken()
+    }
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->

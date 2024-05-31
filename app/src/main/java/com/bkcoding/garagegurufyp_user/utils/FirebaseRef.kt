@@ -1,7 +1,9 @@
 package com.bkcoding.garagegurufyp_user.utils
 
 object FirebaseRef {
-    val CUSTOMERS = "Customers"
-    val GARARAGES = "Garages"
-    val GARAGE_IMAGES = "Garage Images"
+    const val PROJECT_ID = "garageguru-4528e"
+    const val CUSTOMERS = "Customers"
+    const val GARAGES = "Garages"
+    const val GARAGE_IMAGES = "Garage Images"
+    const val TOKEN = "token"
 }
