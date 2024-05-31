@@ -8,6 +8,7 @@ data class Customer(
     val email: String = "",
     val city: String = "",
     val phoneNumber: String = "",
+    val token: String = "",
     @get:Exclude val password: String = "",
     @get:Exclude val confirmPassword: String = ""
 )

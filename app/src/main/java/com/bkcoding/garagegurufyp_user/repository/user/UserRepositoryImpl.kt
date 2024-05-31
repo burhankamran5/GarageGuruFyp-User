@@ -41,7 +41,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override fun storeGarageToDatabase(garage: Garage): Flow<Result<String>> = callbackFlow{
         trySend(Result.Loading)
-        databaseReference.child(FirebaseRef.GARARAGES).child(garage.id).setValue(garage)
+        databaseReference.child(FirebaseRef.GARAGES).child(garage.id).setValue(garage)
             .addOnSuccessListener {
                 trySend(Result.Success("Data inserted Successfully.."))
             }.addOnFailureListener{
@@ -88,7 +88,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override fun getGarageFromDb(userId: String): Flow<Result<Garage>> = callbackFlow{
-        databaseReference.child(FirebaseRef.GARARAGES).child(userId).get().addOnSuccessListener { dataSnapshot ->
+        databaseReference.child(FirebaseRef.GARAGES).child(userId).get().addOnSuccessListener { dataSnapshot ->
             if (dataSnapshot.exists()){
                 val garage = dataSnapshot.getValue(Garage::class.java)
                 val errorMessage = when{

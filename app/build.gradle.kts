@@ -11,6 +11,12 @@ android {
     namespace = "com.bkcoding.garagegurufyp_user"
     compileSdk = 34
 
+    packaging{
+        resources{
+            excludes += "META-INF/DEPENDENCIES"
+        }
+    }
+
     defaultConfig {
         applicationId = "com.bkcoding.garagegurufyp_user"
         minSdk = 24
@@ -67,6 +73,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-messaging-ktx:24.0.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -120,4 +127,11 @@ dependencies {
     implementation ("io.github.rupinderjeet:kprogresshud:1.0.0")
     implementation ("com.google.code.gson:gson:2.8.7")
     implementation("androidx.core:core-splashscreen:1.0.0")
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.19.0")
+
+    //Retrofit Library
+    val retrofitVersion = "2.9.0"
+    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
+    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+
 }
