@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,7 +24,6 @@ import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.ButtonDefaults
@@ -54,7 +54,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bkcoding.garagegurufyp_user.R
-import com.bkcoding.garagegurufyp_user.ui.AuthViewModel
 import com.bkcoding.garagegurufyp_user.dto.Customer
 import com.bkcoding.garagegurufyp_user.extensions.getActivity
 import com.bkcoding.garagegurufyp_user.extensions.isVisible
@@ -62,6 +61,8 @@ import com.bkcoding.garagegurufyp_user.extensions.progressBar
 import com.bkcoding.garagegurufyp_user.extensions.showToast
 import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.repository.Result
+import com.bkcoding.garagegurufyp_user.ui.AuthViewModel
+import com.bkcoding.garagegurufyp_user.utils.CityDropDown
 import com.bkcoding.garagegurufyp_user.utils.isValidEmail
 import com.bkcoding.garagegurufyp_user.utils.isValidText
 import io.github.rupinderjeet.kprogresshud.KProgressHUD
@@ -249,28 +250,16 @@ fun UserSignUpScreen(
             singleLine = true,
             modifier = Modifier.fillMaxWidth(.9f)
         )
-
-        TextField(
-            value = city,
-            onValueChange = { city = it },
-            placeholder = {
-                Text(
-                    text = "Enter Your City",
-                    fontFamily = FontFamily.Serif,
-                    fontWeight = FontWeight.ExtraBold
-                )
-            },
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.Transparent,
-                cursorColor = Color.Black,
-                focusedIndicatorColor = Color.White,
-                unfocusedIndicatorColor = Color.White
-            ),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-            leadingIcon = { Icon(Icons.Filled.Home, "") },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(.9f)
-        )
+        Spacer(modifier = Modifier.height(5.dp))
+        CityDropDown(
+            modifier = Modifier
+                .height(50.dp)
+                .fillMaxWidth(0.9f)
+                .border(width = 2.dp, color = Color.White, shape = RoundedCornerShape(size = 8.dp))
+                .padding(10.dp)
+        ) {
+            city = it.name
+        }
 
         Spacer(modifier = Modifier.height(20.dp))
 

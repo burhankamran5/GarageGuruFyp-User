@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -73,6 +74,7 @@ import com.bkcoding.garagegurufyp_user.extensions.showToast
 import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.ui.AuthViewModel
+import com.bkcoding.garagegurufyp_user.utils.CityDropDown
 import com.bkcoding.garagegurufyp_user.utils.isValidEmail
 import com.bkcoding.garagegurufyp_user.utils.isValidText
 import io.github.rupinderjeet.kprogresshud.KProgressHUD
@@ -198,32 +200,6 @@ fun GarageSignUpScreen(
             }
         }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password), singleLine = true, modifier = Modifier.fillMaxWidth(.9f)
         )
-
-        TextField(
-            value = garageCity,
-            onValueChange = {garageCity = it
-            },
-            placeholder = {
-                Text(
-                    text = "Enter Garage City",
-                    fontFamily = FontFamily.Serif,
-                    fontWeight = FontWeight.ExtraBold
-                )
-            },
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.Transparent,
-                cursorColor = Color.Black,
-                focusedIndicatorColor = Color.White,
-                unfocusedIndicatorColor = Color.White
-            ),
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
-            leadingIcon = { Icon(Icons.Filled.Home, "") },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(.9f)
-        )
-
-
-
         TextField(value = phoneNumber, onValueChange = { phoneNumber = it }, placeholder = {
             Text(
                 text = "03334825710", fontFamily = FontFamily.Serif, fontWeight = FontWeight.ExtraBold
@@ -251,6 +227,17 @@ fun GarageSignUpScreen(
             backgroundColor = Color.Transparent, cursorColor = Color.Black, focusedIndicatorColor = Color.White, unfocusedIndicatorColor = Color.White
         ), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text), leadingIcon = { Icon(Icons.Default.Face, "") }, singleLine = true, modifier = Modifier.fillMaxWidth(.9f)
         )
+        
+        Spacer(modifier = Modifier.height(5.dp))
+        CityDropDown(
+            modifier = Modifier
+                .height(50.dp)
+                .fillMaxWidth(0.9f)
+                .border(width = 2.dp, color = Color.White, shape = RoundedCornerShape(size = 8.dp))
+                .padding(10.dp)
+        ) {
+            garageCity = it.name
+        }
 
 
         OutlinedButton(

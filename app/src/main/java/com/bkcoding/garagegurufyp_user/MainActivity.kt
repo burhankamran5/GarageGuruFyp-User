@@ -4,18 +4,22 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Surface
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.bkcoding.garagegurufyp_user.navigation.Navigation
+import com.bkcoding.garagegurufyp_user.navigation.GarageNavigation
 import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.repository.Result
-import com.bkcoding.garagegurufyp_user.sharedpref.UserPreferences
 import com.bkcoding.garagegurufyp_user.ui.AuthViewModel
 import com.bkcoding.garagegurufyp_user.ui.UserViewModel
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
 import com.bkcoding.garagegurufyp_user.ui.login.UserType
+import com.bkcoding.garagegurufyp_user.ui.theme.GarageGuruFypUserTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -31,11 +35,19 @@ class MainActivity : ComponentActivity() {
         validateUser()
         setContent {
             navController = rememberNavController()
-            Navigation(
-                userStorageVM = userStorageVM,
-                navController =  navController ?: return@setContent,
-                startDestination = getStartDestination()
-            )
+            val navController = rememberNavController()
+            GarageGuruFypUserTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    GarageNavigation(
+                        navController = navController,
+                        userStorageVM = userStorageVM,
+                        startDestination = getStartDestination(),
+                    )
+                }
+            }
         }
     }
 
@@ -88,6 +100,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-
-
