@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.ui.login.UserType
+import com.google.firebase.database.ChildEventListener
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -80,6 +81,26 @@ class ChatRepositoryImpl @Inject constructor(
 
             override fun onCancelled(error: DatabaseError) {
                trySend(Result.Failure(error.toException()))
+            }
+
+        })
+        awaitClose {
+            close()
+        }
+    }
+
+    override fun fetchLastMessage(userId: String): Flow<Result<String>> = callbackFlow{
+        val lastMessageRef = messagesRef.child(userId).limitToLast(1)
+        lastMessageRef.addChildEventListener(object : ChildEventListener{
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val lastMessage = snapshot.child("text").value.toString()
+                trySend(Result.Success(lastMessage))
+            }
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onChildRemoved(snapshot: DataSnapshot) {}
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onCancelled(error: DatabaseError) {
+                trySend(Result.Failure(error.toException()))
             }
 
         })
