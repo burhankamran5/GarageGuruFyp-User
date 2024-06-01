@@ -14,6 +14,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import com.bkcoding.garagegurufyp_user.repository.Result
+import com.bkcoding.garagegurufyp_user.ui.login.UserType
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -23,17 +24,19 @@ class ChatRepositoryImpl @Inject constructor(
 ): ChatRepository {
     private val conversationsRef = databaseReference.child(FirebaseRef.CONVERSATIONS)
     private val messagesRef = databaseReference.child(FirebaseRef.MESSAGES)
-    override fun createConversationIfNotExists(endUserId: String): Flow<Result<String>> = callbackFlow {
+    override fun createConversationIfNotExists(conversation: Conversation): Flow<Result<String>> = callbackFlow {
+        val userType = userPreferences.userType ?: return@callbackFlow
         val currentUserId = userPreferences.userId ?: return@callbackFlow
+        val endUserId = conversation.userId
+        val (currentUserName, currentUserProfile) = getUserNameAndProfile(userType)
         conversationsRef.child(currentUserId).addValueEventListener(
             object : ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (!snapshot.hasChild(endUserId)){
                         // Create 2 conversations 1. From currentUser to endUser 2. From endUser to CurrentUser
-                        val ownConversation = Conversation(createdAt = ServerValue.TIMESTAMP, userId = currentUserId)
-                        val endUserConversation = Conversation(createdAt = ServerValue.TIMESTAMP, userId = endUserId)
+                        val ownConversation = conversation.copy(userId = currentUserId, userName = currentUserName, profileImage = currentUserProfile)
                         conversationsRef.child(endUserId).child(currentUserId).setValue(ownConversation)
-                        conversationsRef.child(currentUserId).child(endUserId).setValue(endUserConversation)
+                        conversationsRef.child(currentUserId).child(endUserId).setValue(conversation)
                     }
                 }
 
@@ -83,5 +86,11 @@ class ChatRepositoryImpl @Inject constructor(
         awaitClose {
             close()
         }
+    }
+
+    private fun getUserNameAndProfile(userType: String) = if (userType == UserType.Customer.name) {
+        Pair(userPreferences.getCustomer()?.name.orEmpty(), "")
+    } else {
+        Pair(userPreferences.getGarage()?.name.orEmpty(), userPreferences.getGarage()?.images?.firstOrNull().orEmpty())
     }
 }
