@@ -74,7 +74,7 @@ class ChatRepositoryImpl @Inject constructor(
                     }
                     trySend(Result.Success(conversationList))
                 } else{
-                    trySend(Result.Failure(Exception("No Customer found with these details")))
+                    trySend(Result.Success(emptyList()))
                 }
             }
 

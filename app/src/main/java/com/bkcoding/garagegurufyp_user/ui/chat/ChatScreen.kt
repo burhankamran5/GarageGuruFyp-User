@@ -17,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -30,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.dto.Conversation
@@ -48,9 +50,19 @@ fun ChatScreen(navController: NavController, conversation: Conversation?) {
 }
 
 @Composable
-private fun ChatScreen(conversation: Conversation?, onBackPress: () -> Unit) {
+private fun ChatScreen(
+    conversation: Conversation?,
+    chatViewModel: ChatViewModel = hiltViewModel(),
+    onBackPress: () -> Unit
+) {
     val context = LocalContext.current
     var message by rememberSaveable { mutableStateOf("") }
+
+    LaunchedEffect(key1 = Unit) {
+        conversation?.let {
+            chatViewModel.createConversationIfNotExists(conversation).collect{}
+        }
+    }
 
     Box(
         modifier = Modifier
