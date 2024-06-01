@@ -1,13 +1,7 @@
 package com.bkcoding.garagegurufyp_user.navigation
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Email
-import androidx.compose.material.icons.outlined.Menu
-import androidx.compose.material.icons.outlined.Settings
 import androidx.navigation.NamedNavArgument
+import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.dto.BottomNavigationItem
 
 sealed class Screen(
@@ -23,27 +17,43 @@ sealed class Screen(
     data object SignUpConfirmationScreen : Screen("SignUpConfirmationScreen")
     data object CustomerHomeScreen : Screen("CustomerHomeScreen")
     data object GarageHomeScreen : Screen("GarageHomeScreen")
+    data object RequestScreen : Screen("RequestScreen")
+    data object GarageScreen : Screen("GarageScreen")
+    data object ChatScreen : Screen("ChatScreen")
+    data object MoreScreen : Screen("MoreScreen")
 }
 
 val BOTTOM_MENU_LIST = listOf(
     BottomNavigationItem(
         title = "Home",
         route = Screen.CustomerHomeScreen.route,
-        selectedIcon = Icons.Filled.Home,
-        unselectedIcon = Icons.Outlined.Menu,
+        selectedIcon = R.drawable.ic_home,
+        unselectedIcon = R.drawable.ic_home
     ),
     BottomNavigationItem(
-        title = "Register",
-        route = Screen.CustomerHomeScreen.route,
-        selectedIcon = Icons.Filled.Email,
-        unselectedIcon = Icons.Outlined.Email
+        title = "Request",
+        route = Screen.RequestScreen.route,
+        selectedIcon = R.drawable.ic_request,
+        unselectedIcon = R.drawable.ic_request
     ),
     BottomNavigationItem(
-        title = "Details",
-        route = Screen.CustomerHomeScreen.route,
-        selectedIcon = Icons.Filled.Settings,
-        unselectedIcon = Icons.Outlined.Settings
+        title = "Garage",
+        route = Screen.GarageScreen.route,
+        selectedIcon = R.drawable.ic_garage,
+        unselectedIcon = R.drawable.ic_garage
     ),
+    BottomNavigationItem(
+        title = "Chat",
+        route = Screen.ChatScreen.route,
+        selectedIcon = R.drawable.ic_chat,
+        unselectedIcon = R.drawable.ic_chat
+    ),
+    BottomNavigationItem(
+        title = "More",
+        route = Screen.MoreScreen.route,
+        selectedIcon = R.drawable.ic_more,
+        unselectedIcon = R.drawable.ic_more
+    )
 )
 
 enum class ScreenType(val label: String){
