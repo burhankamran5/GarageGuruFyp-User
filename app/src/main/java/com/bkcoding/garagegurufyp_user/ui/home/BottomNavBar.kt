@@ -1,7 +1,5 @@
 package com.bkcoding.garagegurufyp_user.ui.home
 
-
-
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -12,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -55,7 +54,7 @@ private fun BottomNavigationScreen(navController: NavController) {
                         restoreState = true
                     }
                 },
-                icon = { Icon(screen.selectedIcon, contentDescription = null) },
+                icon = { Icon(painter = painterResource(id = screen.selectedIcon), contentDescription = null) },
                 label = { Text(screen.title) }
             )
         }
