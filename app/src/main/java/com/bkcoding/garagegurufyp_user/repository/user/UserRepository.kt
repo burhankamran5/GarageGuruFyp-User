@@ -11,4 +11,5 @@ interface UserRepository {
     fun uploadGarageImages(garage: Garage): Flow<Result<List<String>>>
     fun getCustomerFromDb(userId: String): Flow<Result<Customer>>
     fun getGarageFromDb(userId: String): Flow<Result<Garage>>
+    fun getGarages(): Flow<Result<List<Garage>>>
 }

@@ -112,4 +112,26 @@ class UserRepositoryImpl @Inject constructor(
             close()
         }
     }
+
+    override fun getGarages(): Flow<Result<List<Garage>>> = callbackFlow {
+        val garageList = mutableListOf<Garage>()
+        databaseReference.child(FirebaseRef.GARAGES).get().addOnSuccessListener { dataSnapshot ->
+            if (dataSnapshot.exists()){
+                for (ds in dataSnapshot.children) {
+                    val garage: Garage? = ds.getValue(Garage::class.java)
+                    if (garage != null) {
+                        garageList.add(garage)
+                    }
+                }
+                trySend(Result.Success(garageList))
+            } else{
+                trySend(Result.Failure(Exception("No Customer found with these details")))
+            }
+        }.addOnFailureListener {
+            trySend(Result.Failure(it))
+        }
+        awaitClose {
+            close()
+        }
+    }
 }

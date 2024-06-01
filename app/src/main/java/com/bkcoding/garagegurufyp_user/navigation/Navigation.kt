@@ -1,6 +1,8 @@
 package com.bkcoding.garagegurufyp_user.navigation
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
@@ -23,8 +25,13 @@ import com.bkcoding.garagegurufyp_user.ui.signup.GarageSignUpScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.SignUpConfirmationScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.UserSignUpScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.VerifyOtpScreen
+import com.bkcoding.garagegurufyp_user.ui.user.ChatScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.CustomerHomeScreen
+import com.bkcoding.garagegurufyp_user.ui.user.GarageScreen
+import com.bkcoding.garagegurufyp_user.ui.user.MoreScreen
+import com.bkcoding.garagegurufyp_user.ui.user.RequestScreen
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun GarageNavigation(
     navController: NavHostController,
@@ -120,6 +127,7 @@ fun Navigation(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun BottomNavHost(
     navController: NavHostController,
@@ -136,6 +144,68 @@ fun BottomNavHost(
             CustomerHomeScreen(navController = navController, userStorageVM = userStorageVM){
                 onLogout()
             }
+        }
+
+        composable(
+            route = Screen.CustomerHomeScreen.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ){
+            CustomerHomeScreen(navController = navController, userStorageVM = userStorageVM){
+                onLogout()
+            }
+        }
+
+        composable(
+            route = Screen.CustomerHomeScreen.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ){
+            CustomerHomeScreen(navController = navController, userStorageVM = userStorageVM){
+                onLogout()
+            }
+        }
+
+        composable(
+            route = Screen.CustomerHomeScreen.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ){
+            CustomerHomeScreen(navController = navController, userStorageVM = userStorageVM){
+                onLogout()
+            }
+        }
+
+        composable(
+            route = Screen.RequestScreen.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ){
+            RequestScreen()
+        }
+
+        composable(
+            route = Screen.GarageScreen.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ){
+            GarageScreen()
+        }
+
+        composable(
+            route = Screen.ChatScreen.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ){
+            ChatScreen()
+        }
+
+        composable(
+            route = Screen.MoreScreen.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ){
+            MoreScreen()
         }
     }
 }
