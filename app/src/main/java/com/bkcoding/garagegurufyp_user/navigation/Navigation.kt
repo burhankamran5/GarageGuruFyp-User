@@ -23,7 +23,7 @@ import com.bkcoding.garagegurufyp_user.ui.signup.GarageSignUpScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.SignUpConfirmationScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.UserSignUpScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.VerifyOtpScreen
-import com.bkcoding.garagegurufyp_user.ui.user.CustomerHomeScreen
+import com.bkcoding.garagegurufyp_user.ui.customer.CustomerHomeScreen
 
 @Composable
 fun GarageNavigation(

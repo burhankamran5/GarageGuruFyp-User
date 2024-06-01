@@ -6,4 +6,6 @@ object FirebaseRef {
     const val GARAGES = "Garages"
     const val GARAGE_IMAGES = "Garage Images"
     const val TOKEN = "token"
+    const val CONVERSATIONS = "Conversations"
+    const val MESSAGES = "Messages"
 }

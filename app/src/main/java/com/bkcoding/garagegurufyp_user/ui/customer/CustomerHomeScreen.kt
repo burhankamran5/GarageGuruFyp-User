@@ -1,4 +1,4 @@
-package com.bkcoding.garagegurufyp_user.ui.user
+package com.bkcoding.garagegurufyp_user.ui.customer
 
 import android.Manifest
 import android.os.Build
