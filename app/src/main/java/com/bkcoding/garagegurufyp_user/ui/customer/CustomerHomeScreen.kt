@@ -86,8 +86,8 @@ fun CustomerHomeScreen(
     LaunchedEffect(key1 = Unit) {
         userViewModel.refreshFcmToken()
         userViewModel.getGarages()
-        chatViewModel.createConversationIfNotExists(endUserId = "JdePuPFAS3UxFEkyvYCBLMZDgqk1").collectLatest {  }
     }
+
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->

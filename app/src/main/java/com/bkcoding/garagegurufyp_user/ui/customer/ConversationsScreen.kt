@@ -1,34 +1,36 @@
 package com.bkcoding.garagegurufyp_user.ui.customer
 
-import android.util.Log
-import androidx.compose.foundation.Image
+import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Card
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -37,108 +39,126 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.dto.Conversation
-import com.bkcoding.garagegurufyp_user.dto.Garage
-import com.bkcoding.garagegurufyp_user.repository.Result
+import com.bkcoding.garagegurufyp_user.extensions.showToast
+import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.ui.chat.ChatViewModel
-import kotlinx.coroutines.flow.collectLatest
+import com.bkcoding.garagegurufyp_user.ui.component.CircleProgressIndicator
+import com.google.gson.Gson
 
-@Preview
 @Composable
-fun ConversationsScreen(
-    chatViewModel: ChatViewModel = hiltViewModel()
-) {
+fun ConversationsScreen(navController: NavController,chatViewModel: ChatViewModel = hiltViewModel()) {
+    val context = LocalContext.current
+    val isLoading by rememberSaveable { mutableStateOf(chatViewModel.isLoading) }
+    if (isLoading) CircleProgressIndicator()
+    val error = chatViewModel.error
+    if (error.isNotEmpty()) context.showToast(error)
 
-    var conversationList by rememberSaveable {
-        mutableStateOf<List<Conversation>?>(null)
+    LaunchedEffect(key1 = Unit) {
+        chatViewModel.fetchConversations()
     }
 
-    LaunchedEffect(Unit) {
-        chatViewModel.fetchConversations().collectLatest {result->
-            when (result) {
-                Result.Loading -> {
-                    //isLoading = true
-                    Log.i("TAG", "GarageScreen: loading")
-                }
-
-                is Result.Success -> {
-                    conversationList = result.data
-                }
-
-                is Result.Failure -> {}
-            }
+    ConversationsScreen(
+        conversationList = chatViewModel.conversationListResponse,
+        onMessageItemClick = {
+            navController.navigate(Screen.ChatScreen.route + "/${Uri.encode(Gson().toJson(it))}")
         }
-    }
+    )
+}
 
+@Composable
+private fun ConversationsScreen(
+    conversationList: List<Conversation>?,
+    onMessageItemClick: (Conversation) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
             .verticalScroll(rememberScrollState()),
-    ){
-        androidx.compose.material3.Text(
+    ) {
+        Text(
             text = "Chat", fontSize = 30.sp, fontWeight = FontWeight.ExtraBold,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 12.dp),
             textAlign = TextAlign.Start
         )
-        MessageItem()
-        MessageItem()
-        MessageItem()
-        MessageItem()
-        MessageItem()
-        MessageItem()
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 800.dp),
+            contentPadding = PaddingValues(bottom = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(15.dp)
+        ) {
+            items(conversationList.orEmpty()) { item ->
+                MessageItem(modifier = Modifier.clickable { onMessageItemClick(item) }, item)
+            }
+        }
     }
 }
 
-
 @Composable
 fun MessageItem(
-    conversation: Conversation? = null
+    modifier: Modifier = Modifier,
+    conversation: Conversation
 ) {
-    Card(
-        modifier = Modifier
+    Column(
+        modifier = modifier
             .fillMaxWidth()
             .height(70.dp)
-            .padding(horizontal = 10.dp, vertical = 4.dp),
-        shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 10.dp
-        ),
-        colors = CardDefaults.cardColors(
-            containerColor = colorResource(id = R.color.offWhite)
-        )
+            .padding(horizontal = 10.dp, vertical = 4.dp)
+            .background(color = Color.LightGray, shape = RoundedCornerShape(12.dp)),
+        verticalArrangement = Arrangement.Center
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.girl_profile), contentDescription = "",
+            AsyncImage(
+                model = conversation.profileImage,
+                contentDescription = "",
+                placeholder = painterResource(id = R.drawable.ic_placeholder),
+                error = painterResource(id = R.drawable.ic_placeholder),
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
+                    .size(40.dp)
                     .clip(CircleShape)
-                    .size(90.dp)
-                    .padding(horizontal = 12.dp)
+                    .align(Alignment.CenterVertically)
             )
-            Column(  modifier = Modifier.padding(horizontal = 15.dp)) {
-                androidx.compose.material3.Text(text = "PakWheels Garage", fontSize = 17.sp,
+            Column(
+                modifier = Modifier.padding(horizontal = 15.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = conversation.userName,
+                    fontSize = 17.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.ExtraBold)
-                androidx.compose.material3.Text(
-                    text = "I knew it, are you coming? How are you coming? We are available 24/7",
+                Text(
+                    text = conversation.createdAt.toString(),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.Start
                 )
             }
-
         }
     }
+}
+
+@Preview
+@Composable
+fun ConversationsScreenPreview() {
+    ConversationsScreen(conversationList = null, onMessageItemClick = {})
 }
 
 

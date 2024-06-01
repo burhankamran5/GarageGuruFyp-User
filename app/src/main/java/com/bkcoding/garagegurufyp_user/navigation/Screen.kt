@@ -20,6 +20,7 @@ sealed class Screen(
     data object RequestScreen : Screen("RequestScreen")
     data object GarageScreen : Screen("GarageScreen")
     data object ChatScreen : Screen("ChatScreen")
+    data object ConversationsScreen : Screen("ConversationsScreen")
     data object MoreScreen : Screen("MoreScreen")
 }
 
@@ -44,7 +45,7 @@ val BOTTOM_MENU_LIST = listOf(
     ),
     BottomNavigationItem(
         title = "Chat",
-        route = Screen.ChatScreen.route,
+        route = Screen.ConversationsScreen.route,
         selectedIcon = R.drawable.ic_chat,
         unselectedIcon = R.drawable.ic_chat
     ),
