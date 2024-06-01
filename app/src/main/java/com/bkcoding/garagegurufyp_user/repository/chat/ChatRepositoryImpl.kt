@@ -54,8 +54,8 @@ class ChatRepositoryImpl @Inject constructor(
         val senderId = message.senderId
         val receiverId = message.receiverId
         val messageKey = messagesRef.child(senderId).child(receiverId).push().key ?: return
-        messagesRef.child(senderId).child(messageKey).setValue(message)
-        messagesRef.child(receiverId).child(messageKey).setValue(message)
+        messagesRef.child(senderId).child(receiverId).child(messageKey).setValue(message)
+        messagesRef.child(receiverId).child(senderId).child(messageKey).setValue(message)
     }
 
     override fun fetchConversations(): Flow<Result<List<Conversation>>> = callbackFlow{
