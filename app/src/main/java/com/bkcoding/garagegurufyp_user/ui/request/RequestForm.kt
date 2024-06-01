@@ -46,7 +46,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.bkcoding.garagegurufyp_user.R
+import com.bkcoding.garagegurufyp_user.utils.CityDropDown
 
+
+@Preview
 @Composable
 fun UserRequestForm() {
     var carModel by remember { mutableStateOf("") }
@@ -71,7 +74,7 @@ fun UserRequestForm() {
             fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.ExtraBold,
             fontSize = 25.sp,
-            color = colorResource(id = R.color.orange),
+            color = colorResource(id = R.color.black),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(5.dp)
@@ -84,7 +87,7 @@ fun UserRequestForm() {
             fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.ExtraBold,
             textAlign = TextAlign.Start,
-            color = colorResource(id = R.color.orange50),
+            color = colorResource(id = R.color.black),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)
@@ -97,7 +100,7 @@ fun UserRequestForm() {
                 .fillMaxWidth(.9f)
                 .background(color = colorResource(id = R.color.white))
                 .border(
-                    BorderStroke(width = 3.dp, color = colorResource(id = R.color.orange50)),
+                    BorderStroke(width = 2.dp, color = colorResource(id = R.color.black)),
                     shape = RoundedCornerShape(10)
                 ),
             colors = TextFieldDefaults.textFieldColors(
@@ -116,31 +119,21 @@ fun UserRequestForm() {
             fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.ExtraBold,
             textAlign = TextAlign.Start,
-            color = colorResource(id = R.color.orange50),
+            color = colorResource(id = R.color.black),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)
         )
 
-        TextField(
-            value = city,
-            onValueChange = { city = it },
+        CityDropDown(
             modifier = Modifier
-                .fillMaxWidth(.9f)
-                .background(color = colorResource(id = R.color.white))
-                .border(
-                    BorderStroke(width = 3.dp, color = colorResource(id = R.color.orange50)),
-                    shape = RoundedCornerShape(10)
-                ),
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.Transparent,
-                cursorColor = Color.Black,
-                focusedIndicatorColor = Color.White,
-                unfocusedIndicatorColor = Color.White
-            ),
-            textStyle = TextStyle(fontSize = 15.sp, color = Color.Black)
-
-        )
+                .height(50.dp)
+                .fillMaxWidth(0.9f)
+                .border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(size = 8.dp))
+                .padding(10.dp)
+        ) {
+            city = it.name
+        }
 
         Text(
             text = "State Your Problem",
@@ -148,7 +141,7 @@ fun UserRequestForm() {
             fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.ExtraBold,
             textAlign = TextAlign.Start,
-            color = colorResource(id = R.color.orange50),
+            color = colorResource(id = R.color.black),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)
@@ -162,7 +155,7 @@ fun UserRequestForm() {
                 .fillMaxWidth(.9f)
                 .background(color = colorResource(id = R.color.white))
                 .border(
-                    BorderStroke(width = 3.dp, color = colorResource(id = R.color.orange50)),
+                    BorderStroke(width = 2.dp, color = colorResource(id = R.color.black)),
                     shape = RoundedCornerShape(10)
                 ),
             colors = TextFieldDefaults.textFieldColors(
