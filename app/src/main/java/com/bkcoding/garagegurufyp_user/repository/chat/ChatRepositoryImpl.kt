@@ -3,7 +3,6 @@ package com.bkcoding.garagegurufyp_user.repository.chat
 import android.util.Log
 import com.bkcoding.garagegurufyp_user.dto.ChatMessage
 import com.bkcoding.garagegurufyp_user.dto.Conversation
-import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.sharedpref.UserPreferences
 import com.bkcoding.garagegurufyp_user.utils.FirebaseRef
 import com.google.firebase.database.DataSnapshot
@@ -31,8 +30,8 @@ class ChatRepositoryImpl @Inject constructor(
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (!snapshot.hasChild(endUserId)){
                         // Create 2 conversations 1. From currentUser to endUser 2. From endUser to CurrentUser
-                        val ownConversation = Conversation(timeStamp = ServerValue.TIMESTAMP, userId = currentUserId)
-                        val endUserConversation = Conversation(timeStamp = ServerValue.TIMESTAMP, userId = endUserId)
+                        val ownConversation = Conversation(createdAt = ServerValue.TIMESTAMP, userId = currentUserId)
+                        val endUserConversation = Conversation(createdAt = ServerValue.TIMESTAMP, userId = endUserId)
                         conversationsRef.child(endUserId).child(currentUserId).setValue(ownConversation)
                         conversationsRef.child(currentUserId).child(endUserId).setValue(endUserConversation)
                     }
