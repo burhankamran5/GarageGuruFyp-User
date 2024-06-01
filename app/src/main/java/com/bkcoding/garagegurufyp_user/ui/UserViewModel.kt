@@ -1,6 +1,10 @@
 package com.bkcoding.garagegurufyp_user.ui
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.bkcoding.garagegurufyp_user.repository.Result
 import androidx.lifecycle.viewModelScope
 import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.dto.Customer
@@ -24,5 +28,12 @@ class UserViewModel @Inject constructor(
     fun refreshFcmToken() = fcmRepository.refreshFcmToken()
     fun sendPushNotification(notificationReq: NotificationReq) = viewModelScope.launch {
         fcmRepository.sendPushNotification(notificationReq)
+    }
+
+    var homeScreenUIState by mutableStateOf<Result<List<Garage>>?>(null)
+    fun getGarages() = viewModelScope.launch {
+        userRepository.getGarages().collect{
+            homeScreenUIState = it
+        }
     }
 }
