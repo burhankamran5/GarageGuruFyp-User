@@ -30,7 +30,7 @@ class ChatRepositoryImpl @Inject constructor(
         val currentUserId = userPreferences.userId ?: return@callbackFlow
         val endUserId = conversation.userId
         val (currentUserName, currentUserProfile) = getUserNameAndProfile(userType)
-        conversationsRef.child(currentUserId).addValueEventListener(
+        conversationsRef.child(currentUserId).addListenerForSingleValueEvent(
             object : ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (!snapshot.hasChild(endUserId)){
