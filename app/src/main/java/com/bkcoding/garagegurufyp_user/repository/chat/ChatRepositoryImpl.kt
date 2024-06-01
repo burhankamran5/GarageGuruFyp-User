@@ -8,7 +8,6 @@ import com.bkcoding.garagegurufyp_user.utils.FirebaseRef
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -103,6 +102,26 @@ class ChatRepositoryImpl @Inject constructor(
                 trySend(Result.Failure(error.toException()))
             }
 
+        })
+        awaitClose {
+            close()
+        }
+    }
+
+    override fun loadMessages(endUserId: String): Flow<Result<ChatMessage>> = callbackFlow{
+       val currentUserId = userPreferences.userId ?: return@callbackFlow
+        messagesRef.child(currentUserId).child(endUserId).addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
+                val message = dataSnapshot.getValue(ChatMessage::class.java)
+                message?.let { trySend(Result.Success(message)) }
+            }
+
+            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}
+            override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
+            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
+            override fun onCancelled(databaseError: DatabaseError) {
+                trySend(Result.Failure(databaseError.toException()))
+            }
         })
         awaitClose {
             close()
