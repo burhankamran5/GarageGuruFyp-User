@@ -1,7 +1,9 @@
 package com.bkcoding.garagegurufyp_user.repository.chat
 
+import android.util.Log
 import com.bkcoding.garagegurufyp_user.dto.ChatMessage
 import com.bkcoding.garagegurufyp_user.dto.Conversation
+import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.sharedpref.UserPreferences
 import com.bkcoding.garagegurufyp_user.utils.FirebaseRef
 import com.google.firebase.database.DataSnapshot
@@ -12,6 +14,8 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import com.bkcoding.garagegurufyp_user.repository.Result
+import java.lang.Exception
 import javax.inject.Inject
 
 class ChatRepositoryImpl @Inject constructor(
@@ -27,9 +31,10 @@ class ChatRepositoryImpl @Inject constructor(
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (!snapshot.hasChild(endUserId)){
                         // Create 2 conversations 1. From currentUser to endUser 2. From endUser to CurrentUser
-                        val conversation = Conversation(timeStamp = ServerValue.TIMESTAMP)
-                        conversationsRef.child(endUserId).child(currentUserId).setValue(conversation)
-                        conversationsRef.child(currentUserId).child(endUserId).setValue(conversation)
+                        val ownConversation = Conversation(timeStamp = ServerValue.TIMESTAMP, userId = currentUserId)
+                        val endUserConversation = Conversation(timeStamp = ServerValue.TIMESTAMP, userId = endUserId)
+                        conversationsRef.child(endUserId).child(currentUserId).setValue(ownConversation)
+                        conversationsRef.child(currentUserId).child(endUserId).setValue(endUserConversation)
                     }
                 }
 
@@ -49,5 +54,35 @@ class ChatRepositoryImpl @Inject constructor(
         val messageKey = messagesRef.child(senderId).child(receiverId).push().key ?: return
         messagesRef.child(senderId).child(messageKey).setValue(message)
         messagesRef.child(receiverId).child(messageKey).setValue(message)
+    }
+
+    override fun fetchConversations(): Flow<Result<List<Conversation>>> = callbackFlow{
+        val userId = userPreferences.userId ?: return@callbackFlow
+        val conversationList = mutableListOf<Conversation>()
+        trySend(Result.Loading)
+        conversationsRef.child(userId).addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                Log.i("TAG", "onDataChangeInfo: $dataSnapshot")
+                if (dataSnapshot.exists()){
+                    for (ds in dataSnapshot.children) {
+                        val conversation: Conversation? = ds.getValue(Conversation::class.java)
+                        if (conversation != null) {
+                            conversationList.add(conversation)
+                        }
+                    }
+                    trySend(Result.Success(conversationList))
+                } else{
+                    trySend(Result.Failure(Exception("No Customer found with these details")))
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+               trySend(Result.Failure(error.toException()))
+            }
+
+        })
+        awaitClose {
+            close()
+        }
     }
 }

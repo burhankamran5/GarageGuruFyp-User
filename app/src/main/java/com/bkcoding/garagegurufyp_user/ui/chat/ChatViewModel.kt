@@ -12,4 +12,6 @@ class ChatViewModel @Inject constructor(
 ): ViewModel() {
     fun createConversationIfNotExists(endUserId: String) = chatRepository.createConversationIfNotExists(endUserId)
     fun sendMessage(message: ChatMessage) = chatRepository.sendMessage(message)
+
+    fun fetchConversations() = chatRepository.fetchConversations()
 }

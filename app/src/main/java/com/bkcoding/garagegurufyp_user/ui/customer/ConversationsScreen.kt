@@ -1,5 +1,6 @@
-package com.bkcoding.garagegurufyp_user.ui.chat
+package com.bkcoding.garagegurufyp_user.ui.customer
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,10 +15,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Card
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,18 +36,48 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.bkcoding.garagegurufyp_user.R
+import com.bkcoding.garagegurufyp_user.dto.Conversation
+import com.bkcoding.garagegurufyp_user.dto.Garage
+import com.bkcoding.garagegurufyp_user.repository.Result
+import com.bkcoding.garagegurufyp_user.ui.chat.ChatViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Preview
 @Composable
-fun ConversationsScreen() {
+fun ConversationsScreen(
+    chatViewModel: ChatViewModel = hiltViewModel()
+) {
+
+    var conversationList by rememberSaveable {
+        mutableStateOf<List<Conversation>?>(null)
+    }
+
+    LaunchedEffect(Unit) {
+        chatViewModel.fetchConversations().collectLatest {result->
+            when (result) {
+                Result.Loading -> {
+                    //isLoading = true
+                    Log.i("TAG", "GarageScreen: loading")
+                }
+
+                is Result.Success -> {
+                    conversationList = result.data
+                }
+
+                is Result.Failure -> {}
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
             .verticalScroll(rememberScrollState()),
     ){
-        Text(
+        androidx.compose.material3.Text(
             text = "Chat", fontSize = 30.sp, fontWeight = FontWeight.ExtraBold,
             modifier = Modifier
                 .fillMaxWidth()
@@ -59,7 +95,9 @@ fun ConversationsScreen() {
 
 
 @Composable
-fun MessageItem() {
+fun MessageItem(
+    conversation: Conversation? = null
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -86,11 +124,11 @@ fun MessageItem() {
                     .padding(horizontal = 12.dp)
             )
             Column(  modifier = Modifier.padding(horizontal = 15.dp)) {
-                Text(text = "PakWheels Garage", fontSize = 17.sp,
+                androidx.compose.material3.Text(text = "PakWheels Garage", fontSize = 17.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.ExtraBold)
-                Text(
+                androidx.compose.material3.Text(
                     text = "I knew it, are you coming? How are you coming? We are available 24/7",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
@@ -102,3 +140,5 @@ fun MessageItem() {
         }
     }
 }
+
+

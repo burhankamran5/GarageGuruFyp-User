@@ -25,7 +25,7 @@ import com.bkcoding.garagegurufyp_user.ui.signup.GarageSignUpScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.SignUpConfirmationScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.UserSignUpScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.VerifyOtpScreen
-import com.bkcoding.garagegurufyp_user.ui.user.ChatScreen
+import com.bkcoding.garagegurufyp_user.ui.customer.ConversationsScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.CustomerHomeScreen
 import com.bkcoding.garagegurufyp_user.ui.user.GarageScreen
 import com.bkcoding.garagegurufyp_user.ui.user.MoreScreen
@@ -197,7 +197,7 @@ fun BottomNavHost(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }
         ){
-            ChatScreen()
+            ConversationsScreen()
         }
 
         composable(

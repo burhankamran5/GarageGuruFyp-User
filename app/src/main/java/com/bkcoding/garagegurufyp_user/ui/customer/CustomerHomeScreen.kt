@@ -61,9 +61,11 @@ import com.bkcoding.garagegurufyp_user.extensions.showToast
 import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.ui.AuthViewModel
 import com.bkcoding.garagegurufyp_user.ui.UserViewModel
+import com.bkcoding.garagegurufyp_user.ui.chat.ChatViewModel
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
 import com.bkcoding.garagegurufyp_user.ui.theme.GarageGuruFypUserTheme
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -73,6 +75,7 @@ fun CustomerHomeScreen(
     userStorageVM: UserStorageVM = hiltViewModel(),
     authViewModel: AuthViewModel = hiltViewModel(),
     userViewModel: UserViewModel = hiltViewModel(),
+    chatViewModel: ChatViewModel = hiltViewModel(),
     onLogOut: () -> Unit
 ){
     val context = LocalContext.current
@@ -83,6 +86,7 @@ fun CustomerHomeScreen(
     LaunchedEffect(key1 = Unit) {
         userViewModel.refreshFcmToken()
         userViewModel.getGarages()
+        chatViewModel.createConversationIfNotExists(endUserId = "JdePuPFAS3UxFEkyvYCBLMZDgqk1").collectLatest {  }
     }
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
