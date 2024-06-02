@@ -1,6 +1,7 @@
-package com.bkcoding.garagegurufyp_user.ui.user
+package com.bkcoding.garagegurufyp_user.ui.customer
 
 import android.Manifest
+import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -9,6 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -56,13 +58,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.bkcoding.garagegurufyp_user.R
+import com.bkcoding.garagegurufyp_user.dto.Conversation
 import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.extensions.showToast
+import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.ui.AuthViewModel
 import com.bkcoding.garagegurufyp_user.ui.UserViewModel
+import com.bkcoding.garagegurufyp_user.ui.chat.ChatViewModel
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
 import com.bkcoding.garagegurufyp_user.ui.theme.GarageGuruFypUserTheme
+import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -73,6 +79,7 @@ fun CustomerHomeScreen(
     userStorageVM: UserStorageVM = hiltViewModel(),
     authViewModel: AuthViewModel = hiltViewModel(),
     userViewModel: UserViewModel = hiltViewModel(),
+    chatViewModel: ChatViewModel = hiltViewModel(),
     onLogOut: () -> Unit
 ){
     val context = LocalContext.current
@@ -84,6 +91,7 @@ fun CustomerHomeScreen(
         userViewModel.refreshFcmToken()
         userViewModel.getGarages()
     }
+
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -119,11 +127,23 @@ fun CustomerHomeScreen(
         else -> {}
     }
 
-    CustomerHomeScreen(garageList = garageList)
+    CustomerHomeScreen(
+        garageList = garageList,
+        onGarageClick = {
+            val conversation = Conversation(
+                seen = false,
+                createdAt = null,
+                userId = it.id,
+                userName = it.name,
+                profileImage = it.images.getOrNull(0).orEmpty()
+            )
+            navController.navigate(Screen.ChatScreen.route + "/${Uri.encode(Gson().toJson(conversation))}")
+        }
+    )
 }
 
 @Composable
-private fun CustomerHomeScreen(garageList: List<Garage>?) {
+private fun CustomerHomeScreen(garageList: List<Garage>?, onGarageClick: (Garage) -> Unit) {
     Column(
         modifier = Modifier
             .padding(horizontal = 10.dp)
@@ -180,7 +200,7 @@ private fun CustomerHomeScreen(garageList: List<Garage>?) {
             horizontalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             items(garageList.orEmpty()) { item ->
-                GarageCard(modifier = Modifier, item)
+                GarageCard(modifier = Modifier.clickable { onGarageClick(item) }, item)
             }
         }
     }
@@ -281,6 +301,6 @@ private fun GarageCard(modifier: Modifier = Modifier, garage: Garage) {
 @Composable
 fun CustomerHomeScreenPreview() {
     GarageGuruFypUserTheme {
-        CustomerHomeScreen(garageList = emptyList())
+        CustomerHomeScreen(garageList = emptyList(), onGarageClick = {})
     }
 }

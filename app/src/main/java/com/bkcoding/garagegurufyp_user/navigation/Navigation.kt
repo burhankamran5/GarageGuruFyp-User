@@ -15,6 +15,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.bkcoding.garagegurufyp_user.dto.Conversation
+import com.bkcoding.garagegurufyp_user.ui.chat.ChatScreen
 import com.bkcoding.garagegurufyp_user.ui.garage.GarageHomeScreen
 import com.bkcoding.garagegurufyp_user.ui.home.MobileScaffold
 import com.bkcoding.garagegurufyp_user.ui.login.LoginScreen
@@ -25,11 +27,12 @@ import com.bkcoding.garagegurufyp_user.ui.signup.GarageSignUpScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.SignUpConfirmationScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.UserSignUpScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.VerifyOtpScreen
-import com.bkcoding.garagegurufyp_user.ui.user.ChatScreen
-import com.bkcoding.garagegurufyp_user.ui.user.CustomerHomeScreen
+import com.bkcoding.garagegurufyp_user.ui.customer.ConversationsScreen
+import com.bkcoding.garagegurufyp_user.ui.customer.CustomerHomeScreen
 import com.bkcoding.garagegurufyp_user.ui.user.GarageScreen
 import com.bkcoding.garagegurufyp_user.ui.user.MoreScreen
 import com.bkcoding.garagegurufyp_user.ui.user.RequestScreen
+import com.google.gson.Gson
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
@@ -147,36 +150,6 @@ fun BottomNavHost(
         }
 
         composable(
-            route = Screen.CustomerHomeScreen.route,
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None }
-        ){
-            CustomerHomeScreen(navController = navController, userStorageVM = userStorageVM){
-                onLogout()
-            }
-        }
-
-        composable(
-            route = Screen.CustomerHomeScreen.route,
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None }
-        ){
-            CustomerHomeScreen(navController = navController, userStorageVM = userStorageVM){
-                onLogout()
-            }
-        }
-
-        composable(
-            route = Screen.CustomerHomeScreen.route,
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None }
-        ){
-            CustomerHomeScreen(navController = navController, userStorageVM = userStorageVM){
-                onLogout()
-            }
-        }
-
-        composable(
             route = Screen.RequestScreen.route,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }
@@ -193,11 +166,24 @@ fun BottomNavHost(
         }
 
         composable(
-            route = Screen.ChatScreen.route,
+            route = Screen.ConversationsScreen.route,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }
         ){
-            ChatScreen()
+            ConversationsScreen(navController)
+        }
+
+        composable(
+            arguments = listOf(navArgument("conversation") { type = NavType.StringType }),
+            route = Screen.ChatScreen.route + "/{conversation}",
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ){
+            val conversation = it.arguments?.getString("conversation")
+            val conversationResponse = conversation?.let {data->
+                Gson().fromJson(data, Conversation::class.java)
+            }
+            ChatScreen(navController, conversationResponse)
         }
 
         composable(
