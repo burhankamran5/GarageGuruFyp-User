@@ -98,8 +98,10 @@ private fun ChatScreen(
     val context = LocalContext.current
     val listState = rememberLazyListState()
     var message by rememberSaveable { mutableStateOf("") }
-    LaunchedEffect(key1 = chatMessageList) {
-        //chatMessageList?.size?.minus(1)?.let { listState.animateScrollToItem(it) }
+    LaunchedEffect(key1 = chatMessageList?.size) {
+        chatMessageList?.size?.coerceAtLeast(1)?.minus(1)?.let {
+            listState.scrollToItem(it)
+        }
     }
 
     Box(
@@ -110,7 +112,7 @@ private fun ChatScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+
         ) {
             Row(
                 modifier = Modifier
