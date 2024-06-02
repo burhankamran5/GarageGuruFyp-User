@@ -3,7 +3,9 @@ package com.bkcoding.garagegurufyp_user.repository.chat
 import android.util.Log
 import com.bkcoding.garagegurufyp_user.dto.ChatMessage
 import com.bkcoding.garagegurufyp_user.dto.Conversation
+import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.sharedpref.UserPreferences
+import com.bkcoding.garagegurufyp_user.ui.login.UserType
 import com.bkcoding.garagegurufyp_user.utils.FirebaseRef
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -12,10 +14,6 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import com.bkcoding.garagegurufyp_user.repository.Result
-import com.bkcoding.garagegurufyp_user.ui.login.UserType
-import com.google.firebase.database.ChildEventListener
-import java.lang.Exception
 import javax.inject.Inject
 
 class ChatRepositoryImpl @Inject constructor(
@@ -24,9 +22,11 @@ class ChatRepositoryImpl @Inject constructor(
 ): ChatRepository {
     private val conversationsRef = databaseReference.child(FirebaseRef.CONVERSATIONS)
     private val messagesRef = databaseReference.child(FirebaseRef.MESSAGES)
+    private val currentUserId = userPreferences.userId
+
     override fun createConversationIfNotExists(conversation: Conversation): Flow<Result<String>> = callbackFlow {
         val userType = userPreferences.userType ?: return@callbackFlow
-        val currentUserId = userPreferences.userId ?: return@callbackFlow
+        currentUserId ?: return@callbackFlow
         val endUserId = conversation.userId
         val (currentUserName, currentUserProfile) = getUserNameAndProfile(userType)
         conversationsRef.child(currentUserId).addListenerForSingleValueEvent(
@@ -59,10 +59,10 @@ class ChatRepositoryImpl @Inject constructor(
     }
 
     override fun fetchConversations(): Flow<Result<List<Conversation>>> = callbackFlow{
-        val userId = userPreferences.userId ?: return@callbackFlow
+        currentUserId ?: return@callbackFlow
         val conversationList = mutableListOf<Conversation>()
         trySend(Result.Loading)
-        conversationsRef.child(userId).addListenerForSingleValueEvent(object : ValueEventListener{
+        conversationsRef.child(currentUserId).addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 Log.i("TAG", "onDataChangeInfo: $dataSnapshot")
                 if (dataSnapshot.exists()){
@@ -89,16 +89,14 @@ class ChatRepositoryImpl @Inject constructor(
     }
 
     override fun fetchLastMessage(userId: String): Flow<Result<String>> = callbackFlow{
-        val currentUserId = userPreferences.userId ?: return@callbackFlow
+        currentUserId ?: return@callbackFlow
         val lastMessageRef = messagesRef.child(currentUserId).child(userId).limitToLast(1)
-        lastMessageRef.addChildEventListener(object : ChildEventListener{
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val lastMessage = snapshot.child("text").value.toString()
+        lastMessageRef.addChildEventListener(object : SimpleChildEventListener{
+            override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
+                val lastMessage = dataSnapshot.child("text").value.toString()
                 trySend(Result.Success(lastMessage))
             }
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
-            override fun onChildRemoved(snapshot: DataSnapshot) {}
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+
             override fun onCancelled(error: DatabaseError) {
                 trySend(Result.Failure(error.toException()))
             }
@@ -110,18 +108,15 @@ class ChatRepositoryImpl @Inject constructor(
     }
 
     override fun loadMessages(endUserId: String): Flow<Result<ChatMessage>> = callbackFlow{
-       val currentUserId = userPreferences.userId ?: return@callbackFlow
-        messagesRef.child(currentUserId).child(endUserId).addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
+        currentUserId ?: return@callbackFlow
+        messagesRef.child(currentUserId).child(endUserId).addChildEventListener(object : SimpleChildEventListener{
+            override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                 val message = dataSnapshot.getValue(ChatMessage::class.java)
                 message?.let { trySend(Result.Success(message)) }
             }
 
-            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}
-            override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
-            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
-            override fun onCancelled(databaseError: DatabaseError) {
-                trySend(Result.Failure(databaseError.toException()))
+            override fun onCancelled(error: DatabaseError) {
+                trySend(Result.Failure(error.toException()))
             }
         })
         awaitClose {
