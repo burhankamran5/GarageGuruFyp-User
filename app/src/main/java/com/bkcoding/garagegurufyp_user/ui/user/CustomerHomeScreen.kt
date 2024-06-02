@@ -63,6 +63,7 @@ import com.bkcoding.garagegurufyp_user.ui.AuthViewModel
 import com.bkcoding.garagegurufyp_user.ui.UserViewModel
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
 import com.bkcoding.garagegurufyp_user.ui.theme.GarageGuruFypUserTheme
+import com.bkcoding.garagegurufyp_user.ui.theme.Typography
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -119,26 +120,31 @@ fun CustomerHomeScreen(
         else -> {}
     }
 
-    CustomerHomeScreen(garageList = garageList)
+    CustomerHomeScreen(garageList = garageList, customerName = userStorageVM.getSavedCustomer()?.name.orEmpty())
 }
 
 @Composable
-private fun CustomerHomeScreen(garageList: List<Garage>?) {
+private fun CustomerHomeScreen(garageList: List<Garage>?, customerName: String) {
     Column(
         modifier = Modifier
             .padding(horizontal = 10.dp)
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
     ) {
-        Spacer(modifier = Modifier.height(30.dp))
-        Text(
-            text = "Welcome,Burhan Kamran",
-            fontSize = 20.sp,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.ExtraBold,
-            textAlign = TextAlign.Start,
-            color = Color.Black
-        )
+        Spacer(modifier = Modifier.height(18.dp))
+        Column(modifier = Modifier.padding(start = 12.dp)) {
+            Text(
+                text = "Welcome",
+                style = Typography.bodyLarge,
+                textAlign = TextAlign.Start,
+                color = Color.Black
+            )
+            Text(
+                text = customerName,
+                style = Typography.titleLarge,
+                color = Color.Black
+            )
+        }
         Spacer(modifier = Modifier.height(30.dp))
         AutoSwipeViewPager(modifier = Modifier.fillMaxWidth())
         Spacer(modifier = Modifier.height(30.dp))
@@ -281,6 +287,6 @@ private fun GarageCard(modifier: Modifier = Modifier, garage: Garage) {
 @Composable
 fun CustomerHomeScreenPreview() {
     GarageGuruFypUserTheme {
-        CustomerHomeScreen(garageList = emptyList())
+        CustomerHomeScreen(garageList = emptyList(), customerName = "Burhan")
     }
 }
