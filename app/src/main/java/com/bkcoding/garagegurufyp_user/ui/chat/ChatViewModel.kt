@@ -67,4 +67,6 @@ class ChatViewModel @Inject constructor(
             }
         }
     }
+
+    fun fetchLastMessage(userId: String) = chatRepository.fetchLastMessage(userId)
 }

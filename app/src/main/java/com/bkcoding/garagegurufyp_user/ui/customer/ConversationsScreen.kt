@@ -24,7 +24,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,9 +48,12 @@ import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.dto.Conversation
 import com.bkcoding.garagegurufyp_user.extensions.showToast
 import com.bkcoding.garagegurufyp_user.navigation.Screen
+import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.ui.chat.ChatViewModel
 import com.bkcoding.garagegurufyp_user.ui.component.CircleProgressIndicator
 import com.google.gson.Gson
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @Composable
 fun ConversationsScreen(navController: NavController,chatViewModel: ChatViewModel = hiltViewModel()) {
@@ -62,6 +68,7 @@ fun ConversationsScreen(navController: NavController,chatViewModel: ChatViewMode
     }
 
     ConversationsScreen(
+        chatViewModel = chatViewModel,
         conversationList = chatViewModel.conversationListResponse,
         onMessageItemClick = {
             navController.navigate(Screen.ChatScreen.route + "/${Uri.encode(Gson().toJson(it))}")
@@ -72,7 +79,8 @@ fun ConversationsScreen(navController: NavController,chatViewModel: ChatViewMode
 @Composable
 private fun ConversationsScreen(
     conversationList: List<Conversation>?,
-    onMessageItemClick: (Conversation) -> Unit
+    onMessageItemClick: (Conversation) -> Unit,
+    chatViewModel: ChatViewModel
 ) {
     Column(
         modifier = Modifier
@@ -95,17 +103,27 @@ private fun ConversationsScreen(
             verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             items(conversationList.orEmpty()) { item ->
-                MessageItem(modifier = Modifier.clickable { onMessageItemClick(item) }, item)
+                ConversationItem( chatViewModel = chatViewModel,
+                    modifier = Modifier.clickable { onMessageItemClick(item) }, conversation = item)
             }
         }
     }
 }
 
 @Composable
-fun MessageItem(
+fun ConversationItem(
     modifier: Modifier = Modifier,
-    conversation: Conversation
+    conversation: Conversation,
+    chatViewModel: ChatViewModel
 ) {
+    var lastMessage by remember { mutableStateOf("") }
+    LaunchedEffect(key1 = Unit) {
+        chatViewModel.fetchLastMessage(conversation.userId).collectLatest {
+            if (it is Result.Success){
+                lastMessage = it.data
+            }
+        }
+    }
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -143,7 +161,7 @@ fun MessageItem(
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.ExtraBold)
                 Text(
-                    text = conversation.createdAt.toString(),
+                    text = lastMessage,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
                     maxLines = 1,
@@ -155,10 +173,10 @@ fun MessageItem(
     }
 }
 
-@Preview
-@Composable
-fun ConversationsScreenPreview() {
-    ConversationsScreen(conversationList = null, onMessageItemClick = {})
-}
+//@Preview
+//@Composable
+//fun ConversationsScreenPreview() {
+//    ConversationsScreen(conversationList = null, onMessageItemClick = {}, chatViewModel = chatViewModel)
+//}
 
 

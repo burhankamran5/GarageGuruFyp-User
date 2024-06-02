@@ -89,7 +89,8 @@ class ChatRepositoryImpl @Inject constructor(
     }
 
     override fun fetchLastMessage(userId: String): Flow<Result<String>> = callbackFlow{
-        val lastMessageRef = messagesRef.child(userId).limitToLast(1)
+        val currentUserId = userPreferences.userId ?: return@callbackFlow
+        val lastMessageRef = messagesRef.child(currentUserId).child(userId).limitToLast(1)
         lastMessageRef.addChildEventListener(object : ChildEventListener{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val lastMessage = snapshot.child("text").value.toString()
