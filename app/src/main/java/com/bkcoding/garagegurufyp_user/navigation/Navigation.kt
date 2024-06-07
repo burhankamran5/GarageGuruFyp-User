@@ -30,8 +30,10 @@ import com.bkcoding.garagegurufyp_user.ui.signup.VerifyOtpScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.ConversationsScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.CustomerHomeScreen
 import com.bkcoding.garagegurufyp_user.ui.user.GarageScreen
-import com.bkcoding.garagegurufyp_user.ui.user.MoreScreen
-import com.bkcoding.garagegurufyp_user.ui.user.RequestScreen
+import com.bkcoding.garagegurufyp_user.ui.customer.MoreScreen
+import com.bkcoding.garagegurufyp_user.ui.customer.RequestScreen
+import com.bkcoding.garagegurufyp_user.ui.garage.GarageRequestScreen
+import com.bkcoding.garagegurufyp_user.ui.request.UserRequestForm
 import com.google.gson.Gson
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -127,6 +129,36 @@ fun Navigation(
         ){
             GarageHomeScreen(navController = navController, userStorageVM = userStorageVM)
         }
+
+        composable(
+            route = Screen.GarageRequestScreen.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ){
+            GarageRequestScreen(navController = navController)
+        }
+
+        composable(
+            route = Screen.ConversationsScreen.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ){
+            ConversationsScreen(navController)
+        }
+
+        composable(
+            arguments = listOf(navArgument("conversation") { type = NavType.StringType }),
+            route = Screen.ChatScreen.route + "/{conversation}",
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ){
+            val conversation = it.arguments?.getString("conversation")
+            val conversationResponse = conversation?.let {data->
+                Gson().fromJson(data, Conversation::class.java)
+            }
+            ChatScreen(navController, conversationResponse)
+        }
+
     }
 }
 
@@ -154,7 +186,15 @@ fun BottomNavHost(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }
         ){
-            RequestScreen()
+            RequestScreen(navController = navController)
+        }
+
+        composable(
+            route = Screen.UserRequestForm.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ){
+            UserRequestForm(navController = navController)
         }
 
         composable(

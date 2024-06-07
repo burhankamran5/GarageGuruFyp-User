@@ -22,6 +22,8 @@ sealed class Screen(
     data object ChatScreen : Screen("ChatScreen")
     data object ConversationsScreen : Screen("ConversationsScreen")
     data object MoreScreen : Screen("MoreScreen")
+    data object UserRequestForm : Screen("UserRequestForm")
+    data object GarageRequestScreen : Screen("GarageRequestScreen")
 }
 
 val BOTTOM_MENU_LIST = listOf(

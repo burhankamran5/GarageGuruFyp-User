@@ -20,4 +20,8 @@
     <string name="view_all">View All</string>
     <string name="message_empty_error">Please Enter a Message!</string>
     <string name="write_your_message">Write Your Message…</string>
+    <string name="new_request">New Request</string>
+    <string name="all_request">All Request</string>
+    <string name="empty_error">Please Fill Empty Fields!</string>
+    <string name="filter">Filter</string>
 </resources>
