@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -140,7 +141,7 @@ fun VerifyOtpScreen(
             text = "Please Enter The OTP",
             color = colorResource(id = R.color.black),
             fontSize = 23.sp,
-            fontFamily = FontFamily.Serif,
+            fontFamily = FontFamily(Font(R.font.googlesansbold)),
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             modifier = Modifier
@@ -157,8 +158,8 @@ fun VerifyOtpScreen(
             placeholder = {
                 Text(
                     text = "Enter Your OTP",
-                    fontFamily = FontFamily.Serif,
-                    fontWeight = FontWeight.ExtraBold
+                    fontFamily = FontFamily(Font(R.font.googlesansregular)),
+                    fontWeight = FontWeight.Normal
                 )
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -203,6 +204,7 @@ fun VerifyOtpScreen(
                 text = "Continue",
                 color = colorResource(id = R.color.white),
                 fontSize = 12.sp,
+                fontFamily = FontFamily(Font(R.font.googlesansbold)),
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
@@ -211,13 +213,15 @@ fun VerifyOtpScreen(
             text = stringResource(id = R.string.not_received_code),
             color = colorResource(id = R.color.black),
             fontSize = 12.sp,
-            fontWeight = FontWeight.Bold,
+            fontFamily = FontFamily(Font(R.font.poppinsmedium)),
+            fontWeight = FontWeight.Medium,
             textAlign = TextAlign.Center
         )
         Text(
             text = stringResource(id = R.string.resend_code),
             color = colorResource(id = R.color.teal_200),
             fontSize = 14.sp,
+            fontFamily = FontFamily(Font(R.font.googlesansbold)),
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             modifier = Modifier

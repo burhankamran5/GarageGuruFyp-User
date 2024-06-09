@@ -45,6 +45,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -151,8 +152,8 @@ private fun CustomerHomeScreen(garageList: List<Garage>?, customerName: String) 
         Text(
             text = "Car Cries,Guru Replies",
             fontSize = 18.sp,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.ExtraBold,
+            fontFamily = FontFamily(Font(R.font.googlesansbold)),
+            fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             color = Color.Black,
             modifier = Modifier.fillMaxWidth()
@@ -162,8 +163,8 @@ private fun CustomerHomeScreen(garageList: List<Garage>?, customerName: String) 
             Text(
                 text = stringResource(id = R.string.garage),
                 fontSize = 18.sp,
-                fontFamily = FontFamily.Serif,
-                fontWeight = FontWeight.ExtraBold,
+                fontFamily = FontFamily(Font(R.font.googlesansbold)),
+                fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Start,
                 lineHeight = 15.sp,
                 color = Color.Black
@@ -171,8 +172,8 @@ private fun CustomerHomeScreen(garageList: List<Garage>?, customerName: String) 
             Text(
                 text = stringResource(id = R.string.view_all),
                 fontSize = 18.sp,
-                fontFamily = FontFamily.Serif,
-                fontWeight = FontWeight.ExtraBold,
+                fontFamily = FontFamily(Font(R.font.googlesansbold)),
+                fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.End,
                 lineHeight = 15.sp,
                 color = Color.Black
@@ -255,7 +256,7 @@ private fun GarageCard(modifier: Modifier = Modifier, garage: Garage) {
             Text(
                 text = garage.name,
                 fontSize = 15.sp,
-                fontFamily = FontFamily.Serif,
+                fontFamily = FontFamily(Font(R.font.poppinssemibold)),
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Start,
                 color = Color.Black,
@@ -264,7 +265,7 @@ private fun GarageCard(modifier: Modifier = Modifier, garage: Garage) {
             Text(
                 text = garage.location,
                 fontSize = 12.sp,
-                fontFamily = FontFamily.Serif,
+                fontFamily = FontFamily(Font(R.font.googlesansregular)),
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Start,
                 color = Color.Black,
@@ -273,7 +274,7 @@ private fun GarageCard(modifier: Modifier = Modifier, garage: Garage) {
             Text(
                 text = garage.phoneNumber,
                 fontSize = 12.sp,
-                fontFamily = FontFamily.Serif,
+                fontFamily = FontFamily(Font(R.font.googlesansregular)),
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Start,
                 color = Color.Black,

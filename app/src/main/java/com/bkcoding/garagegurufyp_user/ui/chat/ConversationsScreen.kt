@@ -24,6 +24,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -42,7 +44,10 @@ fun ConversationsScreen() {
             .verticalScroll(rememberScrollState()),
     ){
         Text(
-            text = "Chat", fontSize = 30.sp, fontWeight = FontWeight.ExtraBold,
+            text = "Chat",
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = FontFamily(Font(R.font.googlesansbold)),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 12.dp),
@@ -86,14 +91,19 @@ fun MessageItem() {
                     .padding(horizontal = 12.dp)
             )
             Column(  modifier = Modifier.padding(horizontal = 15.dp)) {
-                Text(text = "PakWheels Garage", fontSize = 17.sp,
+                Text(
+                    text = "PakWheels Garage",
+                    fontSize = 17.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    fontWeight = FontWeight.ExtraBold)
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily(Font(R.font.googlesansbold))
+                )
                 Text(
                     text = "I knew it, are you coming? How are you coming? We are available 24/7",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
+                    fontFamily = FontFamily(Font(R.font.poppinsmedium)),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )

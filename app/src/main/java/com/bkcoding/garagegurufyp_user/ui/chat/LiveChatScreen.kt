@@ -26,6 +26,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -71,13 +73,14 @@ fun MessageInputField(modifier: Modifier = Modifier) {
             textStyle = TextStyle(fontSize = 15.sp, color = Color.Black)
 
         )
-
-        Image(painter = painterResource(id = R.drawable.send_icon), contentDescription = "",
-            modifier = Modifier.clickable {}.size(30.dp) )
+        Image(
+            painter = painterResource(id = R.drawable.send_icon),
+            contentDescription = "",
+            modifier = Modifier
+                .clickable {}
+                .size(30.dp)
+        )
     }
-
-
-
 }
 
 @Composable
@@ -95,7 +98,8 @@ fun ChatToolbar() {
 
             Text(
                 text = "PakWheel Garage",
-                fontWeight = FontWeight.ExtraBold,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily(Font(R.font.googlesansbold)),
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.align(Alignment.Center)

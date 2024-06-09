@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -107,7 +108,7 @@ fun UserSignUpScreen(
             text = "Create your account",
             color = colorResource(id = R.color.black),
             fontSize = 23.sp,
-            fontFamily = FontFamily.Serif,
+            fontFamily = FontFamily(Font(R.font.googlesansbold)),
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             modifier = Modifier
@@ -125,8 +126,8 @@ fun UserSignUpScreen(
             placeholder = {
                 Text(
                     text = "Enter Your Name",
-                    fontFamily = FontFamily.Serif,
-                    fontWeight = FontWeight.ExtraBold
+                    fontFamily = FontFamily(Font(R.font.googlesansregular)),
+                    fontWeight = FontWeight.Normal
                 )
             },
             colors = TextFieldDefaults.textFieldColors(
@@ -140,9 +141,6 @@ fun UserSignUpScreen(
             singleLine = true,
             modifier = Modifier.fillMaxWidth(.9f)
         )
-
-
-
         TextField(
             value = email,
             onValueChange = {
@@ -152,8 +150,8 @@ fun UserSignUpScreen(
             placeholder = {
                 Text(
                     text = "Enter Your Email",
-                    fontFamily = FontFamily.Serif,
-                    fontWeight = FontWeight.ExtraBold
+                    fontFamily = FontFamily(Font(R.font.googlesansregular)),
+                    fontWeight = FontWeight.Normal
                 )
             },
             isError = email.isNotEmpty() && !isValidEmail(email),
@@ -168,7 +166,6 @@ fun UserSignUpScreen(
             singleLine = true,
             modifier = Modifier.fillMaxWidth(.9f)
         )
-
         TextField(
             value = password,
             onValueChange = { password = it },
@@ -176,8 +173,8 @@ fun UserSignUpScreen(
             placeholder = {
                 Text(
                     text = "Enter Password",
-                    fontFamily = FontFamily.Serif,
-                    fontWeight = FontWeight.ExtraBold
+                    fontFamily = FontFamily(Font(R.font.googlesansregular)),
+                    fontWeight = FontWeight.Normal
                 )
             },
             colors = TextFieldDefaults.textFieldColors(
@@ -206,8 +203,8 @@ fun UserSignUpScreen(
             placeholder = {
                 Text(
                     text = "Confirm Password",
-                    fontFamily = FontFamily.Serif,
-                    fontWeight = FontWeight.ExtraBold
+                    fontFamily = FontFamily(Font(R.font.googlesansregular)),
+                    fontWeight = FontWeight.Normal
                 )
             },
             colors = TextFieldDefaults.textFieldColors(
@@ -235,8 +232,8 @@ fun UserSignUpScreen(
             placeholder = {
                 Text(
                     text = "3XXXXXXXXX",
-                    fontFamily = FontFamily.Serif,
-                    fontWeight = FontWeight.ExtraBold
+                    fontFamily = FontFamily(Font(R.font.googlesansregular)),
+                    fontWeight = FontWeight.Normal
                 )
             },
             colors = TextFieldDefaults.textFieldColors(
@@ -298,6 +295,7 @@ fun UserSignUpScreen(
                 text = "Continue",
                 color = colorResource(id = R.color.white),
                 fontSize = 12.sp,
+                fontFamily = FontFamily(Font(R.font.googlesansbold)),
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
