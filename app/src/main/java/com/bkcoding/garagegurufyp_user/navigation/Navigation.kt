@@ -16,6 +16,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.bkcoding.garagegurufyp_user.dto.Conversation
+import com.bkcoding.garagegurufyp_user.dto.Request
+import com.bkcoding.garagegurufyp_user.ui.customer.RequestBidScreen
 import com.bkcoding.garagegurufyp_user.ui.chat.ChatScreen
 import com.bkcoding.garagegurufyp_user.ui.garage.GarageHomeScreen
 import com.bkcoding.garagegurufyp_user.ui.home.MobileScaffold
@@ -232,6 +234,19 @@ fun BottomNavHost(
             exitTransition = { ExitTransition.None }
         ){
             MoreScreen()
+        }
+
+        composable(
+            arguments = listOf(navArgument("request") { type = NavType.StringType }),
+            route = Screen.RequestBidScreen.route + "/{request}",
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ){
+            val request = it.arguments?.getString("request")
+            val requestResponse = request?.let {data->
+                Gson().fromJson(data, Request::class.java)
+            }
+            RequestBidScreen(navController = navController, request = requestResponse)
         }
     }
 }

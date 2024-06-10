@@ -1,5 +1,6 @@
 package com.bkcoding.garagegurufyp_user.ui.customer
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -39,6 +40,7 @@ import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.ui.UserViewModel
 import com.bkcoding.garagegurufyp_user.ui.theme.GarageGuruFypUserTheme
+import com.google.gson.Gson
 
 @Composable
 fun RequestScreen(navController: NavController, userViewModel: UserViewModel = hiltViewModel()) {
@@ -58,11 +60,19 @@ fun RequestScreen(navController: NavController, userViewModel: UserViewModel = h
         is Result.Failure -> {}
         else -> {}
     }
-    RequestScreen(requestList = requestList, onPostRequestClick = { navController.navigate(Screen.UserRequestForm.route) })
+    RequestScreen(
+        requestList = requestList,
+        onPostRequestClick = { navController.navigate(Screen.UserRequestForm.route) },
+        onRequestClick = { navController.navigate(Screen.RequestBidScreen.route + "/${Uri.encode(Gson().toJson(it))}")}
+    )
 }
 
 @Composable
-private fun RequestScreen(requestList: List<Request>?, onPostRequestClick: () -> Unit){
+private fun RequestScreen(
+    requestList: List<Request>?,
+    onPostRequestClick: () -> Unit,
+    onRequestClick: (Request) -> Unit
+){
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
             text = "Request Screen",
@@ -117,6 +127,7 @@ private fun RequestScreen(requestList: List<Request>?, onPostRequestClick: () ->
                             color = colorResource(id = R.color.orange),
                             shape = RoundedCornerShape(12.dp)
                         )
+                        .clickable { onRequestClick(it) }
                 ) {
                     AsyncImage(
                         model = it.images.getOrNull(0),
@@ -159,6 +170,6 @@ private fun RequestScreen(requestList: List<Request>?, onPostRequestClick: () ->
 @Composable
 fun RequestScreenPreview() {
     GarageGuruFypUserTheme {
-        RequestScreen(requestList = null, onPostRequestClick = {})
+        RequestScreen(requestList = null, onPostRequestClick = {}, onRequestClick = {})
     }
 }
