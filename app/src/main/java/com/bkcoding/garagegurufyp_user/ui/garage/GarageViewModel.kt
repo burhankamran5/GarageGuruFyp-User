@@ -52,15 +52,18 @@ class GarageViewModel @Inject constructor(
         garageRepository.bidOnRequest(requestId, bid).collect{
             if(it is Result.Success){
                 isLoading = false
-                Log.i("TAG", "bidOnRequest: ${it.data}")
-                sendPushNotification(
-                    NotificationReq(
-                        Message(
-                            token = bid.customer?.token.orEmpty(),
-                            notification = Notification(title = "Bid", body = "${bid.garages?.name} bid on your Request!")
+                getCustomerFromDb(bid.customer?.id.orEmpty()).collect{customerResult->
+                    if(customerResult is Result.Success){
+                        sendPushNotification(
+                            NotificationReq(
+                                Message(
+                                    token = customerResult.data.token,
+                                    notification = Notification(title = "Bid", body = "${bid.garages?.name} bid on your Request!")
+                                )
+                            )
                         )
-                    )
-                )
+                    }
+                }
             }else if(it is Result.Failure){
                 isLoading = false
                 error = it.exception.message ?: "Error"
@@ -71,4 +74,7 @@ class GarageViewModel @Inject constructor(
     fun sendPushNotification(notificationReq: NotificationReq) = viewModelScope.launch {
         fcmRepository.sendPushNotification(notificationReq)
     }
+
+    fun getCustomerFromDb(userId: String) = garageRepository.getCustomerFromDb(userId)
+
 }
