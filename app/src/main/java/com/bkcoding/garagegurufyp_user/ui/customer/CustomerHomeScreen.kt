@@ -47,6 +47,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -69,6 +70,7 @@ import com.bkcoding.garagegurufyp_user.ui.chat.ChatViewModel
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
 import com.bkcoding.garagegurufyp_user.ui.theme.GarageGuruFypUserTheme
 import com.google.gson.Gson
+import com.bkcoding.garagegurufyp_user.ui.theme.Typography
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -150,23 +152,28 @@ private fun CustomerHomeScreen(garageList: List<Garage>?, onGarageClick: (Garage
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
     ) {
-        Spacer(modifier = Modifier.height(30.dp))
-        Text(
-            text = "Welcome,Burhan Kamran",
-            fontSize = 20.sp,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.ExtraBold,
-            textAlign = TextAlign.Start,
-            color = Color.Black
-        )
+        Spacer(modifier = Modifier.height(18.dp))
+        Column(modifier = Modifier.padding(start = 12.dp)) {
+            Text(
+                text = "Welcome",
+                style = Typography.bodyLarge,
+                textAlign = TextAlign.Start,
+                color = Color.Black
+            )
+            Text(
+                text = "customerName",
+                style = Typography.titleLarge,
+                color = Color.Black
+            )
+        }
         Spacer(modifier = Modifier.height(30.dp))
         AutoSwipeViewPager(modifier = Modifier.fillMaxWidth())
         Spacer(modifier = Modifier.height(30.dp))
         Text(
             text = "Car Cries,Guru Replies",
             fontSize = 18.sp,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.ExtraBold,
+            fontFamily = FontFamily(Font(R.font.googlesansbold)),
+            fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             color = Color.Black,
             modifier = Modifier.fillMaxWidth()
@@ -176,8 +183,8 @@ private fun CustomerHomeScreen(garageList: List<Garage>?, onGarageClick: (Garage
             Text(
                 text = stringResource(id = R.string.garage),
                 fontSize = 18.sp,
-                fontFamily = FontFamily.Serif,
-                fontWeight = FontWeight.ExtraBold,
+                fontFamily = FontFamily(Font(R.font.googlesansbold)),
+                fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Start,
                 lineHeight = 15.sp,
                 color = Color.Black
@@ -185,8 +192,8 @@ private fun CustomerHomeScreen(garageList: List<Garage>?, onGarageClick: (Garage
             Text(
                 text = stringResource(id = R.string.view_all),
                 fontSize = 18.sp,
-                fontFamily = FontFamily.Serif,
-                fontWeight = FontWeight.ExtraBold,
+                fontFamily = FontFamily(Font(R.font.googlesansbold)),
+                fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.End,
                 lineHeight = 15.sp,
                 color = Color.Black
@@ -269,7 +276,7 @@ private fun GarageCard(modifier: Modifier = Modifier, garage: Garage) {
             Text(
                 text = garage.name,
                 fontSize = 15.sp,
-                fontFamily = FontFamily.Serif,
+                fontFamily = FontFamily(Font(R.font.poppinssemibold)),
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Start,
                 color = Color.Black,
@@ -278,7 +285,7 @@ private fun GarageCard(modifier: Modifier = Modifier, garage: Garage) {
             Text(
                 text = garage.location,
                 fontSize = 12.sp,
-                fontFamily = FontFamily.Serif,
+                fontFamily = FontFamily(Font(R.font.googlesansregular)),
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Start,
                 color = Color.Black,
@@ -287,7 +294,7 @@ private fun GarageCard(modifier: Modifier = Modifier, garage: Garage) {
             Text(
                 text = garage.phoneNumber,
                 fontSize = 12.sp,
-                fontFamily = FontFamily.Serif,
+                fontFamily = FontFamily(Font(R.font.googlesansregular)),
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Start,
                 color = Color.Black,

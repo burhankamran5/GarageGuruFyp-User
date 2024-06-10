@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -108,8 +109,8 @@ private fun UserRequestForm(isLoading: Boolean, onDoneClick: (String, String, St
             Text(
                 text = "Post Your Request",
                 textAlign = TextAlign.Center,
-                fontFamily = FontFamily.Serif,
-                fontWeight = FontWeight.ExtraBold,
+                fontFamily = FontFamily(Font(R.font.googlesansbold)),
+                fontWeight = FontWeight.Bold,
                 fontSize = 25.sp,
                 color = colorResource(id = R.color.black),
                 modifier = Modifier
@@ -119,8 +120,8 @@ private fun UserRequestForm(isLoading: Boolean, onDoneClick: (String, String, St
             Text(
                 text = "Your Car Model",
                 fontSize = 15.sp,
-                fontFamily = FontFamily.Serif,
-                fontWeight = FontWeight.ExtraBold,
+                fontFamily = FontFamily(Font(R.font.googlesansbold)),
+                fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Start,
                 color = colorResource(id = R.color.black),
                 modifier = Modifier
@@ -149,8 +150,8 @@ private fun UserRequestForm(isLoading: Boolean, onDoneClick: (String, String, St
             Text(
                 text = "Your City",
                 fontSize = 15.sp,
-                fontFamily = FontFamily.Serif,
-                fontWeight = FontWeight.ExtraBold,
+                fontFamily = FontFamily(Font(R.font.googlesansbold)),
+                fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Start,
                 color = colorResource(id = R.color.black),
                 modifier = Modifier
@@ -173,8 +174,8 @@ private fun UserRequestForm(isLoading: Boolean, onDoneClick: (String, String, St
             Text(
                 text = "State Your Problem",
                 fontSize = 15.sp,
-                fontFamily = FontFamily.Serif,
-                fontWeight = FontWeight.ExtraBold,
+                fontFamily = FontFamily(Font(R.font.googlesansbold)),
+                fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Start,
                 color = colorResource(id = R.color.black),
                 modifier = Modifier
@@ -217,7 +218,7 @@ private fun UserRequestForm(isLoading: Boolean, onDoneClick: (String, String, St
                     text = "Choose Images from Gallery",
                     color = colorResource(id = R.color.white),
                     fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily(Font(R.font.googlesansbold)),fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
             }
@@ -264,7 +265,7 @@ private fun UserRequestForm(isLoading: Boolean, onDoneClick: (String, String, St
                     text = "Done",
                     color = colorResource(id = R.color.white),
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily(Font(R.font.googlesansbold)),fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
             }
