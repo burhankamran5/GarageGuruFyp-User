@@ -26,6 +26,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -56,7 +57,7 @@ fun ChooseSignUp(navController: NavController) {
             text = "Create an account to get started.",
             color = colorResource(id = R.color.black),
             fontSize = 23.sp,
-            fontFamily = FontFamily.Serif,
+            fontFamily = FontFamily(Font(R.font.googlesansbold)),
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             modifier = Modifier
@@ -78,8 +79,8 @@ fun ChooseSignUp(navController: NavController) {
                 text = "Signup as User",
                 color = colorResource(id = R.color.black),
                 fontSize = 20.sp,
-                fontFamily = FontFamily.Serif,
-                fontWeight = FontWeight.ExtraBold,
+                fontFamily = FontFamily(Font(R.font.googlesansbold)),
+                fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Start,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -91,8 +92,8 @@ fun ChooseSignUp(navController: NavController) {
                     text = stringResource(id = R.string.sign_up_user),
                     color = colorResource(id = R.color.black),
                     fontSize = 13.sp,
-                    fontFamily = FontFamily.Serif,
-                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily(Font(R.font.poppinsmedium)),
+                    fontWeight = FontWeight.Medium,
                     textAlign = TextAlign.Start,
                     modifier = Modifier
                         .fillMaxWidth(.4f)
@@ -115,6 +116,7 @@ fun ChooseSignUp(navController: NavController) {
                         text = "Continue",
                         color = colorResource(id = R.color.white),
                         fontSize = 12.sp,
+                        fontFamily = FontFamily(Font(R.font.googlesansbold)),
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center
                     )
@@ -137,8 +139,8 @@ Spacer(modifier = Modifier.height(15.dp))
                 text = "Signup as Garage",
                 color = colorResource(id = R.color.black),
                 fontSize = 20.sp,
-                fontFamily = FontFamily.Serif,
-                fontWeight = FontWeight.ExtraBold,
+                fontFamily = FontFamily(Font(R.font.googlesansbold)),
+                fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Start,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -150,7 +152,7 @@ Spacer(modifier = Modifier.height(15.dp))
                     text = stringResource(id = R.string.grow_your_business),
                     color = colorResource(id = R.color.black),
                     fontSize = 13.sp,
-                    fontFamily = FontFamily.Serif,
+                    fontFamily = FontFamily(Font(R.font.googlesansbold)),
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Start,
                     modifier = Modifier
@@ -175,6 +177,7 @@ Spacer(modifier = Modifier.height(15.dp))
                         text = "Continue",
                         color = colorResource(id = R.color.white),
                         fontSize = 12.sp,
+                        fontFamily = FontFamily(Font(R.font.googlesansbold)),
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center
                     )

@@ -33,7 +33,6 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
@@ -54,6 +53,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -124,7 +124,7 @@ fun GarageSignUpScreen(
             text = "Create your account",
             color = colorResource(id = R.color.black),
             fontSize = 23.sp,
-            fontFamily = FontFamily.Serif,
+            fontFamily = FontFamily(Font(R.font.googlesansbold)),
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             modifier = Modifier
@@ -142,8 +142,8 @@ fun GarageSignUpScreen(
             placeholder = {
                 Text(
                     text = "Enter Garage Name",
-                    fontFamily = FontFamily.Serif,
-                    fontWeight = FontWeight.ExtraBold
+                    fontFamily = FontFamily(Font(R.font.googlesansregular)),
+                    fontWeight = FontWeight.Normal
                 )
             },
             colors = TextFieldDefaults.textFieldColors(
@@ -159,73 +159,168 @@ fun GarageSignUpScreen(
         )
 
 
-        TextField(value = garageEmail, onValueChange = {
-            garageEmail = it
-            isEmailValid = isValidEmail(it)
-        }, isError = garageEmail.isNotEmpty() && !isValidEmail(garageEmail), placeholder = {
-            Text(
-                text = "Enter Garage Email", fontFamily = FontFamily.Serif, fontWeight = FontWeight.ExtraBold
-            )
-        }, colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = Color.Transparent, cursorColor = Color.Black, focusedIndicatorColor = Color.White, unfocusedIndicatorColor = Color.White
-        ), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email), leadingIcon = { Icon(Icons.Filled.Email, "") }, singleLine = true, modifier = Modifier.fillMaxWidth(.9f)
+        TextField(
+            value = garageEmail,
+            onValueChange = {
+                garageEmail = it
+                isEmailValid = isValidEmail(it)
+            },
+            isError = garageEmail.isNotEmpty() && !isValidEmail(garageEmail),
+            placeholder = {
+                Text(
+                    text = "Enter Garage Email",
+                    fontFamily = FontFamily(Font(R.font.googlesansregular)),
+                    fontWeight = FontWeight.Normal
+                )
+            },
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                cursorColor = Color.Black,
+                focusedIndicatorColor = Color.White,
+                unfocusedIndicatorColor = Color.White
+            ),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            leadingIcon = { Icon(Icons.Filled.Email, "") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(.9f)
         )
 
-        TextField(value = password, onValueChange = { password = it }, placeholder = {
-            Text(
-                text = "Enter Password", fontFamily = FontFamily.Serif, fontWeight = FontWeight.ExtraBold
-            )
-        }, visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(), colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = Color.Transparent, cursorColor = Color.Black, focusedIndicatorColor = Color.White, unfocusedIndicatorColor = Color.White
-        ), trailingIcon = {
-            IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
-                if (passwordVisibility) {
-                    Image(painter = painterResource(id = R.drawable.ic_show), contentDescription = "", modifier = Modifier.size(25.dp))
-                } else Image(painter = painterResource(id = R.drawable.ic_hide), contentDescription = "")
-            }
-        }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password), singleLine = true, modifier = Modifier.fillMaxWidth(.9f)
+        TextField(
+            value = password,
+            onValueChange = { password = it },
+            placeholder = {
+                Text(
+                    text = "Enter Password",
+                    fontFamily = FontFamily(Font(R.font.googlesansregular)),
+                    fontWeight = FontWeight.Normal
+                )
+            },
+            visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                cursorColor = Color.Black,
+                focusedIndicatorColor = Color.White,
+                unfocusedIndicatorColor = Color.White
+            ),
+            trailingIcon = {
+                IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
+                    if (passwordVisibility) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_show),
+                            contentDescription = "",
+                            modifier = Modifier.size(25.dp)
+                        )
+                    } else Image(
+                        painter = painterResource(id = R.drawable.ic_hide),
+                        contentDescription = ""
+                    )
+                }
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(.9f)
         )
 
-        TextField(value = confirmPassword, onValueChange = { confirmPassword = it }, placeholder = {
-            Text(
-                text = "Confirm Password", fontFamily = FontFamily.Serif, fontWeight = FontWeight.ExtraBold
-            )
-        }, visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(), colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = Color.Transparent, cursorColor = Color.Black, focusedIndicatorColor = Color.White, unfocusedIndicatorColor = Color.White
-        ), trailingIcon = {
-            IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
-                if (passwordVisibility) {
-                    Image(painter = painterResource(id = R.drawable.ic_show), contentDescription = "", modifier = Modifier.size(25.dp))
-                } else Image(painter = painterResource(id = R.drawable.ic_hide), contentDescription = "")
-            }
-        }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password), singleLine = true, modifier = Modifier.fillMaxWidth(.9f)
+        TextField(
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
+            placeholder = {
+                Text(
+                    text = "Confirm Password",
+                    fontFamily = FontFamily(Font(R.font.googlesansregular)),
+                    fontWeight = FontWeight.Normal
+                )
+            },
+            visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                cursorColor = Color.Black,
+                focusedIndicatorColor = Color.White,
+                unfocusedIndicatorColor = Color.White
+            ),
+            trailingIcon = {
+                IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
+                    if (passwordVisibility) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_show),
+                            contentDescription = "",
+                            modifier = Modifier.size(25.dp)
+                        )
+                    } else Image(
+                        painter = painterResource(id = R.drawable.ic_hide),
+                        contentDescription = ""
+                    )
+                }
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(.9f)
         )
-        TextField(value = phoneNumber, onValueChange = { phoneNumber = it }, placeholder = {
-            Text(
-                text = "03334825710", fontFamily = FontFamily.Serif, fontWeight = FontWeight.ExtraBold
-            )
-        }, colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = Color.Transparent, cursorColor = Color.Black, focusedIndicatorColor = Color.White, unfocusedIndicatorColor = Color.White
-        ), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone), leadingIcon = { Icon(Icons.Filled.Phone, "") }, singleLine = true, modifier = Modifier.fillMaxWidth(.9f)
+        TextField(
+            value = phoneNumber,
+            onValueChange = { phoneNumber = it },
+            placeholder = {
+                Text(
+                    text = "03334825710",
+                    fontFamily = FontFamily(Font(R.font.googlesansregular)),
+                    fontWeight = FontWeight.Normal
+                )
+            },
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                cursorColor = Color.Black,
+                focusedIndicatorColor = Color.White,
+                unfocusedIndicatorColor = Color.White
+            ),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            leadingIcon = { Icon(Icons.Filled.Phone, "") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(.9f)
         )
 
-        TextField(value = garageLocation, onValueChange = { garageLocation = it }, placeholder = {
-            Text(
-                text = "Enter Garage Location", fontFamily = FontFamily.Serif, fontWeight = FontWeight.ExtraBold
-            )
-        }, colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = Color.Transparent, cursorColor = Color.Black, focusedIndicatorColor = Color.White, unfocusedIndicatorColor = Color.White
-        ), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text), leadingIcon = { Icon(Icons.Filled.LocationOn, "") }, singleLine = true, modifier = Modifier.fillMaxWidth(.9f)
+        TextField(
+            value = garageLocation,
+            onValueChange = { garageLocation = it },
+            placeholder = {
+                Text(
+                    text = "Enter Garage Location",
+                    fontFamily = FontFamily(Font(R.font.googlesansregular)),
+                    fontWeight = FontWeight.Normal
+                )
+            },
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                cursorColor = Color.Black,
+                focusedIndicatorColor = Color.White,
+                unfocusedIndicatorColor = Color.White
+            ),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            leadingIcon = { Icon(Icons.Filled.LocationOn, "") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(.9f)
         )
 
 
-        TextField(value = garageEmployeeCount, onValueChange = { garageEmployeeCount = it }, placeholder = {
-            Text(
-                text = "Enter Employee Count", fontFamily = FontFamily.Serif, fontWeight = FontWeight.ExtraBold
-            )
-        }, colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = Color.Transparent, cursorColor = Color.Black, focusedIndicatorColor = Color.White, unfocusedIndicatorColor = Color.White
-        ), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text), leadingIcon = { Icon(Icons.Default.Face, "") }, singleLine = true, modifier = Modifier.fillMaxWidth(.9f)
+        TextField(
+            value = garageEmployeeCount,
+            onValueChange = { garageEmployeeCount = it },
+            placeholder = {
+                Text(
+                    text = "Enter Employee Count",
+                    fontFamily = FontFamily(Font(R.font.googlesansregular)),
+                    fontWeight = FontWeight.Normal
+                )
+            },
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                cursorColor = Color.Black,
+                focusedIndicatorColor = Color.White,
+                unfocusedIndicatorColor = Color.White
+            ),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            leadingIcon = { Icon(Icons.Default.Face, "") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(.9f)
         )
         
         Spacer(modifier = Modifier.height(5.dp))
@@ -241,12 +336,22 @@ fun GarageSignUpScreen(
 
 
         OutlinedButton(
-            onClick = { galleryLauncher.launch("image/*") }, modifier = Modifier.padding(10.dp), shape = RoundedCornerShape(8.dp), colors = ButtonDefaults.buttonColors(
+            onClick = { galleryLauncher.launch("image/*") },
+            modifier = Modifier.padding(10.dp),
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(
                 containerColor = colorResource(id = R.color.orange)
-            ), border = BorderStroke(color = colorResource(id = R.color.white), width = 2.dp), elevation = ButtonDefaults.buttonElevation(8.dp)
+            ),
+            border = BorderStroke(color = colorResource(id = R.color.white), width = 2.dp),
+            elevation = ButtonDefaults.buttonElevation(8.dp)
         ) {
             Text(
-                text = "Choose Images from Gallery", color = colorResource(id = R.color.white), fontSize = 12.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center
+                text = "Choose Images from Gallery",
+                color = colorResource(id = R.color.white),
+                fontSize = 12.sp,
+                fontFamily = FontFamily(Font(R.font.googlesansbold)),
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
             )
         }
 
@@ -310,7 +415,12 @@ fun GarageSignUpScreen(
             ), border = BorderStroke(color = colorResource(id = R.color.white), width = 2.dp), elevation = ButtonDefaults.buttonElevation(8.dp)
         ) {
             Text(
-                text = "Continue", color = colorResource(id = R.color.white), fontSize = 12.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center
+                text = "Continue",
+                color = colorResource(id = R.color.white),
+                fontSize = 12.sp,
+                fontFamily = FontFamily(Font(R.font.googlesansbold)),
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
             )
         }
     }

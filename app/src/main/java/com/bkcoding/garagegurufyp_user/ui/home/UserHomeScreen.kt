@@ -1,4 +1,3 @@
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -7,9 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,8 +21,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -67,8 +63,8 @@ private fun UserHomeScreen(){
         Text(
             text = "Welcome,Burhan Kamran",
             fontSize = 20.sp,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.ExtraBold,
+            fontWeight = FontWeight.Bold,
+            fontFamily = FontFamily(Font(R.font.googlesansbold)),
             textAlign = TextAlign.Start,
             color = colorResource(id = R.color.black)
         )
@@ -78,14 +74,13 @@ private fun UserHomeScreen(){
         Text(
             text = "Car Cries,Guru Replies",
             fontSize = 18.sp,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.ExtraBold,
+            fontFamily = FontFamily(Font(R.font.googlesansbold)),
+            fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             color = colorResource(id = R.color.black), modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(20.dp))
         ItemList()
-
     }
 }
 
@@ -170,7 +165,8 @@ fun ItemDesign(modifier: Modifier = Modifier,title: String) {
                     .align(Alignment.Center)
                     .padding(5.dp),
                 textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily(Font(R.font.googlesansbold))
             )
         }
     }

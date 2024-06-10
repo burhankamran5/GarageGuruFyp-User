@@ -1,6 +1,5 @@
 package com.bkcoding.garagegurufyp_user.ui.signup
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +21,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.bkcoding.garagegurufyp_user.R
-import com.bkcoding.garagegurufyp_user.dto.Garage
 
 
 @Composable
@@ -54,8 +53,8 @@ fun SignUpConfirmationScreen(navController: NavController, isGarage: Boolean) {
             text = stringResource(id = if (isGarage) R.string.approval_pending else R.string.high_fives),
             color = colorResource(id = R.color.black),
             fontSize = 30.sp,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.Bold,
+            fontFamily = FontFamily(Font(R.font.poppinsmedium)),
+            fontWeight = FontWeight.Medium,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .padding(horizontal = 20.dp, vertical = 30.dp)
@@ -79,11 +78,10 @@ fun SignUpConfirmationScreen(navController: NavController, isGarage: Boolean) {
                 text = "Welcome",
                 color = colorResource(id = R.color.white),
                 fontSize = 12.sp,
+                fontFamily = FontFamily(Font(R.font.googlesansbold)),
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
         }
-
-
     }
 }

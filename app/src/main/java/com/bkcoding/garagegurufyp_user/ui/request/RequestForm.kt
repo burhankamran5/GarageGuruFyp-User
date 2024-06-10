@@ -38,6 +38,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -71,8 +72,8 @@ fun UserRequestForm() {
         Text(
             text = "Post Your Request",
             textAlign = TextAlign.Center,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.ExtraBold,
+            fontFamily = FontFamily(Font(R.font.googlesansbold)),
+            fontWeight = FontWeight.Bold,
             fontSize = 25.sp,
             color = colorResource(id = R.color.black),
             modifier = Modifier
@@ -84,8 +85,8 @@ fun UserRequestForm() {
         Text(
             text = "Your Car Model",
             fontSize = 15.sp,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.ExtraBold,
+            fontFamily = FontFamily(Font(R.font.googlesansbold)),
+            fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Start,
             color = colorResource(id = R.color.black),
             modifier = Modifier
@@ -116,8 +117,8 @@ fun UserRequestForm() {
         Text(
             text = "Your City",
             fontSize = 15.sp,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.ExtraBold,
+            fontFamily = FontFamily(Font(R.font.googlesansbold)),
+            fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Start,
             color = colorResource(id = R.color.black),
             modifier = Modifier
@@ -138,8 +139,8 @@ fun UserRequestForm() {
         Text(
             text = "State Your Problem",
             fontSize = 15.sp,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.ExtraBold,
+            fontFamily = FontFamily(Font(R.font.googlesansbold)),
+            fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Start,
             color = colorResource(id = R.color.black),
             modifier = Modifier
@@ -182,6 +183,7 @@ fun UserRequestForm() {
                 text = "Choose Images from Gallery",
                 color = colorResource(id = R.color.white),
                 fontSize = 12.sp,
+                fontFamily = FontFamily(Font(R.font.googlesansbold)),
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
@@ -223,6 +225,7 @@ fun UserRequestForm() {
                 text = "Done",
                 color = colorResource(id = R.color.white),
                 fontSize = 14.sp,
+                fontFamily = FontFamily(Font(R.font.googlesansbold)),
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
