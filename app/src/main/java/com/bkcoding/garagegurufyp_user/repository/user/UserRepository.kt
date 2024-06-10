@@ -14,6 +14,6 @@ interface UserRepository {
     fun getGarageFromDb(userId: String): Flow<Result<Garage>>
     fun getGarages(): Flow<Result<List<Garage>>>
 
-    fun postRequest(request: Request): Flow<Result<List<String>>>
+    fun postRequest(request: Request): Flow<Result<String>>
     fun getRequest(): Flow<Result<List<Request>>>
 }

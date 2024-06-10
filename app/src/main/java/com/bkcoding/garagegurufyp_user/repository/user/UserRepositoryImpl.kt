@@ -138,39 +138,39 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    override fun postRequest(request: Request): Flow<Result<List<String>>> = callbackFlow {
+    override fun postRequest(request: Request): Flow<Result<String>> = callbackFlow {
         trySend(Result.Loading)
         val key = databaseReference.push().key
-        val newRequest = Request(
-            id = key ?: "",
-            images = request.images,
-            imageUris = request.imageUris,
-            description = request.description,
-            carModel = request.carModel,
-            garage = request.garage,
-            bids = request.bids,
-            status = request.status,
-            city = request.city,
-            customer = request.customer
-        )
-        databaseReference.child(FirebaseRef.REQUEST).child(key ?: return@callbackFlow).setValue(newRequest)
-            .addOnSuccessListener {
-                //trySend(Result.Success("Data inserted Successfully.."))
-                val uploadTasks = newRequest.imageUris.map { storageReference.child(FirebaseRef.REQUEST_IMAGES).child(newRequest.id).putFile(it) }
-                Tasks.whenAllSuccess<UploadTask.TaskSnapshot>(uploadTasks).addOnSuccessListener{ imageTasks ->
-                    val downloadUrls = mutableListOf<String>()
-                    GlobalScope.launch {
-                        imageTasks.forEach {
-                            downloadUrls.add(it.storage.downloadUrl.await().toString())
-                        }
-                        trySend(Result.Success(downloadUrls))
-                    }
-                }.addOnFailureListener{
-                    trySend(Result.Failure(it))
+        val uploadTasks = request.imageUris.map { storageReference.child(FirebaseRef.REQUEST_IMAGES).child(key.orEmpty()).putFile(it) }
+        Tasks.whenAllSuccess<UploadTask.TaskSnapshot>(uploadTasks).addOnSuccessListener{ imageTasks ->
+            val downloadUrls = mutableListOf<String>()
+            GlobalScope.launch {
+                imageTasks.forEach {
+                    downloadUrls.add(it.storage.downloadUrl.await().toString())
                 }
-            }.addOnFailureListener{
-                trySend(Result.Failure(it))
+                val newRequest = Request(
+                    id = key ?: "",
+                    images = downloadUrls,
+                    imageUris = request.imageUris,
+                    description = request.description,
+                    carModel = request.carModel,
+                    garage = request.garage,
+                    bids = request.bids,
+                    status = request.status,
+                    city = request.city,
+                    customer = request.customer
+                )
+                databaseReference.child(FirebaseRef.REQUEST).child(key ?: return@launch).setValue(newRequest)
+                    .addOnSuccessListener {
+                        trySend(Result.Success("Data inserted Successfully.."))
+
+                    }.addOnFailureListener{
+                        trySend(Result.Failure(it))
+                    }
             }
+        }.addOnFailureListener{
+            trySend(Result.Failure(it))
+        }
         awaitClose {
             close()
         }

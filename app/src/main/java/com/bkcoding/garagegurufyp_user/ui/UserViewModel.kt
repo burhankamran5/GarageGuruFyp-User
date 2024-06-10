@@ -35,7 +35,7 @@ class UserViewModel @Inject constructor(
     }
 
     var homeScreenUIState by mutableStateOf<Result<List<Garage>>?>(null)
-    var postRequestResponse by mutableStateOf<Result<List<String>>?>(null)
+    var postRequestResponse by mutableStateOf<Result<String>?>(null)
     var getRequestResponse by mutableStateOf<Result<List<Request>>?>(null)
 
     fun getGarages() = viewModelScope.launch {
