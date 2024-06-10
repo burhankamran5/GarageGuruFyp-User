@@ -13,7 +13,7 @@ data class Request(
     val city: String = "",
     val customer: Customer = Customer(),
     val garage: Garage = Garage(),
-    val bids: List<Bid> = emptyList(),
+    val bids: Map<String,Bid> = mapOf(),
     ) {
     enum class RequestStatus {
         OPEN, CLOSED, PENDING
