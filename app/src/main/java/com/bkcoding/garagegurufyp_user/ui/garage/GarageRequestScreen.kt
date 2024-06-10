@@ -60,6 +60,7 @@ import com.bkcoding.garagegurufyp_user.repository.fcm.NotificationReq
 import com.bkcoding.garagegurufyp_user.ui.component.CircleProgressIndicator
 import com.bkcoding.garagegurufyp_user.ui.component.MinimalDialog
 import com.bkcoding.garagegurufyp_user.ui.theme.GarageGuruFypUserTheme
+import com.bkcoding.garagegurufyp_user.ui.theme.Typography
 import com.bkcoding.garagegurufyp_user.utils.City
 
 @Composable
@@ -128,7 +129,7 @@ private fun GarageRequestScreen(
                     text = stringResource(id = R.string.all_request),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily(Font(R.font.neo_sans_bold)),
+                    style = Typography.bodySmall,
                     textAlign = TextAlign.Center,
                     color = Color.Black,
                     modifier = Modifier.weight(1f)
@@ -143,7 +144,7 @@ private fun GarageRequestScreen(
             ) {
                 Text(
                     text = stringResource(id = R.string.all_request),
-                    fontFamily = FontFamily(Font(R.font.neo_sans_bold)),
+                    style = Typography.bodySmall,
                     color = Color.Black,
                     textAlign = TextAlign.Start,
                     modifier = Modifier.weight(1f)
@@ -193,14 +194,14 @@ private fun GarageRequestScreen(
                                 text = it.carModel,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
-                                fontFamily = FontFamily(Font(R.font.neo_sans_bold)),
+                                style = Typography.bodySmall,
                                 color = Color.White
                             )
                             Text(
                                 text = it.description,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Normal,
-                                fontFamily = FontFamily(Font(R.font.neo_sans_regular)),
+                                style = Typography.bodySmall,
                                 color = colorResource(id = R.color.white_semi_50),
                                 modifier = Modifier.padding(top = 5.dp)
                             )
@@ -236,7 +237,7 @@ private fun FilterCityDropDown(modifier: Modifier = Modifier, onUserCitySelected
             )
             Text(
                 text = stringResource(id = R.string.filter),
-                fontFamily = FontFamily(Font(R.font.neo_sans_bold)),
+                style = Typography.bodySmall,
                 textAlign = TextAlign.Start,
                 color = Color.White,
                 modifier = Modifier.padding(horizontal = 15.dp, vertical = 10.dp)

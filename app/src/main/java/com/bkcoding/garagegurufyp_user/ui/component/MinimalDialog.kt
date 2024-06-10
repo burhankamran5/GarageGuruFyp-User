@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.bkcoding.garagegurufyp_user.R
+import com.bkcoding.garagegurufyp_user.ui.theme.Typography
 
 @Composable
 fun MinimalDialog(onDismissRequest: () -> Unit, onBidClick: (Int) -> Unit) {
@@ -53,7 +54,7 @@ fun MinimalDialog(onDismissRequest: () -> Unit, onBidClick: (Int) -> Unit) {
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color.Black,
-                fontFamily = FontFamily(Font(R.font.neo_sans_bold)),
+                style = Typography.bodySmall,
                 textAlign = TextAlign.Start,
                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp)
             )

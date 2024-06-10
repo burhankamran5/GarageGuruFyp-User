@@ -51,6 +51,7 @@ import com.bkcoding.garagegurufyp_user.dto.Bid
 import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.dto.Request
 import com.bkcoding.garagegurufyp_user.ui.theme.GarageGuruFypUserTheme
+import com.bkcoding.garagegurufyp_user.ui.theme.Typography
 
 @Composable
 fun RequestBidScreen(navController: NavController, request: Request?) {
@@ -105,20 +106,20 @@ private fun RequestBidScreen(request: Request?, onBackPress: () -> Unit) {
         ) {
             Text(
                 text = request?.carModel ?: "Car Model",
-                fontFamily = FontFamily(Font(R.font.neo_sans_bold)),
+                style = Typography.bodySmall,
                 color = Color.Black,
                 textAlign = TextAlign.Start
             )
             Text(
                 text = request?.city ?: "City",
-                fontFamily = FontFamily(Font(R.font.neo_sans_regular)),
+                style = Typography.labelSmall,
                 color = Color.Gray,
                 textAlign = TextAlign.End
             )
         }
         Text(
             text = request?.description ?: "Description",
-            fontFamily = FontFamily(Font(R.font.neo_sans_regular)),
+            style = Typography.labelSmall,
             fontSize = 14.sp,
             color = Color.Black,
             textAlign = TextAlign.Start,

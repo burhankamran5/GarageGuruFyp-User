@@ -41,6 +41,7 @@ import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.ui.UserViewModel
 import com.bkcoding.garagegurufyp_user.ui.theme.GarageGuruFypUserTheme
+import com.bkcoding.garagegurufyp_user.ui.theme.Typography
 import com.google.gson.Gson
 
 @Composable
@@ -91,7 +92,7 @@ private fun RequestScreen(
         ) {
             Text(
                 text = stringResource(id = R.string.all_request),
-                fontFamily = FontFamily(Font(R.font.neo_sans_bold)),
+                style = Typography.bodySmall,
                 color = Color.Black,
                 textAlign = TextAlign.Start,
                 modifier = Modifier.weight(1f)
@@ -106,7 +107,7 @@ private fun RequestScreen(
             ) {
                 Text(
                     text = stringResource(id = R.string.new_request),
-                    fontFamily = FontFamily(Font(R.font.neo_sans_bold)),
+                    style = Typography.bodySmall,
                     textAlign = TextAlign.Start,
                     color = Color.White,
                     modifier = Modifier.padding(horizontal = 15.dp, vertical = 10.dp)
@@ -144,20 +145,20 @@ private fun RequestScreen(
                     ) {
                         Text(
                             text = it.carModel,
-                            fontFamily = FontFamily(Font(R.font.neo_sans_bold)),
+                            style = Typography.bodySmall,
                             color = Color.Black,
                             textAlign = TextAlign.Start
                         )
                         Text(
                             text = it.city,
-                            fontFamily = FontFamily(Font(R.font.neo_sans_regular)),
+                            style = Typography.bodySmall,
                             color = Color.Gray,
                             textAlign = TextAlign.End
                         )
                     }
                     Text(
                         text = it.description,
-                        fontFamily = FontFamily(Font(R.font.neo_sans_bold)),
+                        style = Typography.bodySmall,
                         color = Color.Black,
                         textAlign = TextAlign.Start,
                         modifier = Modifier.padding(start = 10.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)
