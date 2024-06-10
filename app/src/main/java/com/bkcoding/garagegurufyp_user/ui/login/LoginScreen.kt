@@ -155,28 +155,15 @@ fun LoginScreen(
         Image(
             painter = painterResource(id = R.drawable.mechanic_icon_com),
             contentDescription = "",
-            modifier = Modifier.size(130.dp)
+            modifier = Modifier.size(110.dp)
         )
-
-        Text(
-            text = "Car cries, Guru replies",
-            textAlign = TextAlign.Center,
-            fontFamily = FontFamily(Font(R.font.googlesansbold)),
-            fontWeight = FontWeight.Bold,
-            fontSize = 25.sp,
-            color = Color.Black,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(5.dp)
-        )
-
 
         Text(
             text = "Log-in",
             textAlign = TextAlign.Center,
             fontFamily = FontFamily(Font(R.font.poppinsmedium)),
             fontWeight = FontWeight.Medium,
-            fontSize = 45.sp,
+            fontSize = 30.sp,
             color = Color.Black,
             modifier = Modifier
                 .fillMaxWidth()
@@ -187,7 +174,7 @@ fun LoginScreen(
             text = "Email",
             fontSize = 18.sp,
             fontFamily = FontFamily(Font(R.font.poppinsmedium)),
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Start,
             color = colorResource(id = R.color.black),
             modifier = Modifier
@@ -266,7 +253,7 @@ fun LoginScreen(
             ),
             modifier = Modifier.fillMaxWidth(.9f)
         )
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(35.dp))
         UserTypeDropdown(
             modifier = Modifier
                 .height(50.dp)
@@ -276,7 +263,7 @@ fun LoginScreen(
         ) {
             userType = if (it == UserType.Customer) "Customer" else "Garage"
         }
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(15.dp))
         OutlinedButton(
             onClick = {
                 if (email.isEmpty() || password.isEmpty()) {
@@ -331,7 +318,7 @@ fun LoginScreen(
 
         Text(
             text = "Don't have a account?",
-            fontSize = 22.sp,
+            fontSize = 18.sp,
             fontFamily = FontFamily(Font(R.font.googlesansregular)),
             fontWeight = FontWeight.Normal,
             textAlign = TextAlign.Start,
@@ -340,7 +327,7 @@ fun LoginScreen(
 
         Text(
             text = "Sign-Up",
-            fontSize = 22.sp,
+            fontSize = 15.sp,
             fontFamily = FontFamily(Font(R.font.googlesansbold)),
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Start,

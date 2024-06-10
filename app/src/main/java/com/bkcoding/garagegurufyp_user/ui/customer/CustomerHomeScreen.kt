@@ -161,7 +161,7 @@ private fun CustomerHomeScreen(garageList: List<Garage>?, onGarageClick: (Garage
                 color = Color.Black
             )
             Text(
-                text = customerName,
+                text = "customerName",
                 style = Typography.titleLarge,
                 color = Color.Black
             )
