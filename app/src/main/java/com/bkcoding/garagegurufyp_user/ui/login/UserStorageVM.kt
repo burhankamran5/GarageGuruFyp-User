@@ -8,7 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class UserStorageVM @Inject constructor(private val userPreferences: UserPreferences) :
+class UserStorageVM @Inject constructor(val userPreferences: UserPreferences) :
     ViewModel() {
     // Both are used for signup process. Should not be used to display user data
     var customer = Customer()

@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -30,6 +29,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,8 +51,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.bkcoding.garagegurufyp_user.R
+import com.bkcoding.garagegurufyp_user.dto.Bid
 import com.bkcoding.garagegurufyp_user.dto.Request
 import com.bkcoding.garagegurufyp_user.extensions.showToast
+import com.bkcoding.garagegurufyp_user.repository.fcm.Message
+import com.bkcoding.garagegurufyp_user.repository.fcm.Notification
+import com.bkcoding.garagegurufyp_user.repository.fcm.NotificationReq
+import com.bkcoding.garagegurufyp_user.ui.component.CircleProgressIndicator
+import com.bkcoding.garagegurufyp_user.ui.component.MinimalDialog
 import com.bkcoding.garagegurufyp_user.ui.theme.GarageGuruFypUserTheme
 import com.bkcoding.garagegurufyp_user.utils.City
 
@@ -73,7 +79,15 @@ fun GarageRequestScreen(
     GarageRequestScreen(
         isLoading = isLoading,
         requestList = garageViewModel.getRequestResponse,
-        onBackPress = { navController.popBackStack() }
+        onBackPress = { navController.popBackStack() },
+        onBidClick = { requestId, bidAmount ->
+            val bid = Bid(
+                customer = garageViewModel.getRequestResponse?.filter { it.id == requestId }?.getOrNull(0)?.customer,
+                price = bidAmount.toString(),
+                garages = garageViewModel.userPreferences.getGarage()
+            )
+            garageViewModel.bidOnRequest(requestId, bid)
+        }
     )
 }
 
@@ -81,8 +95,11 @@ fun GarageRequestScreen(
 private fun GarageRequestScreen(
     isLoading: Boolean,
     requestList: List<Request>?,
-    onBackPress: () -> Unit
+    onBackPress: () -> Unit,
+    onBidClick: (String, Int) -> Unit
 ) {
+    var showBidDialog by rememberSaveable { mutableStateOf(false) }
+    var selectRequestId by rememberSaveable { mutableStateOf("") }
     var filteredList by remember { mutableStateOf(listOf<Request>()) }
     LaunchedEffect(requestList) {
         if (requestList != null) {
@@ -90,98 +107,117 @@ private fun GarageRequestScreen(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 15.dp, vertical = 10.dp)
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "",
-                modifier = Modifier.clickable { onBackPress() }
-            )
-            Text(
-                text = stringResource(id = R.string.all_request),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily(Font(R.font.neo_sans_bold)),
-                textAlign = TextAlign.Center,
-                color = Color.Black,
-                modifier = Modifier.weight(1f)
-            )
-        }
-        Spacer(modifier = Modifier.height(30.dp))
-        Row(
-            modifier = Modifier
-                .padding(horizontal = 15.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(id = R.string.all_request),
-                fontFamily = FontFamily(Font(R.font.neo_sans_bold)),
-                color = Color.Black,
-                textAlign = TextAlign.Start,
-                modifier = Modifier.weight(1f)
-            )
-            FilterCityDropDown {
-                filteredList = requestList.orEmpty().filter { request ->
-                    request.city.contains(it.name, ignoreCase = true)
+    if (showBidDialog) MinimalDialog(onDismissRequest = { showBidDialog = false }) {
+        onBidClick(selectRequestId, it)
+        showBidDialog = false
+    }
+
+    Box(modifier = Modifier.fillMaxSize()){
+        Column(modifier = Modifier.fillMaxSize()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 15.dp, vertical = 10.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "",
+                    modifier = Modifier.clickable { onBackPress() }
+                )
+                Text(
+                    text = stringResource(id = R.string.all_request),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily(Font(R.font.neo_sans_bold)),
+                    textAlign = TextAlign.Center,
+                    color = Color.Black,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            Spacer(modifier = Modifier.height(30.dp))
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 15.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(id = R.string.all_request),
+                    fontFamily = FontFamily(Font(R.font.neo_sans_bold)),
+                    color = Color.Black,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier.weight(1f)
+                )
+                FilterCityDropDown {
+                    if (it.name == "All") {
+                        requestList?.let {
+                            filteredList = requestList
+                        }
+                    } else {
+                        filteredList = requestList.orEmpty().filter { request ->
+                            request.city.contains(it.name, ignoreCase = true)
+                        }
+                    }
                 }
             }
-        }
-        Spacer(modifier = Modifier.height(10.dp))
-        LazyColumn(
-            modifier = Modifier.padding(horizontal = 15.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            items(filteredList) {
-                if (it.status == Request.RequestStatus.OPEN) Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = Color.Gray, shape = RoundedCornerShape(10.dp)),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Spacer(modifier = Modifier.width(10.dp))
-                    AsyncImage(
-                        model = it.images.getOrNull(0),
-                        contentDescription = "",
-                        placeholder = painterResource(id = R.drawable.ic_placeholder),
-                        error = painterResource(id = R.drawable.ic_placeholder),
-                        contentScale = ContentScale.Crop,
+            Spacer(modifier = Modifier.height(10.dp))
+            LazyColumn(
+                modifier = Modifier.padding(horizontal = 15.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                items(filteredList) {
+                    if (it.status == Request.RequestStatus.OPEN) Row(
                         modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Column(modifier = Modifier.padding(vertical = 10.dp)) {
-                        Text(
-                            text = it.carModel,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily(Font(R.font.neo_sans_bold)),
-                            color = Color.White
+                            .fillMaxWidth()
+                            .background(color = Color.Gray, shape = RoundedCornerShape(10.dp))
+                            .clickable {
+                                showBidDialog = true
+                                selectRequestId = it.id
+                            },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Spacer(modifier = Modifier.width(10.dp))
+                        AsyncImage(
+                            model = it.images.getOrNull(0),
+                            contentDescription = "",
+                            placeholder = painterResource(id = R.drawable.ic_placeholder),
+                            error = painterResource(id = R.drawable.ic_placeholder),
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(50.dp)
+                                .clip(CircleShape)
                         )
-                        Text(
-                            text = it.description,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Normal,
-                            fontFamily = FontFamily(Font(R.font.neo_sans_regular)),
-                            color = colorResource(id = R.color.white_semi_50)
-                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column(modifier = Modifier.padding(vertical = 25.dp)) {
+                            Text(
+                                text = it.carModel,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = FontFamily(Font(R.font.neo_sans_bold)),
+                                color = Color.White
+                            )
+                            Text(
+                                text = it.description,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Normal,
+                                fontFamily = FontFamily(Font(R.font.neo_sans_regular)),
+                                color = colorResource(id = R.color.white_semi_50),
+                                modifier = Modifier.padding(top = 5.dp)
+                            )
+                        }
                     }
                 }
             }
         }
+        if (isLoading) CircleProgressIndicator(modifier = Modifier.align(Alignment.Center))
     }
-    if (isLoading) CircularProgressIndicator()
+
 }
 
 @Composable
 private fun FilterCityDropDown(modifier: Modifier = Modifier, onUserCitySelected: (City) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
-    val listOfCity = listOf(City.Lahore, City.Islamabad, City.Karachi, City.Multan)
+    val listOfCity = listOf(City.All, City.Lahore, City.Islamabad, City.Karachi, City.Multan)
 
     Box(modifier = modifier.clickable { expanded = true }) {
         Row(
@@ -236,7 +272,8 @@ fun GarageRequestScreenPreview() {
         GarageRequestScreen(
             isLoading = true,
             requestList = null,
-            onBackPress = {}
+            onBackPress = {},
+            onBidClick = { _, _ -> }
         )
     }
 }

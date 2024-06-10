@@ -5,6 +5,7 @@ import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.dto.ApprovalStatus
 import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.dto.Customer
+import com.bkcoding.garagegurufyp_user.dto.Request
 import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.utils.FirebaseRef
 import com.google.android.gms.tasks.Tasks
@@ -12,6 +13,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -126,6 +128,68 @@ class UserRepositoryImpl @Inject constructor(
                 trySend(Result.Success(garageList))
             } else{
                 trySend(Result.Failure(Exception("No Customer found with these details")))
+            }
+        }.addOnFailureListener {
+            trySend(Result.Failure(it))
+        }
+        awaitClose {
+            close()
+        }
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    override fun postRequest(request: Request): Flow<Result<List<String>>> = callbackFlow {
+        trySend(Result.Loading)
+        val key = databaseReference.push().key
+        val newRequest = Request(
+            id = key ?: "",
+            images = request.images,
+            imageUris = request.imageUris,
+            description = request.description,
+            carModel = request.carModel,
+            garage = request.garage,
+            bids = request.bids,
+            status = request.status,
+            city = request.city,
+            customer = request.customer
+        )
+        databaseReference.child(FirebaseRef.REQUEST).child(key ?: return@callbackFlow).setValue(newRequest)
+            .addOnSuccessListener {
+                //trySend(Result.Success("Data inserted Successfully.."))
+                val uploadTasks = newRequest.imageUris.map { storageReference.child(FirebaseRef.REQUEST_IMAGES).child(newRequest.id).putFile(it) }
+                Tasks.whenAllSuccess<UploadTask.TaskSnapshot>(uploadTasks).addOnSuccessListener{ imageTasks ->
+                    val downloadUrls = mutableListOf<String>()
+                    GlobalScope.launch {
+                        imageTasks.forEach {
+                            downloadUrls.add(it.storage.downloadUrl.await().toString())
+                        }
+                        trySend(Result.Success(downloadUrls))
+                    }
+                }.addOnFailureListener{
+                    trySend(Result.Failure(it))
+                }
+            }.addOnFailureListener{
+                trySend(Result.Failure(it))
+            }
+        awaitClose {
+            close()
+        }
+    }
+
+    override fun getRequest() = callbackFlow {
+        trySend(Result.Loading)
+        val requestList = mutableListOf<Request>()
+        databaseReference.child(FirebaseRef.REQUEST).get().addOnSuccessListener { dataSnapshot ->
+            if (dataSnapshot.exists()){
+                for (ds in dataSnapshot.children) {
+                    val request: Request? = ds.getValue(Request::class.java)
+                    if (request != null) {
+                        requestList.add(request)
+                    }
+                }
+                trySend(Result.Success(requestList))
+            } else{
+                trySend(Result.Failure(Exception("No Request found with these details")))
             }
         }.addOnFailureListener {
             trySend(Result.Failure(it))

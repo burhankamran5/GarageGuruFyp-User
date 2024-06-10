@@ -34,6 +34,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.bkcoding.garagegurufyp_user.R
+import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.ui.AuthViewModel
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
@@ -46,6 +47,7 @@ fun GarageHomeScreen(
     authViewModel: AuthViewModel = hiltViewModel()
 ){
     GarageHomeScreen(
+        loginGarageInfo = userStorageVM.userPreferences.getGarage(),
         onInboxClick = { navController.navigate(Screen.ConversationsScreen.route) },
         onRequestClick = {
             navController.navigate(Screen.GarageRequestScreen.route)
@@ -54,7 +56,7 @@ fun GarageHomeScreen(
 }
 
 @Composable
-private fun GarageHomeScreen(onInboxClick: () -> Unit, onRequestClick: () -> Unit) {
+private fun GarageHomeScreen(loginGarageInfo: Garage?, onInboxClick: () -> Unit, onRequestClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -65,7 +67,7 @@ private fun GarageHomeScreen(onInboxClick: () -> Unit, onRequestClick: () -> Uni
             verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
-                model = "",
+                model = loginGarageInfo?.images?.getOrNull(0),
                 contentDescription = "",
                 placeholder = painterResource(id = R.drawable.ic_placeholder),
                 error = painterResource(id = R.drawable.ic_placeholder),
@@ -76,7 +78,7 @@ private fun GarageHomeScreen(onInboxClick: () -> Unit, onRequestClick: () -> Uni
                     .align(Alignment.CenterVertically)
             )
             Text(
-                text = "conversation.userName",
+                text = loginGarageInfo?.name ?: "Garage Name",
                 fontSize = 17.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -144,6 +146,6 @@ private fun MenuCard(modifier: Modifier = Modifier, text: String, @DrawableRes i
 @Composable
 fun GarageHomeScreenPreview() {
     GarageGuruFypUserTheme {
-        GarageHomeScreen(onInboxClick = {}, onRequestClick = {})
+        GarageHomeScreen(loginGarageInfo = null, onInboxClick = {}, onRequestClick = {})
     }
 }

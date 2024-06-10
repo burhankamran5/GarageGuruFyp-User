@@ -1,7 +1,11 @@
 package com.bkcoding.garagegurufyp_user.dto
 
+import android.net.Uri
+import com.google.firebase.database.Exclude
+
 data class Request(
-    val id: Int = 0,
+    val id: String = "",
+    @get:Exclude val imageUris: List<Uri> = emptyList(),
     val images: List<String> = emptyList(),
     val carModel: String = "",
     val description: String = "",

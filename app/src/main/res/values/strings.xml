@@ -24,4 +24,7 @@
     <string name="all_request">All Request</string>
     <string name="empty_error">Please Fill Empty Fields!</string>
     <string name="filter">Filter</string>
+    <string name="bid_amount">Bid Amount</string>
+    <string name="enter_your_bid_amount">Enter Your Bid Amount…</string>
+    <string name="bid">Bid</string>
 </resources>

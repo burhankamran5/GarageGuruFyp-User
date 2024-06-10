@@ -8,9 +8,12 @@ import com.bkcoding.garagegurufyp_user.repository.Result
 import androidx.lifecycle.viewModelScope
 import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.dto.Customer
+import com.bkcoding.garagegurufyp_user.dto.Request
 import com.bkcoding.garagegurufyp_user.repository.fcm.FcmRepository
 import com.bkcoding.garagegurufyp_user.repository.fcm.NotificationReq
 import com.bkcoding.garagegurufyp_user.repository.user.UserRepository
+import com.bkcoding.garagegurufyp_user.sharedpref.UserPreferences
+import com.google.firebase.storage.StorageReference
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val fcmRepository: FcmRepository
+    private val fcmRepository: FcmRepository,
+    val userPreferences: UserPreferences
 ): ViewModel() {
     fun storeUserToDb(customer: Customer) = userRepository.storeUserToDatabase(customer)
     fun uploadGarageImages(garage: Garage) = userRepository.uploadGarageImages(garage)
@@ -31,9 +35,24 @@ class UserViewModel @Inject constructor(
     }
 
     var homeScreenUIState by mutableStateOf<Result<List<Garage>>?>(null)
+    var postRequestResponse by mutableStateOf<Result<List<String>>?>(null)
+    var getRequestResponse by mutableStateOf<Result<List<Request>>?>(null)
+
     fun getGarages() = viewModelScope.launch {
         userRepository.getGarages().collect{
             homeScreenUIState = it
+        }
+    }
+
+    fun postRequest(request: Request) = viewModelScope.launch {
+        userRepository.postRequest(request).collect{
+            postRequestResponse = it
+        }
+    }
+
+    fun getRequest() = viewModelScope.launch {
+        userRepository.getRequest().collect{
+            getRequestResponse = it
         }
     }
 }
