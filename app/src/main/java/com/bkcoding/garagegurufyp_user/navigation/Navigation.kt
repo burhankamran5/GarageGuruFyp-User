@@ -49,7 +49,7 @@ fun GarageNavigation(
             }
         }
     }else{
-        Navigation(userStorageVM, navController, if(!userStorageVM.isFirstLaunch()) "LoginScreen" else startDestination){
+        Navigation(userStorageVM, navController, startDestination){
             goToCustomerHomeScreen = true
         }
     }
