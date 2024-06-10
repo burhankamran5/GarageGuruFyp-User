@@ -61,7 +61,7 @@ fun RequestScreen(navController: NavController, userViewModel: UserViewModel = h
         else -> {}
     }
     RequestScreen(
-        requestList = requestList,
+        requestList = requestList.filter { it.customer.id == userViewModel.userPreferences.userId },
         onPostRequestClick = { navController.navigate(Screen.UserRequestForm.route) },
         onRequestClick = { navController.navigate(Screen.RequestBidScreen.route + "/${Uri.encode(Gson().toJson(it))}")}
     )
