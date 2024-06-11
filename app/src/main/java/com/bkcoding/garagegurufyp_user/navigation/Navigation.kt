@@ -35,6 +35,7 @@ import com.bkcoding.garagegurufyp_user.ui.user.GarageScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.MoreScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.RequestScreen
 import com.bkcoding.garagegurufyp_user.ui.garage.GarageRequestScreen
+import com.bkcoding.garagegurufyp_user.ui.garage.MyRequestScreen
 import com.bkcoding.garagegurufyp_user.ui.request.UserRequestForm
 import com.google.gson.Gson
 
@@ -146,6 +147,14 @@ fun Navigation(
             exitTransition = { ExitTransition.None }
         ){
             ConversationsScreen(navController)
+        }
+
+        composable(
+            route = Screen.MyRequestScreen.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ){
+            MyRequestScreen(navController)
         }
 
         composable(
