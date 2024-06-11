@@ -62,8 +62,11 @@ import com.bkcoding.garagegurufyp_user.ui.theme.Typography
 import kotlinx.coroutines.launch
 
 @Composable
-fun RequestDetailsScreen(navController: NavController, request: Request?,
-                         userViewModel: UserViewModel = hiltViewModel()) {
+fun RequestDetailsScreen(
+    navController: NavController,
+    request: Request?,
+    userViewModel: UserViewModel = hiltViewModel()
+) {
     var latestRequest by remember { mutableStateOf(request) }
     val scope = rememberCoroutineScope()
     RequestDetailsScreen(
@@ -73,7 +76,7 @@ fun RequestDetailsScreen(navController: NavController, request: Request?,
             scope.launch {
                 userViewModel.updateRequest(it).collect{ result ->
                     if (result is Result.Success){
-                        latestRequest = request
+                        latestRequest = it
                     }
                 }
             }
@@ -132,7 +135,7 @@ private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onR
                 textAlign = TextAlign.Start
             )
             Text(
-                text = request.city ?: "City",
+                text = request.city,
                 style = Typography.labelSmall,
                 color = Color.Gray,
                 textAlign = TextAlign.End
@@ -254,8 +257,7 @@ fun BidItem(modifier: Modifier = Modifier, bid: Bid, onBidAction: (Boolean) -> U
                     fontWeight = FontWeight.Normal
                 )
             }
-            if (bid.bidStatus == BidStatus.ACCEPTED) return
-            Row(
+            if (bid.bidStatus == BidStatus.PENDING) Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(4.dp)
