@@ -1,6 +1,8 @@
 package com.bkcoding.garagegurufyp_user.navigation
 
 import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.dto.BottomNavigationItem
 
@@ -25,6 +27,19 @@ sealed class Screen(
     data object UserRequestForm : Screen("UserRequestForm")
     data object GarageRequestScreen : Screen("GarageRequestScreen")
     data object RequestBidScreen : Screen("RequestBidScreen")
+}
+
+class GarageNavigationActions(private val navController: NavHostController) {
+
+    fun navigateTo(destination: BottomNavigationItem) {
+        navController.navigate(destination.route) {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
 }
 
 val BOTTOM_MENU_LIST = listOf(
@@ -59,11 +74,3 @@ val BOTTOM_MENU_LIST = listOf(
         unselectedIcon = R.drawable.ic_more
     )
 )
-
-enum class ScreenType(val label: String){
-    LOGIN_SCREEN("LoginScreen"),
-    ONBOARDING_SCREEN("OnBoardingScreen"),
-    CUSTOMER_HOME_SCREEN("CustomerHomeScreen"),
-    GARAGE_HOME_SCREEN("GarageHomeScreen")
-
-}

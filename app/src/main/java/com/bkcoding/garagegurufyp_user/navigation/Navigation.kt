@@ -5,37 +5,39 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.bkcoding.garagegurufyp_user.dto.Conversation
 import com.bkcoding.garagegurufyp_user.dto.Request
-import com.bkcoding.garagegurufyp_user.ui.customer.RequestBidScreen
 import com.bkcoding.garagegurufyp_user.ui.chat.ChatScreen
+import com.bkcoding.garagegurufyp_user.ui.customer.ConversationsScreen
+import com.bkcoding.garagegurufyp_user.ui.customer.CustomerHomeScreen
+import com.bkcoding.garagegurufyp_user.ui.customer.MoreScreen
+import com.bkcoding.garagegurufyp_user.ui.customer.RequestBidScreen
+import com.bkcoding.garagegurufyp_user.ui.customer.RequestScreen
 import com.bkcoding.garagegurufyp_user.ui.garage.GarageHomeScreen
-import com.bkcoding.garagegurufyp_user.ui.home.MobileScaffold
+import com.bkcoding.garagegurufyp_user.ui.garage.GarageRequestScreen
+import com.bkcoding.garagegurufyp_user.ui.home.GarageBottomNavigationBar
 import com.bkcoding.garagegurufyp_user.ui.login.LoginScreen
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
 import com.bkcoding.garagegurufyp_user.ui.onboarding.OnBoardingScreen
+import com.bkcoding.garagegurufyp_user.ui.request.UserRequestForm
 import com.bkcoding.garagegurufyp_user.ui.signup.ChooseSignUp
 import com.bkcoding.garagegurufyp_user.ui.signup.GarageSignUpScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.SignUpConfirmationScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.UserSignUpScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.VerifyOtpScreen
-import com.bkcoding.garagegurufyp_user.ui.customer.ConversationsScreen
-import com.bkcoding.garagegurufyp_user.ui.customer.CustomerHomeScreen
 import com.bkcoding.garagegurufyp_user.ui.user.GarageScreen
-import com.bkcoding.garagegurufyp_user.ui.customer.MoreScreen
-import com.bkcoding.garagegurufyp_user.ui.customer.RequestScreen
-import com.bkcoding.garagegurufyp_user.ui.garage.GarageRequestScreen
-import com.bkcoding.garagegurufyp_user.ui.request.UserRequestForm
 import com.google.gson.Gson
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -45,33 +47,40 @@ fun GarageNavigation(
     userStorageVM: UserStorageVM,
     startDestination: String
 ) {
-    var goToCustomerHomeScreen by rememberSaveable { mutableStateOf(startDestination == ScreenType.CUSTOMER_HOME_SCREEN.label) }
-    if(goToCustomerHomeScreen){
-        MobileScaffold(navController = navController) {
-            BottomNavHost(navController, userStorageVM){
-                goToCustomerHomeScreen = false
-            }
-        }
-    }else{
-        Navigation(userStorageVM, navController, startDestination){
-            goToCustomerHomeScreen = true
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val selectedDestination = navBackStackEntry?.destination?.route ?: Screen.LoginScreen.route
+    val navigationActions = remember(navController) {
+        GarageNavigationActions(navController)
+    }
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        Navigation(
+            Modifier.weight(1f),
+            userStorageVM,
+            navController,
+            startDestination
+        )
+        if (BOTTOM_MENU_LIST.any { it.route == navController.currentDestination?.route }) {
+            GarageBottomNavigationBar(
+                selectedDestination = selectedDestination,
+                navigateToTopLevelDestination = navigationActions::navigateTo
+            )
         }
     }
 }
 
-
-
-
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun Navigation(
+    modifier: Modifier = Modifier,
     userStorageVM: UserStorageVM,
     navController: NavHostController,
-    startDestination: String,
-    goToCustomerScreen: () -> Unit
+    startDestination: String
 ) {
 
     NavHost(
+        modifier = modifier,
         navController = navController,
         startDestination = startDestination
 
@@ -85,9 +94,7 @@ fun Navigation(
         composable(Screen.LoginScreen.route,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None } ) {
-            LoginScreen(navController = navController, userStorageVM = userStorageVM){
-                goToCustomerScreen()
-            }
+            LoginScreen(navController = navController, userStorageVM = userStorageVM)
         }
 
         composable(Screen.ChooseSignUpScreen.route,
@@ -161,26 +168,12 @@ fun Navigation(
             ChatScreen(navController, conversationResponse)
         }
 
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@Composable
-fun BottomNavHost(
-    navController: NavHostController,
-    userStorageVM: UserStorageVM,
-    onLogout: () -> Unit
-) {
-    NavHost(navController = navController, startDestination = Screen.CustomerHomeScreen.route) {
-
         composable(
             route = Screen.CustomerHomeScreen.route,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }
         ){
-            CustomerHomeScreen(navController = navController, userStorageVM = userStorageVM){
-                onLogout()
-            }
+            CustomerHomeScreen(navController = navController)
         }
 
         composable(
@@ -233,7 +226,7 @@ fun BottomNavHost(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }
         ){
-            MoreScreen()
+            MoreScreen(navController = navController)
         }
 
         composable(
@@ -248,6 +241,7 @@ fun BottomNavHost(
             }
             RequestBidScreen(navController = navController, request = requestResponse)
         }
+
     }
 }
 

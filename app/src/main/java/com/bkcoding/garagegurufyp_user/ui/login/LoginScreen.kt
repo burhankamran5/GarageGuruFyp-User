@@ -77,8 +77,7 @@ fun LoginScreen(
     navController: NavController,
     authVM: AuthViewModel = hiltViewModel(),
     userViewModel: UserViewModel = hiltViewModel(),
-    userStorageVM: UserStorageVM = hiltViewModel(),
-    goToCustomerScreen: () -> Unit
+    userStorageVM: UserStorageVM = hiltViewModel()
 ) {
     val context = LocalContext.current
     val interactionSource = remember { MutableInteractionSource() }
@@ -121,10 +120,9 @@ fun LoginScreen(
                         userStorageVM.updateUserData(UserType.Customer.name, result.data.id)
                         userStorageVM.updateCustomerPref(result.data)
                         navController.popBackStack(navController.graph.id, true)
-                        goToCustomerScreen()
-                        /*navController.navigate(Screen.CustomerHomeScreen.route){
+                        navController.navigate(Screen.CustomerHomeScreen.route){
                             popUpTo(navController.graph.id)
-                        }*/
+                        }
                     }
                     is Result.Failure -> {
                         context.showToast(result.exception.message.toString())
