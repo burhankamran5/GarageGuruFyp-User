@@ -29,6 +29,11 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,33 +41,48 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
 import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.dto.Bid
+import com.bkcoding.garagegurufyp_user.dto.BidStatus
 import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.dto.Request
+import com.bkcoding.garagegurufyp_user.repository.Result
+import com.bkcoding.garagegurufyp_user.ui.UserViewModel
 import com.bkcoding.garagegurufyp_user.ui.theme.GarageGuruFypUserTheme
 import com.bkcoding.garagegurufyp_user.ui.theme.Typography
+import kotlinx.coroutines.launch
 
 @Composable
-fun RequestBidScreen(navController: NavController, request: Request?) {
-    RequestBidScreen(
-        request = request,
-        onBackPress = { navController.popBackStack() }
+fun RequestDetailsScreen(navController: NavController, request: Request?,
+                         userViewModel: UserViewModel = hiltViewModel()) {
+    var latestRequest by remember { mutableStateOf(request) }
+    val scope = rememberCoroutineScope()
+    RequestDetailsScreen(
+        request = latestRequest,
+        onBackPress = { navController.popBackStack() },
+        onRequestUpdated = {
+            scope.launch {
+                userViewModel.updateRequest(it).collect{ result ->
+                    if (result is Result.Success){
+                        latestRequest = request
+                    }
+                }
+            }
+        }
     )
 }
 
 @Composable
-private fun RequestBidScreen(request: Request?, onBackPress: () -> Unit) {
+private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onRequestUpdated: (Request) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -137,22 +157,40 @@ private fun RequestBidScreen(request: Request?, onBackPress: () -> Unit) {
                 .padding(horizontal = 15.dp)
                 .align(Alignment.Start)
         )
+        if (request?.acceptedBid != null){
+            BidItem(bid = request.acceptedBid, onBidAction = {})
+            return@Column
+        }
+        val bids = request?.bids?.toList()?.map { it.second }?.filter { it.bidStatus == BidStatus.PENDING}
+        if (bids.isNullOrEmpty()) return@Column
         LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(max = 700.dp),
-            contentPadding = PaddingValues(bottom = 20.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 700.dp),
+                contentPadding = PaddingValues(bottom = 20.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            items(request?.bids.orEmpty().toList()) {
-                BidItemDesign(modifier = Modifier, bid = it.second)
+            items(bids) { bid ->
+                BidItem(modifier = Modifier, bid = bid) { accepted ->
+                    if (accepted) {
+                        val acceptedBid = bid.copy(bidStatus = BidStatus.ACCEPTED)
+                        val updatedBids = request.bids.toMutableMap()
+                        updatedBids[bid.id] = acceptedBid
+                        onRequestUpdated(request.copy(bids = updatedBids, acceptedBid = acceptedBid))
+                    } else {
+                        val rejectedBid = bid.copy(bidStatus = BidStatus.DECLINED)
+                        val updatedBids = request.bids.toMutableMap()
+                        updatedBids[bid.id] = rejectedBid
+                        onRequestUpdated(request.copy(bids = updatedBids))
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-fun BidItemDesign(modifier: Modifier = Modifier, bid: Bid) {
+fun BidItem(modifier: Modifier = Modifier, bid: Bid, onBidAction: (Boolean) -> Unit) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -165,7 +203,7 @@ fun BidItemDesign(modifier: Modifier = Modifier, bid: Bid) {
     ) {
         Spacer(modifier = Modifier.width(5.dp))
         SubcomposeAsyncImage(
-            model = bid.garages?.images?.getOrNull(0),
+            model = bid.garage?.images?.getOrNull(0),
             loading = {
                 CircularProgressIndicator()
             },
@@ -187,7 +225,7 @@ fun BidItemDesign(modifier: Modifier = Modifier, bid: Bid) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = bid.garages?.name ?: "Name",
+                    text = bid.garage?.name ?: "Name",
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
                     textAlign = TextAlign.Start
@@ -207,7 +245,7 @@ fun BidItemDesign(modifier: Modifier = Modifier, bid: Bid) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = bid.garages?.location ?: "Location",
+                    text = bid.garage?.location ?: "Location",
                     fontWeight = FontWeight.Normal,
                 )
                 Text(
@@ -221,7 +259,7 @@ fun BidItemDesign(modifier: Modifier = Modifier, bid: Bid) {
                     .padding(4.dp)
             ) {
                 OutlinedButton(
-                    onClick = {},
+                    onClick = { onBidAction(false)},
                     modifier = Modifier
                         .height(40.dp)
                         .weight(1f), // Adjust width for equal buttons
@@ -242,7 +280,7 @@ fun BidItemDesign(modifier: Modifier = Modifier, bid: Bid) {
                 }
                 Spacer(modifier = Modifier.width(10.dp))
                 OutlinedButton(
-                    onClick = {},
+                    onClick = {onBidAction(true)},
                     modifier = Modifier
                         .height(40.dp)
                         .weight(1f), // Adjust width for equal buttons
@@ -274,10 +312,10 @@ fun RequestBidScreenPreview() {
         description = "description",
         city = "Lahore",
         bids = mapOf(
-            "bidder1" to Bid(1,  price = "100.00", garages = Garage(name = "Pak Wheel", city = "Lahore"))
+            "bidder1" to Bid("1",  price = "100.00", garage = Garage(name = "Pak Wheel", city = "Lahore"))
         )
     )
     GarageGuruFypUserTheme {
-        RequestBidScreen(request = request, onBackPress = {})
+        RequestDetailsScreen(request = request, onBackPress = {}, onRequestUpdated = {})
     }
 }

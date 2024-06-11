@@ -27,8 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -122,50 +120,55 @@ private fun RequestScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             items(requestList.orEmpty()){
-                Column(
-                    modifier = Modifier
-                        .padding(horizontal = 15.dp)
-                        .border(
-                            width = 1.dp,
-                            color = colorResource(id = R.color.orange),
-                            shape = RoundedCornerShape(12.dp)
-                        )
-                        .clickable { onRequestClick(it) }
-                ) {
-                    AsyncImage(
-                        model = it.images.getOrNull(0),
-                        contentDescription = "",
-                        modifier = Modifier.aspectRatio(12f / 6f)
-                    )
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 10.dp, top = 10.dp, end = 10.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = it.carModel,
-                            style = Typography.bodySmall,
-                            color = Color.Black,
-                            textAlign = TextAlign.Start
-                        )
-                        Text(
-                            text = it.city,
-                            style = Typography.bodySmall,
-                            color = Color.Gray,
-                            textAlign = TextAlign.End
-                        )
-                    }
-                    Text(
-                        text = it.description,
-                        style = Typography.bodySmall,
-                        color = Color.Black,
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier.padding(start = 10.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)
-                    )
-                }
+               RequestItem(request = it, onRequestClick = onRequestClick)
             }
         }
+    }
+}
+
+@Composable
+fun RequestItem(request: Request, onRequestClick: (Request) -> Unit){
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 15.dp)
+            .border(
+                width = 1.dp,
+                color = colorResource(id = R.color.orange),
+                shape = RoundedCornerShape(12.dp)
+            )
+            .clickable { onRequestClick(request) }
+    ) {
+        AsyncImage(
+            model = request.images.getOrNull(0),
+            contentDescription = "",
+            modifier = Modifier.aspectRatio(12f / 6f)
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, top = 10.dp, end = 10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = request.carModel,
+                style = Typography.bodySmall,
+                color = Color.Black,
+                textAlign = TextAlign.Start
+            )
+            Text(
+                text = request.city,
+                style = Typography.bodySmall,
+                color = Color.Gray,
+                textAlign = TextAlign.End
+            )
+        }
+        Text(
+            text = request.description,
+            style = Typography.bodySmall,
+            color = Color.Black,
+            textAlign = TextAlign.Start,
+            modifier = Modifier.padding(start = 10.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)
+        )
     }
 }
 

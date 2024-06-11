@@ -13,7 +13,7 @@ interface UserRepository {
     fun getCustomerFromDb(userId: String): Flow<Result<Customer>>
     fun getGarageFromDb(userId: String): Flow<Result<Garage>>
     fun getGarages(): Flow<Result<List<Garage>>>
-
     fun postRequest(request: Request): Flow<Result<String>>
-    fun getRequest(): Flow<Result<List<Request>>>
+    fun getRequests(): Flow<Result<List<Request>>>
+    fun updateRequest(request: Request): Flow<Result<String>>
 }

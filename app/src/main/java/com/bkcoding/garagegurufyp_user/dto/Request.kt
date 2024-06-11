@@ -12,10 +12,12 @@ data class Request(
     val status: RequestStatus = RequestStatus.OPEN,
     val city: String = "",
     val customer: Customer = Customer(),
-    val garage: Garage = Garage(),
-    val bids: Map<String,Bid> = mapOf(),
-    ) {
-    enum class RequestStatus {
-        OPEN, CLOSED, PENDING
-    }
+    val assignedGarage: Garage? = null,
+    val bids: Map<String, Bid> = mapOf(),
+    val isRatedByCustomer: Boolean = false,
+    val acceptedBid: Bid? = null
+)
+
+enum class RequestStatus {
+    OPEN, COMPLETED, IN_PROGRESS
 }

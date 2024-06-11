@@ -17,7 +17,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.bkcoding.garagegurufyp_user.dto.Conversation
 import com.bkcoding.garagegurufyp_user.dto.Request
-import com.bkcoding.garagegurufyp_user.ui.customer.RequestBidScreen
+import com.bkcoding.garagegurufyp_user.ui.customer.RequestDetailsScreen
 import com.bkcoding.garagegurufyp_user.ui.chat.ChatScreen
 import com.bkcoding.garagegurufyp_user.ui.garage.GarageHomeScreen
 import com.bkcoding.garagegurufyp_user.ui.home.MobileScaffold
@@ -246,7 +246,7 @@ fun BottomNavHost(
             val requestResponse = request?.let {data->
                 Gson().fromJson(data, Request::class.java)
             }
-            RequestBidScreen(navController = navController, request = requestResponse)
+            RequestDetailsScreen(navController = navController, request = requestResponse)
         }
     }
 }

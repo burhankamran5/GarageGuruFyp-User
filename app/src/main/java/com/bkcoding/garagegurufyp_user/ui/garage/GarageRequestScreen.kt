@@ -40,8 +40,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,10 +51,8 @@ import coil.compose.AsyncImage
 import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.dto.Bid
 import com.bkcoding.garagegurufyp_user.dto.Request
+import com.bkcoding.garagegurufyp_user.dto.RequestStatus
 import com.bkcoding.garagegurufyp_user.extensions.showToast
-import com.bkcoding.garagegurufyp_user.repository.fcm.Message
-import com.bkcoding.garagegurufyp_user.repository.fcm.Notification
-import com.bkcoding.garagegurufyp_user.repository.fcm.NotificationReq
 import com.bkcoding.garagegurufyp_user.ui.component.CircleProgressIndicator
 import com.bkcoding.garagegurufyp_user.ui.component.MinimalDialog
 import com.bkcoding.garagegurufyp_user.ui.theme.GarageGuruFypUserTheme
@@ -85,7 +81,7 @@ fun GarageRequestScreen(
             val bid = Bid(
                 customer = garageViewModel.getRequestResponse?.filter { it.id == requestId }?.getOrNull(0)?.customer,
                 price = bidAmount.toString(),
-                garages = garageViewModel.userPreferences.getGarage()
+                garage = garageViewModel.userPreferences.getGarage()
             )
             garageViewModel.bidOnRequest(requestId, bid)
         }
@@ -167,7 +163,7 @@ private fun GarageRequestScreen(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 items(filteredList) {
-                    if (it.status == Request.RequestStatus.OPEN) Row(
+                    if (it.status == RequestStatus.OPEN) Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(color = Color.Gray, shape = RoundedCornerShape(10.dp))
