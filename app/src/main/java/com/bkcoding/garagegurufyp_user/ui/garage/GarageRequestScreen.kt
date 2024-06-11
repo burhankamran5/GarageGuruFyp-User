@@ -75,7 +75,7 @@ fun GarageRequestScreen(
 
     GarageRequestScreen(
         isLoading = isLoading,
-        requestList = garageViewModel.getRequestResponse?.filter { it.city.equals(garageViewModel.userPreferences.getGarage()?.city, ignoreCase = true) },
+        requestList = garageViewModel.getRequestResponse?.filter { it.city.equals(garageViewModel.userPreferences.getGarage()?.city, ignoreCase = true) }?.filter { !it.bids.containsKey(garageViewModel.userPreferences.getGarage()?.id) },
         onBackPress = { navController.popBackStack() },
         onBidClick = { requestId, bidAmount ->
             val bid = Bid(
