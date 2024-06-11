@@ -28,4 +28,5 @@
     <string name="enter_your_bid_amount">Enter Your Bid Amount…</string>
     <string name="bid">Bid</string>
     <string name="all_bids">All Bids</string>
+    <string name="accepted_bid">Accepted Bid</string>
 </resources>

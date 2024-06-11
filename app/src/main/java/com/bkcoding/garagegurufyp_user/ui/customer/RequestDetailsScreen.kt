@@ -83,6 +83,7 @@ fun RequestDetailsScreen(navController: NavController, request: Request?,
 
 @Composable
 private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onRequestUpdated: (Request) -> Unit) {
+    request ?: return
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -109,7 +110,7 @@ private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onR
         }
         Spacer(modifier = Modifier.height(10.dp))
         SubcomposeAsyncImage(
-            model = request?.images?.getOrNull(0),
+            model = request.images.getOrNull(0),
             loading = {
                 CircularProgressIndicator()
             },
@@ -125,20 +126,20 @@ private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onR
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = request?.carModel ?: "Car Model",
+                text = request.carModel,
                 style = Typography.bodySmall,
                 color = Color.Black,
                 textAlign = TextAlign.Start
             )
             Text(
-                text = request?.city ?: "City",
+                text = request.city ?: "City",
                 style = Typography.labelSmall,
                 color = Color.Gray,
                 textAlign = TextAlign.End
             )
         }
         Text(
-            text = request?.description ?: "Description",
+            text = request.description,
             style = Typography.labelSmall,
             fontSize = 14.sp,
             color = Color.Black,
@@ -149,7 +150,7 @@ private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onR
         )
         Spacer(modifier = Modifier.height(10.dp))
         Text(
-            text = stringResource(id = R.string.all_bids),
+            text = stringResource(id = if (request.acceptedBid != null) R.string.accepted_bid else R.string.all_bids),
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
@@ -157,12 +158,12 @@ private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onR
                 .padding(horizontal = 15.dp)
                 .align(Alignment.Start)
         )
-        if (request?.acceptedBid != null){
+        if (request.acceptedBid != null){
             BidItem(bid = request.acceptedBid, onBidAction = {})
-            return@Column
+            return
         }
-        val bids = request?.bids?.toList()?.map { it.second }?.filter { it.bidStatus == BidStatus.PENDING}
-        if (bids.isNullOrEmpty()) return@Column
+        val bids = request.bids.toList().map { it.second }.filter { it.bidStatus == BidStatus.PENDING}
+        if (bids.isEmpty()) return
         LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -253,6 +254,7 @@ fun BidItem(modifier: Modifier = Modifier, bid: Bid, onBidAction: (Boolean) -> U
                     fontWeight = FontWeight.Normal
                 )
             }
+            if (bid.bidStatus == BidStatus.ACCEPTED) return
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
