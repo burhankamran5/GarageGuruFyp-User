@@ -65,6 +65,7 @@ import com.bkcoding.garagegurufyp_user.extensions.showToast
 import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.ui.UserViewModel
+import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
 import com.bkcoding.garagegurufyp_user.ui.theme.GarageGuruFypUserTheme
 import com.bkcoding.garagegurufyp_user.ui.theme.Typography
 import com.google.gson.Gson
@@ -75,7 +76,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun CustomerHomeScreen(
     navController: NavController,
-    userViewModel: UserViewModel = hiltViewModel()
+    userViewModel: UserViewModel = hiltViewModel(),
+    userStorageVM: UserStorageVM = hiltViewModel()
 ){
     val context = LocalContext.current
     var garageList by rememberSaveable {
