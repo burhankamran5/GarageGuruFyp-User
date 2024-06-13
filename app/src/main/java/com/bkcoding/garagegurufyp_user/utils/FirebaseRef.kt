@@ -8,4 +8,6 @@ object FirebaseRef {
     const val TOKEN = "token"
     const val CONVERSATIONS = "Conversations"
     const val MESSAGES = "Messages"
+    const val REQUEST_IMAGES = "Request Images"
+    const val REQUEST = "Request"
 }

@@ -1,8 +1,13 @@
 package com.bkcoding.garagegurufyp_user.dto
 
 data class Bid(
-    val id: Int = 0,
-    val customer: Customer,
+    val id: String = "",
+    val customer: Customer? = null,
     val price: String = "",
-    val garages:List<Garage> = emptyList()
-    )
+    val garage: Garage? = null,
+    val bidStatus: BidStatus = BidStatus.PENDING
+)
+
+enum class BidStatus {
+    PENDING, ACCEPTED, DECLINED
+}

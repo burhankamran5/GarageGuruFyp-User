@@ -6,12 +6,13 @@ import com.bkcoding.garagegurufyp_user.repository.chat.ChatRepository
 import com.bkcoding.garagegurufyp_user.repository.chat.ChatRepositoryImpl
 import com.bkcoding.garagegurufyp_user.repository.fcm.FcmRepository
 import com.bkcoding.garagegurufyp_user.repository.fcm.FcmRepositoryImpl
+import com.bkcoding.garagegurufyp_user.repository.garage.GarageRepository
+import com.bkcoding.garagegurufyp_user.repository.garage.GarageRepositoryImpl
 import com.bkcoding.garagegurufyp_user.repository.user.UserRepository
 import com.bkcoding.garagegurufyp_user.repository.user.UserRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -29,5 +30,8 @@ abstract class RepositoryModule {
     abstract fun providesFcmRepository(repo: FcmRepositoryImpl): FcmRepository
     @Binds
     @Singleton
-    abstract fun providesChatRepository(repo: ChatRepositoryImpl): ChatRepository
+    abstract fun providesChatRepository(repo: ChatRepositoryImpl): ChatRepository@Binds
+
+    @Singleton
+    abstract fun providesGarageRepository(repo: GarageRepositoryImpl): GarageRepository
 }

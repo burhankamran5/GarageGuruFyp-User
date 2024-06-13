@@ -20,4 +20,16 @@
     <string name="view_all">View All</string>
     <string name="message_empty_error">Please Enter a Message!</string>
     <string name="write_your_message">Write Your Message…</string>
+    <string name="new_request">New Request</string>
+    <string name="all_request">All Request</string>
+    <string name="empty_error">Please Fill Empty Fields!</string>
+    <string name="filter">Filter</string>
+    <string name="bid_amount">Bid Amount</string>
+    <string name="enter_your_bid_amount">Enter Your Bid Amount…</string>
+    <string name="bid">Bid</string>
+    <string name="all_bids">All Bids</string>
+    <string name="accepted_bid">Accepted Bid</string>
+    <string name="request">Request</string>
+    <string name="my_request">My Request</string>
+    <string name="inbox">Inbox</string>
 </resources>

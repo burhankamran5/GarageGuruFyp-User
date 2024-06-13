@@ -5,6 +5,7 @@ import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.dto.ApprovalStatus
 import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.dto.Customer
+import com.bkcoding.garagegurufyp_user.dto.Request
 import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.utils.FirebaseRef
 import com.google.android.gms.tasks.Tasks
@@ -12,6 +13,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +28,7 @@ class UserRepositoryImpl @Inject constructor(
     private val databaseReference: DatabaseReference,
     private val storageReference: StorageReference
 ): UserRepository {
+    private val requestsRef =  databaseReference.child(FirebaseRef.REQUEST)
     override fun storeUserToDatabase(customer: Customer): Flow<Result<String>> = callbackFlow {
         trySend(Result.Loading)
         databaseReference.child(FirebaseRef.CUSTOMERS).child(customer.id).setValue(customer)
@@ -127,6 +130,80 @@ class UserRepositoryImpl @Inject constructor(
             } else{
                 trySend(Result.Failure(Exception("No Customer found with these details")))
             }
+        }.addOnFailureListener {
+            trySend(Result.Failure(it))
+        }
+        awaitClose {
+            close()
+        }
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    override fun postRequest(request: Request): Flow<Result<String>> = callbackFlow {
+        trySend(Result.Loading)
+        val key = databaseReference.push().key
+        val uploadTasks = request.imageUris.map { storageReference.child(FirebaseRef.REQUEST_IMAGES).child(key.orEmpty()).putFile(it) }
+        Tasks.whenAllSuccess<UploadTask.TaskSnapshot>(uploadTasks).addOnSuccessListener{ imageTasks ->
+            val downloadUrls = mutableListOf<String>()
+            GlobalScope.launch {
+                imageTasks.forEach {
+                    downloadUrls.add(it.storage.downloadUrl.await().toString())
+                }
+                val newRequest = Request(
+                    id = key ?: "",
+                    images = downloadUrls,
+                    imageUris = request.imageUris,
+                    description = request.description,
+                    carModel = request.carModel,
+                    assignedGarage = request.assignedGarage,
+                    bids = request.bids,
+                    status = request.status,
+                    city = request.city,
+                    customer = request.customer
+                )
+                requestsRef.child(key ?: return@launch).setValue(newRequest)
+                    .addOnSuccessListener {
+                        trySend(Result.Success("Data inserted Successfully.."))
+
+                    }.addOnFailureListener{
+                        trySend(Result.Failure(it))
+                    }
+            }
+        }.addOnFailureListener{
+            trySend(Result.Failure(it))
+        }
+        awaitClose {
+            close()
+        }
+    }
+
+    override fun getRequests() = callbackFlow {
+        trySend(Result.Loading)
+        val requestList = mutableListOf<Request>()
+        requestsRef.get().addOnSuccessListener { dataSnapshot ->
+            if (dataSnapshot.exists()){
+                for (ds in dataSnapshot.children) {
+                    val request: Request? = ds.getValue(Request::class.java)
+                    if (request != null) {
+                        requestList.add(request)
+                    }
+                }
+                trySend(Result.Success(requestList))
+            } else{
+                trySend(Result.Failure(Exception("No Request found with these details")))
+            }
+        }.addOnFailureListener {
+            trySend(Result.Failure(it))
+        }
+        awaitClose {
+            close()
+        }
+    }
+
+    override fun updateRequest(request: Request): Flow<Result<String>> = callbackFlow {
+        trySend(Result.Loading)
+        requestsRef.child(request.id).setValue(request).addOnSuccessListener {
+            trySend(Result.Success("Request Updated"))
         }.addOnFailureListener {
             trySend(Result.Failure(it))
         }
