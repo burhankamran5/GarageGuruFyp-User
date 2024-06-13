@@ -28,6 +28,7 @@ class UserRepositoryImpl @Inject constructor(
     private val databaseReference: DatabaseReference,
     private val storageReference: StorageReference
 ): UserRepository {
+    private val requestsRef =  databaseReference.child(FirebaseRef.REQUEST)
     override fun storeUserToDatabase(customer: Customer): Flow<Result<String>> = callbackFlow {
         trySend(Result.Loading)
         databaseReference.child(FirebaseRef.CUSTOMERS).child(customer.id).setValue(customer)
@@ -154,13 +155,13 @@ class UserRepositoryImpl @Inject constructor(
                     imageUris = request.imageUris,
                     description = request.description,
                     carModel = request.carModel,
-                    garage = request.garage,
+                    assignedGarage = request.assignedGarage,
                     bids = request.bids,
                     status = request.status,
                     city = request.city,
                     customer = request.customer
                 )
-                databaseReference.child(FirebaseRef.REQUEST).child(key ?: return@launch).setValue(newRequest)
+                requestsRef.child(key ?: return@launch).setValue(newRequest)
                     .addOnSuccessListener {
                         trySend(Result.Success("Data inserted Successfully.."))
 
@@ -176,10 +177,10 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getRequest() = callbackFlow {
+    override fun getRequests() = callbackFlow {
         trySend(Result.Loading)
         val requestList = mutableListOf<Request>()
-        databaseReference.child(FirebaseRef.REQUEST).get().addOnSuccessListener { dataSnapshot ->
+        requestsRef.get().addOnSuccessListener { dataSnapshot ->
             if (dataSnapshot.exists()){
                 for (ds in dataSnapshot.children) {
                     val request: Request? = ds.getValue(Request::class.java)
@@ -191,6 +192,18 @@ class UserRepositoryImpl @Inject constructor(
             } else{
                 trySend(Result.Failure(Exception("No Request found with these details")))
             }
+        }.addOnFailureListener {
+            trySend(Result.Failure(it))
+        }
+        awaitClose {
+            close()
+        }
+    }
+
+    override fun updateRequest(request: Request): Flow<Result<String>> = callbackFlow {
+        trySend(Result.Loading)
+        requestsRef.child(request.id).setValue(request).addOnSuccessListener {
+            trySend(Result.Success("Request Updated"))
         }.addOnFailureListener {
             trySend(Result.Failure(it))
         }

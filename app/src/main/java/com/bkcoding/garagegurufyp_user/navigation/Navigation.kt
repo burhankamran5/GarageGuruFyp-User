@@ -23,7 +23,7 @@ import com.bkcoding.garagegurufyp_user.ui.chat.ChatScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.ConversationsScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.CustomerHomeScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.MoreScreen
-import com.bkcoding.garagegurufyp_user.ui.customer.RequestBidScreen
+import com.bkcoding.garagegurufyp_user.ui.customer.RequestDetailsScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.RequestScreen
 import com.bkcoding.garagegurufyp_user.ui.garage.GarageHomeScreen
 import com.bkcoding.garagegurufyp_user.ui.garage.GarageRequestScreen
@@ -38,6 +38,11 @@ import com.bkcoding.garagegurufyp_user.ui.signup.SignUpConfirmationScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.UserSignUpScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.VerifyOtpScreen
 import com.bkcoding.garagegurufyp_user.ui.user.GarageScreen
+import com.bkcoding.garagegurufyp_user.ui.customer.MoreScreen
+import com.bkcoding.garagegurufyp_user.ui.customer.RequestScreen
+import com.bkcoding.garagegurufyp_user.ui.garage.GarageRequestScreen
+import com.bkcoding.garagegurufyp_user.ui.garage.MyRequestScreen
+import com.bkcoding.garagegurufyp_user.ui.request.UserRequestForm
 import com.google.gson.Gson
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -156,6 +161,14 @@ fun Navigation(
         }
 
         composable(
+            route = Screen.MyRequestScreen.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ){
+            MyRequestScreen(navController)
+        }
+
+        composable(
             arguments = listOf(navArgument("conversation") { type = NavType.StringType }),
             route = Screen.ChatScreen.route + "/{conversation}",
             enterTransition = { EnterTransition.None },
@@ -239,7 +252,7 @@ fun Navigation(
             val requestResponse = request?.let {data->
                 Gson().fromJson(data, Request::class.java)
             }
-            RequestBidScreen(navController = navController, request = requestResponse)
+            RequestDetailsScreen(navController = navController, request = requestResponse)
         }
 
     }

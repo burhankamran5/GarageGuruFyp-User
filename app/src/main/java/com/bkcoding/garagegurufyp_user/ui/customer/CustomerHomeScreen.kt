@@ -123,6 +123,7 @@ fun CustomerHomeScreen(
     }
 
     CustomerHomeScreen(
+        customerName = userStorageVM.getSavedCustomer()?.name.orEmpty(),
         garageList = garageList,
         onGarageClick = {
             val conversation = Conversation(
@@ -138,7 +139,7 @@ fun CustomerHomeScreen(
 }
 
 @Composable
-private fun CustomerHomeScreen(garageList: List<Garage>?, onGarageClick: (Garage) -> Unit) {
+private fun CustomerHomeScreen(garageList: List<Garage>?, onGarageClick: (Garage) -> Unit, customerName: String) {
     Column(
         modifier = Modifier
             .padding(horizontal = 10.dp)
@@ -154,7 +155,7 @@ private fun CustomerHomeScreen(garageList: List<Garage>?, onGarageClick: (Garage
                 color = Color.Black
             )
             Text(
-                text = "customerName",
+                text = customerName,
                 style = Typography.titleLarge,
                 color = Color.Black
             )
@@ -301,6 +302,7 @@ private fun GarageCard(modifier: Modifier = Modifier, garage: Garage) {
 @Composable
 fun CustomerHomeScreenPreview() {
     GarageGuruFypUserTheme {
-        CustomerHomeScreen(garageList = emptyList(), onGarageClick = {})
+        CustomerHomeScreen(
+            garageList = emptyList(), onGarageClick = {}, customerName = "Burhan")
     }
 }

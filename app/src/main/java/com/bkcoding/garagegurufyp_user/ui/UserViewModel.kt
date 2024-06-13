@@ -13,7 +13,6 @@ import com.bkcoding.garagegurufyp_user.repository.fcm.FcmRepository
 import com.bkcoding.garagegurufyp_user.repository.fcm.NotificationReq
 import com.bkcoding.garagegurufyp_user.repository.user.UserRepository
 import com.bkcoding.garagegurufyp_user.sharedpref.UserPreferences
-import com.google.firebase.storage.StorageReference
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,6 +33,8 @@ class UserViewModel @Inject constructor(
         fcmRepository.sendPushNotification(notificationReq)
     }
 
+    fun updateRequest(request: Request) =  userRepository.updateRequest(request)
+
     var homeScreenUIState by mutableStateOf<Result<List<Garage>>?>(null)
     var postRequestResponse by mutableStateOf<Result<String>?>(null)
     var getRequestResponse by mutableStateOf<Result<List<Request>>?>(null)
@@ -51,7 +52,7 @@ class UserViewModel @Inject constructor(
     }
 
     fun getRequest() = viewModelScope.launch {
-        userRepository.getRequest().collect{
+        userRepository.getRequests().collect{
             getRequestResponse = it
         }
     }

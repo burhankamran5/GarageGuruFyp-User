@@ -1,18 +1,13 @@
 package com.bkcoding.garagegurufyp_user.ui.garage
 
-import android.util.Log
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bkcoding.garagegurufyp_user.dto.Bid
-import com.bkcoding.garagegurufyp_user.dto.ChatMessage
-import com.bkcoding.garagegurufyp_user.dto.Conversation
 import com.bkcoding.garagegurufyp_user.dto.Request
 import com.bkcoding.garagegurufyp_user.repository.Result
-import com.bkcoding.garagegurufyp_user.repository.chat.ChatRepository
 import com.bkcoding.garagegurufyp_user.repository.fcm.FcmRepository
 import com.bkcoding.garagegurufyp_user.repository.fcm.Message
 import com.bkcoding.garagegurufyp_user.repository.fcm.Notification
@@ -58,7 +53,7 @@ class GarageViewModel @Inject constructor(
                             NotificationReq(
                                 Message(
                                     token = customerResult.data.token,
-                                    notification = Notification(title = "Bid", body = "${bid.garages?.name} bid on your Request!")
+                                    notification = Notification(title = "Bid", body = "${bid.garage?.name} bid on your Request!")
                                 )
                             )
                         )

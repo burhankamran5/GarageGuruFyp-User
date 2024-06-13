@@ -7,13 +7,17 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
@@ -23,8 +27,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,17 +52,27 @@ fun GarageHomeScreen(
     userStorageVM: UserStorageVM = hiltViewModel(),
     authViewModel: AuthViewModel = hiltViewModel()
 ){
+    val context = LocalContext.current
     GarageHomeScreen(
         loginGarageInfo = userStorageVM.userPreferences.getGarage(),
-        onInboxClick = { navController.navigate(Screen.ConversationsScreen.route) },
-        onRequestClick = {
-            navController.navigate(Screen.GarageRequestScreen.route)
+        onMenuClick = {
+            when (it) {
+                context.getString(R.string.request) -> navController.navigate(Screen.GarageRequestScreen.route)
+                context.getString(R.string.inbox) -> navController.navigate(Screen.ConversationsScreen.route)
+                context.getString(R.string.my_request) -> navController.navigate(Screen.MyRequestScreen.route)
+            }
         }
     )
 }
 
 @Composable
-private fun GarageHomeScreen(loginGarageInfo: Garage?, onInboxClick: () -> Unit, onRequestClick: () -> Unit) {
+private fun GarageHomeScreen(loginGarageInfo: Garage?, onMenuClick: (String) -> Unit) {
+    val menuList = listOf(
+        stringResource(id = R.string.request),
+        stringResource(id = R.string.inbox),
+        stringResource(id = R.string.my_request)
+    )
+    val iconList = listOf(R.drawable.ic_request_garage, R.drawable.ic_inbox, R.drawable.ic_inbox)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -87,29 +103,26 @@ private fun GarageHomeScreen(loginGarageInfo: Garage?, onInboxClick: () -> Unit,
             )
         }
         Spacer(modifier = Modifier.height(30.dp))
-        Column(
+        LazyVerticalStaggeredGrid(
             modifier = Modifier
+                .heightIn(max = 700.dp)
                 .fillMaxSize()
                 .background(
                     color = Color.White,
                     shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)
-                )
+                ),
+            contentPadding = PaddingValues(top = 20.dp),
+            columns = StaggeredGridCells.Fixed(2),
+            verticalItemSpacing = 10.dp,
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 20.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
+            itemsIndexed(menuList) { index, item ->
                 MenuCard(
-                    modifier = Modifier.clickable { onRequestClick() },
-                    text = "Request",
-                    id = R.drawable.ic_request_garage
-                )
-                MenuCard(
-                    modifier = Modifier.clickable { onInboxClick() },
-                    text = "Inbox",
-                    id = R.drawable.ic_inbox
+                    modifier = Modifier
+                        .padding(horizontal = 10.dp)
+                        .clickable { onMenuClick(item) },
+                    text = item,
+                    id = iconList[index]
                 )
             }
         }
@@ -146,6 +159,6 @@ private fun MenuCard(modifier: Modifier = Modifier, text: String, @DrawableRes i
 @Composable
 fun GarageHomeScreenPreview() {
     GarageGuruFypUserTheme {
-        GarageHomeScreen(loginGarageInfo = null, onInboxClick = {}, onRequestClick = {})
+        GarageHomeScreen(loginGarageInfo = null, onMenuClick = {})
     }
 }

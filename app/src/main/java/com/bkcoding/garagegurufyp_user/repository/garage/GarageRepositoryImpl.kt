@@ -6,6 +6,7 @@ import com.bkcoding.garagegurufyp_user.dto.Bid
 import com.bkcoding.garagegurufyp_user.dto.Customer
 import com.bkcoding.garagegurufyp_user.dto.Request
 import com.bkcoding.garagegurufyp_user.repository.Result
+import com.bkcoding.garagegurufyp_user.sharedpref.UserPreferences
 import com.bkcoding.garagegurufyp_user.utils.FirebaseRef
 import com.google.firebase.database.DatabaseReference
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -17,6 +18,7 @@ import javax.inject.Inject
 class GarageRepositoryImpl @Inject constructor(
     @ApplicationContext val context: Context,
     private val databaseReference: DatabaseReference,
+    private val userPreferences: UserPreferences,
 ) : GarageRepository {
 
     override fun getRequest() = callbackFlow {
@@ -43,8 +45,9 @@ class GarageRepositoryImpl @Inject constructor(
     }
 
     override fun bidOnRequest(requestId: String, bid: Bid): Flow<Result<String>> = callbackFlow {
+        val bidId = userPreferences.userId ?: return@callbackFlow
         trySend(Result.Loading)
-        databaseReference.child(FirebaseRef.REQUEST).child(requestId).child("bids").child(databaseReference.push().key ?: return@callbackFlow).setValue(bid)
+        databaseReference.child(FirebaseRef.REQUEST).child(requestId).child("bids").child(bidId).setValue(bid.copy(id = bidId))
             .addOnSuccessListener {
                 trySend(Result.Success("Bids Added"))
             }
