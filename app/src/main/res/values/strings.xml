@@ -32,4 +32,8 @@
     <string name="request">Request</string>
     <string name="my_request">My Request</string>
     <string name="inbox">Inbox</string>
+    <string name="log_out">Log Out</string>
+    <string name="active">Active</string>
+    <string name="completed">Completed</string>
+    <string name="requested">Requested</string>
 </resources>
