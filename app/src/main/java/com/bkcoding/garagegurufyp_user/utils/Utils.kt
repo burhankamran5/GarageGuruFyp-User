@@ -1,5 +1,7 @@
 package com.bkcoding.garagegurufyp_user.utils
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.DropdownMenu
@@ -13,6 +15,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 fun isValidEmail(email: String): Boolean {
     val emailRegex = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+".toRegex()
@@ -88,7 +98,41 @@ fun CityDropDown(
     }
 }
 
-enum class City {
+fun convertMillisToDate(millis: Long): String {
+    val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    sdf.timeZone = TimeZone.getDefault()
+    return sdf.format(Date(millis))
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun getInboxRelativeTime(firebaseTime: String): String {
+    // Parse the API timestamp
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    val apiDateTime = LocalDateTime.parse(firebaseTime, formatter)
+
+    // Get the current time
+    val currentDateTime = LocalDateTime.now(ZoneId.of("UTC"))
+
+    // Calculate the difference
+    val years = ChronoUnit.YEARS.between(apiDateTime, currentDateTime)
+    val months = ChronoUnit.MONTHS.between(apiDateTime, currentDateTime)
+    val weeks = ChronoUnit.WEEKS.between(apiDateTime, currentDateTime)
+    val days = ChronoUnit.DAYS.between(apiDateTime, currentDateTime)
+    val hours = ChronoUnit.HOURS.between(apiDateTime, currentDateTime)
+    val minutes = ChronoUnit.MINUTES.between(apiDateTime, currentDateTime)
+
+    return when {
+        years > 0 -> "${years}y"
+        months > 0 -> "${months}m"
+        weeks > 0 -> "${weeks}w"
+        days > 0 -> "${days}d"
+        hours > 0 -> "${hours}h"
+        minutes > 0 -> "${minutes}min"
+        else -> "just now"
+    }
+}
+
+    enum class City {
     All,
     Lahore,
     Islamabad,

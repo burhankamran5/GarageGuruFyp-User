@@ -2,6 +2,7 @@ package com.bkcoding.garagegurufyp_user.repository.user
 
 import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.dto.Customer
+import com.bkcoding.garagegurufyp_user.dto.NotificationData
 import com.bkcoding.garagegurufyp_user.dto.Request
 import com.bkcoding.garagegurufyp_user.repository.Result
 import kotlinx.coroutines.flow.Flow
@@ -16,4 +17,5 @@ interface UserRepository {
     fun postRequest(request: Request): Flow<Result<String>>
     fun getRequests(): Flow<Result<List<Request>>>
     fun updateRequest(request: Request): Flow<Result<String>>
+    fun addPushNotificationOnDB(notificationData: NotificationData): Flow<Result<String>>
 }

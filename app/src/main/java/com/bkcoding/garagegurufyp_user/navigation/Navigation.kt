@@ -27,6 +27,8 @@ import com.bkcoding.garagegurufyp_user.ui.customer.RequestDetailsScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.RequestScreen
 import com.bkcoding.garagegurufyp_user.ui.garage.GarageHomeScreen
 import com.bkcoding.garagegurufyp_user.ui.garage.GarageRequestScreen
+import com.bkcoding.garagegurufyp_user.ui.garage.MyRequestScreen
+import com.bkcoding.garagegurufyp_user.ui.garage.NotificationScreen
 import com.bkcoding.garagegurufyp_user.ui.home.GarageBottomNavigationBar
 import com.bkcoding.garagegurufyp_user.ui.login.LoginScreen
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
@@ -38,11 +40,6 @@ import com.bkcoding.garagegurufyp_user.ui.signup.SignUpConfirmationScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.UserSignUpScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.VerifyOtpScreen
 import com.bkcoding.garagegurufyp_user.ui.user.GarageScreen
-import com.bkcoding.garagegurufyp_user.ui.customer.MoreScreen
-import com.bkcoding.garagegurufyp_user.ui.customer.RequestScreen
-import com.bkcoding.garagegurufyp_user.ui.garage.GarageRequestScreen
-import com.bkcoding.garagegurufyp_user.ui.garage.MyRequestScreen
-import com.bkcoding.garagegurufyp_user.ui.request.UserRequestForm
 import com.google.gson.Gson
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -179,6 +176,14 @@ fun Navigation(
                 Gson().fromJson(data, Conversation::class.java)
             }
             ChatScreen(navController, conversationResponse)
+        }
+
+        composable(
+            route = Screen.NotificationScreen.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ) {
+            NotificationScreen(navController)
         }
 
         composable(

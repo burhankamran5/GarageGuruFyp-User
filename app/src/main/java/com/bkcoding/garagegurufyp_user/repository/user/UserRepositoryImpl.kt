@@ -5,6 +5,7 @@ import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.dto.ApprovalStatus
 import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.dto.Customer
+import com.bkcoding.garagegurufyp_user.dto.NotificationData
 import com.bkcoding.garagegurufyp_user.dto.Request
 import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.utils.FirebaseRef
@@ -211,4 +212,19 @@ class UserRepositoryImpl @Inject constructor(
             close()
         }
     }
+
+    override fun addPushNotificationOnDB(notificationData: NotificationData): Flow<Result<String>> =
+        callbackFlow {
+            val key = databaseReference.push().key ?: return@callbackFlow
+            databaseReference.child(FirebaseRef.NOTIFICATIONS).child(key).setValue(notificationData)
+                .addOnSuccessListener {
+                    trySend(Result.Success("Notification Sent!"))
+                }
+                .addOnFailureListener {
+                    Result.Failure(it)
+                }
+            awaitClose {
+                close()
+            }
+        }
 }

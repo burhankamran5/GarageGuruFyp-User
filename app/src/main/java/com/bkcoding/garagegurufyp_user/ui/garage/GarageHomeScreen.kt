@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -20,7 +21,10 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,12 +65,13 @@ fun GarageHomeScreen(
                 context.getString(R.string.inbox) -> navController.navigate(Screen.ConversationsScreen.route)
                 context.getString(R.string.my_request) -> navController.navigate(Screen.MyRequestScreen.route)
             }
-        }
+        },
+        onNotificationClick = { navController.navigate(Screen.NotificationScreen.route) }
     )
 }
 
 @Composable
-private fun GarageHomeScreen(loginGarageInfo: Garage?, onMenuClick: (String) -> Unit) {
+private fun GarageHomeScreen(loginGarageInfo: Garage?, onMenuClick: (String) -> Unit, onNotificationClick: () -> Unit) {
     val menuList = listOf(
         stringResource(id = R.string.request),
         stringResource(id = R.string.inbox),
@@ -79,7 +84,7 @@ private fun GarageHomeScreen(loginGarageInfo: Garage?, onMenuClick: (String) -> 
             .background(color = colorResource(id = R.color.orange50))
     ) {
         Row(
-            modifier = Modifier.padding(start = 15.dp, top = 50.dp),
+            modifier = Modifier.padding(start = 15.dp, top = 50.dp, end = 15.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
@@ -99,8 +104,20 @@ private fun GarageHomeScreen(loginGarageInfo: Garage?, onMenuClick: (String) -> 
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.ExtraBold,
-                modifier = Modifier.padding(start = 10.dp)
+                modifier = Modifier.padding(start = 10.dp).weight(1f)
             )
+            Box(
+                modifier = Modifier
+                    .size(35.dp)
+                    .background(color = Color.White, shape = CircleShape)
+                    .clickable{ onNotificationClick() }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Notifications,
+                    contentDescription = "",
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
         }
         Spacer(modifier = Modifier.height(30.dp))
         LazyVerticalStaggeredGrid(
@@ -159,6 +176,6 @@ private fun MenuCard(modifier: Modifier = Modifier, text: String, @DrawableRes i
 @Composable
 fun GarageHomeScreenPreview() {
     GarageGuruFypUserTheme {
-        GarageHomeScreen(loginGarageInfo = null, onMenuClick = {})
+        GarageHomeScreen(loginGarageInfo = null, onMenuClick = {}, onNotificationClick = {})
     }
 }

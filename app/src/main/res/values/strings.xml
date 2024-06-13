@@ -33,4 +33,8 @@
     <string name="my_request">My Requests</string>
     <string name="request">Requests\n</string>
     <string name="inbox">Inbox</string>
+    <string name="active">Active</string>
+    <string name="completed">Completed</string>
+    <string name="requested">Requested</string>
+    <string name="notification">Notification</string>
 </resources>

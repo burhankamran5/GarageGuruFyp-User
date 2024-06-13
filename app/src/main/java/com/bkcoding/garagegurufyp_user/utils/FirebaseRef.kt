@@ -10,4 +10,5 @@ object FirebaseRef {
     const val MESSAGES = "Messages"
     const val REQUEST_IMAGES = "Request Images"
     const val REQUEST = "Request"
+    const val NOTIFICATIONS = "Notifications"
 }
