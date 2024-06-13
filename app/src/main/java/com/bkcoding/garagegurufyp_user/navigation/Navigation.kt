@@ -31,7 +31,7 @@ import com.bkcoding.garagegurufyp_user.ui.garage.GarageHomeScreen
 import com.bkcoding.garagegurufyp_user.ui.garage.GarageRequestScreen
 import com.bkcoding.garagegurufyp_user.ui.garage.MyRequestScreen
 import com.bkcoding.garagegurufyp_user.ui.garage.NotificationScreen
-import com.bkcoding.garagegurufyp_user.ui.home.GarageBottomNavigationBar
+import com.bkcoding.garagegurufyp_user.ui.customer.GarageBottomNavigationBar
 import com.bkcoding.garagegurufyp_user.ui.login.LoginScreen
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
 import com.bkcoding.garagegurufyp_user.ui.onboarding.OnBoardingScreen

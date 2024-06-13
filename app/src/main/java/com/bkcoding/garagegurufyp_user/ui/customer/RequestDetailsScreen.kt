@@ -3,19 +3,24 @@ package com.bkcoding.garagegurufyp_user.ui.customer
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -33,6 +38,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -59,6 +65,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
@@ -126,38 +133,45 @@ private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onR
     request ?: return
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(.9f)
+            .background(color = colorResource(id = R.color.offWhite))
+            .fillMaxSize()
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         Row(modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 15.dp)) {
             Icon(
+                tint = colorResource(id = R.color.orange),
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "",
                 modifier = Modifier.clickable { onBackPress() }
             )
             Text(
-                text = "Garage's Offers",
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold,
+                text = "Request Details",
+                style = Typography.titleLarge,
                 fontSize = 20.sp,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth()
             )
         }
         Spacer(modifier = Modifier.height(10.dp))
         SubcomposeAsyncImage(
+            contentScale = ContentScale.FillBounds,
             model = request.images.getOrNull(0),
             loading = {
-                CircularProgressIndicator()
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = colorResource(id = R.color.bright_gray)))
             },
             contentDescription = stringResource(R.string.app_name),
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(max = 250.dp)
+                .height(250.dp)
+                .padding(12.dp)
+                .clip(RoundedCornerShape(8.dp))
         )
         Row(
             modifier = Modifier
@@ -166,12 +180,14 @@ private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onR
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = request.carModel,
-                style = Typography.bodySmall,
+                modifier = Modifier.padding(start = 10.dp),
+                text = request.carModel.uppercase(),
+                style = Typography.bodyLarge,
                 color = Color.Black,
-                textAlign = TextAlign.Start
+                textAlign = TextAlign.Start,
             )
             Text(
+                modifier = Modifier.padding(end = 10.dp),
                 text = request.city,
                 style = Typography.labelSmall,
                 color = Color.Gray,
@@ -182,10 +198,10 @@ private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onR
             text = request.description,
             style = Typography.labelSmall,
             fontSize = 14.sp,
-            color = Color.Black,
+            color = Color.Gray,
             textAlign = TextAlign.Start,
             modifier = Modifier
-                .padding(start = 10.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)
+                .padding(start = 18.dp, top = 4.dp, end = 10.dp, bottom = 10.dp)
                 .fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(10.dp))
@@ -193,12 +209,12 @@ private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onR
             Text(
                 text = stringResource(id = R.string.accepted_bid),
                 textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
                 modifier = Modifier
                     .padding(horizontal = 15.dp)
                     .align(Alignment.Start)
             )
+            Spacer(modifier = Modifier.height(8.dp))
             BidItem(bid = request.acceptedBid, onBidAction = {})
         }
         val bids = request.bids.toList().map { it.second }.filter { it.bidStatus == BidStatus.PENDING}
@@ -206,7 +222,7 @@ private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onR
             Text(
                 text = stringResource(id = R.string.all_bids),
                 textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold,
+                style = Typography.headlineLarge,
                 fontSize = 20.sp,
                 modifier = Modifier
                     .padding(horizontal = 15.dp)
@@ -245,37 +261,63 @@ private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onR
                 ReviewCard(rating = request.rating ?: 0, review = request.review.orEmpty())
             }
         }
-        if (request.status == RequestStatus.IN_PROGRESS){
-            Button(modifier = Modifier.align(Alignment.CenterHorizontally),
+    }
+    Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxSize().padding(top = 70.dp, end = 20.dp)
+        ){
+            Text(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(Color.Gray)
+                    .border(color = Color.White, shape = RoundedCornerShape(size = 4.dp), width = 1.dp)
+                    .padding(6.dp)
+                    .align(Alignment.TopEnd),
+                text = request.status.name,
+                style = Typography.labelSmall,
+                color = Color.White
+            )
+        }
+        if (request.status == RequestStatus.IN_PROGRESS) {
+            Button(modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 24.dp)
+                .height(50.dp)
+                .zIndex(10f),
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.orange)),
                 onClick = { onRequestUpdated(request.copy(status = RequestStatus.COMPLETED)) }
             ) {
-                Text(text = "Mark as complete")
+                Text(
+                    text = "Mark as complete",
+                    style = Typography.bodyLarge
+                )
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BidItem(modifier: Modifier = Modifier, bid: Bid, onBidAction: (Boolean) -> Unit) {
+Card(modifier = Modifier
+    .padding(horizontal = 8.dp, vertical = 5.dp)
+    .border(width = 1.dp, shape = RoundedCornerShape(8.dp), color = colorResource(id = R.color.orange)),
+    colors = CardDefaults.cardColors(containerColor = Color.White)) {
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 5.dp)
-            .background(
-                color = colorResource(id = R.color.orange50),
-                shape = RoundedCornerShape(10.dp)
-            ),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier.width(5.dp))
         SubcomposeAsyncImage(
             model = bid.garage?.images?.getOrNull(0),
             loading = {
-                CircularProgressIndicator()
+                Box(modifier = Modifier.size(40.dp)) {
+                    CircularProgressIndicator(color = colorResource(id = R.color.orange), modifier = Modifier.align(Alignment.Center), strokeWidth = 2.dp)
+                }
             },
             contentDescription = stringResource(R.string.app_name),
             modifier = Modifier
+                .padding(vertical = 12.dp)
                 .size(70.dp)
                 .clip(shape = CircleShape),
             contentScale = ContentScale.Crop
@@ -292,13 +334,15 @@ fun BidItem(modifier: Modifier = Modifier, bid: Bid, onBidAction: (Boolean) -> U
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
+                    style = Typography.titleLarge,
                     text = bid.garage?.name ?: "Name",
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
                     textAlign = TextAlign.Start
                 )
                 Text(
-                    text = "Bid",
+                    color = colorResource(id = R.color.orange),
+                    text = "PKR",
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
                     textAlign = TextAlign.Start,
@@ -324,47 +368,37 @@ fun BidItem(modifier: Modifier = Modifier, bid: Bid, onBidAction: (Boolean) -> U
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(4.dp)
+                        .padding(top = 8.dp, bottom = 4.dp)
                 ) {
-                    OutlinedButton(
+                    Button(
                         onClick = { onBidAction(false) },
                         modifier = Modifier
                             .height(40.dp)
-                            .weight(1f), // Adjust width for equal buttons
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.Red
-                        ),
-                        border = BorderStroke(color = Color.Red, width = 1.dp),
-                        elevation = ButtonDefaults.buttonElevation(8.dp)
+                            .weight(1f),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                        elevation = ButtonDefaults.buttonElevation(4.dp)
                     ) {
                         Text(
                             text = "Decline",
                             color = colorResource(id = R.color.white),
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            textAlign = TextAlign.Center,
+                            fontSize = 12.sp,
+                            style = Typography.labelSmall
                         )
                     }
                     Spacer(modifier = Modifier.width(10.dp))
-                    OutlinedButton(
+                    Button(
                         onClick = { onBidAction(true) },
                         modifier = Modifier
                             .height(40.dp)
-                            .weight(1f), // Adjust width for equal buttons
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = colorResource(id = R.color.lightGreen)
-                        ),
-                        border = BorderStroke(color = colorResource(id = R.color.lightGreen), width = 1.dp),
-                        elevation = ButtonDefaults.buttonElevation(8.dp)
+                            .weight(1f),
+                        colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.orange)),
+                        elevation = ButtonDefaults.buttonElevation(4.dp)
                     ) {
                         Text(
                             text = "Accept",
                             color = colorResource(id = R.color.white),
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            textAlign = TextAlign.Center,
+                            fontSize = 12.sp,
+                            style = Typography.labelSmall
                         )
                     }
                 }
@@ -372,9 +406,10 @@ fun BidItem(modifier: Modifier = Modifier, bid: Bid, onBidAction: (Boolean) -> U
         }
     }
 }
+}
 
 
-@Preview
+//@Preview
 @Composable
 fun ReviewInputCard(onSubmitReview: (Int, String) -> Unit = { _, _ -> }){
     var reviewText by remember { mutableStateOf("") }
@@ -382,7 +417,7 @@ fun ReviewInputCard(onSubmitReview: (Int, String) -> Unit = { _, _ -> }){
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(vertical = 8.dp, horizontal = 16.dp),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
@@ -394,6 +429,7 @@ fun ReviewInputCard(onSubmitReview: (Int, String) -> Unit = { _, _ -> }){
             onValueChange = { reviewText = it },
             placeholder = {
                 androidx.compose.material.Text(
+                    modifier = Modifier.fillMaxSize(),
                     textAlign = TextAlign.Start,
                     text = "Write a review",
                     fontFamily = FontFamily(Font(R.font.googlesanslight)),
@@ -420,8 +456,10 @@ fun ReviewInputCard(onSubmitReview: (Int, String) -> Unit = { _, _ -> }){
                 onSubmitReview(rating, reviewText)
             }
         ) {
-            Text(text = "Submit Rating")
+            Text(text = "Submit Rating",
+                style = Typography.bodyLarge)
         }
+        Spacer(modifier = Modifier.height(12.dp))
     }
 }
 
@@ -430,13 +468,19 @@ fun ReviewCard(rating: Int, review: String){
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(vertical = 8.dp, horizontal = 12.dp),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         RatingView(initialRating = rating, isEnabled = false)
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(text = review)
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = review,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp, start = 4.dp, end = 4.dp),
+            textAlign = TextAlign.Center
+        )
     }
 }
 
@@ -471,16 +515,22 @@ private fun RatingView(initialRating :Int =0, isEnabled: Boolean = true, onRatin
     }
 }
 
-//@Preview(showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun RequestBidScreenPreview() {
     val request = Request(
+        images = listOf("https://firebasestorage.googleapis.com/v0/b/garageguru-4528e.appspot.com/o/Request%20Images%2F-O-71rg_-t9UGk_4SB30?alt=media&token=bd0270be-ac48-4f48-bcc1-5e733929ac31"),
         carModel = "honda City R",
         description = "description",
         city = "Lahore",
         bids = mapOf(
-            "bidder1" to Bid("1",  price = "100.00", garage = Garage(name = "Pak Wheel", city = "Lahore"))
-        )
+            "bidder1" to Bid(bidStatus = BidStatus.PENDING, id = "1",  price = "100.00", garage = Garage(name = "Pak Wheel", city = "Lahore")),
+            "bidder2" to Bid(bidStatus = BidStatus.PENDING, id = "1",  price = "100.00", garage = Garage(name = "Pak Wheel", city = "Lahore"))
+        ),
+//        acceptedBid = Bid(bidStatus = BidStatus.ACCEPTED, id = "1",  price = "100.00", garage = Garage(name = "Pak Wheel", city = "Lahore")),
+        status = RequestStatus.COMPLETED,
+        rating = 3,
+        review = "It was an amazing experience with the garage. Delivered amazing"
     )
     GarageGuruFypUserTheme {
         RequestDetailsScreen(request = request, onBackPress = {}, onRequestUpdated = {})

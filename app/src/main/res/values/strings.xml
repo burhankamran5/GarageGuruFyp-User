@@ -29,7 +29,7 @@
     <string name="bid">Bid</string>
     <string name="all_bids">All Bids</string>
     <string name="log_out">Log Out</string>
-    <string name="accepted_bid">Accepted Bid\n</string>
+    <string name="accepted_bid">Accepted Bid</string>
     <string name="my_request">My Requests</string>
     <string name="request">Requests\n</string>
     <string name="inbox">Inbox</string>
