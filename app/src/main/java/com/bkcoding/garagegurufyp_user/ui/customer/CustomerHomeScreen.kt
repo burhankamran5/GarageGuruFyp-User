@@ -58,6 +58,7 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.dto.Conversation
 import com.bkcoding.garagegurufyp_user.dto.Garage
@@ -144,6 +145,7 @@ fun CustomerHomeScreen(
 private fun CustomerHomeScreen(garageList: List<Garage>?, onGarageClick: (Garage) -> Unit, customerName: String) {
     Column(
         modifier = Modifier
+            .background(color = colorResource(id = R.color.bright_gray))
             .padding(horizontal = 10.dp)
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
@@ -254,15 +256,18 @@ fun AutoSwipeViewPager(modifier: Modifier = Modifier) {
 @Composable
 private fun GarageCard(modifier: Modifier = Modifier, garage: Garage) {
     Box(
-        modifier = modifier.background(color = Color.LightGray, shape = RoundedCornerShape(12.dp))
+        modifier = modifier.background(color = Color.White, shape = RoundedCornerShape(12.dp))
     ) {
         Column(modifier = Modifier.padding(horizontal = 5.dp, vertical = 5.dp)) {
-            AsyncImage(
+            SubcomposeAsyncImage(
+                loading = {
+                    Box(modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = colorResource(id = R.color.bright_gray)))
+                },
                 model = garage.images.getOrNull(0),
                 contentDescription = "",
-                placeholder = painterResource(id = R.drawable.ic_launcher_background),
-                error = painterResource(id = R.drawable.ic_launcher_background),
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.FillBounds,
                 modifier = Modifier
                     .padding(0.dp)
                     .width(150.dp)
@@ -272,6 +277,7 @@ private fun GarageCard(modifier: Modifier = Modifier, garage: Garage) {
             Text(
                 text = garage.name,
                 fontSize = 15.sp,
+                style = Typography.labelLarge,
                 fontFamily = FontFamily(Font(R.font.poppinssemibold)),
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Start,
@@ -279,28 +285,25 @@ private fun GarageCard(modifier: Modifier = Modifier, garage: Garage) {
                 modifier = Modifier.padding(top = 10.dp)
             )
             Text(
-                text = garage.location,
+                text = garage.city,
                 fontSize = 12.sp,
                 fontFamily = FontFamily(Font(R.font.googlesansregular)),
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Start,
-                color = Color.Black,
-                modifier = Modifier.padding(top = 5.dp)
-            )
-            Text(
-                text = garage.phoneNumber,
-                fontSize = 12.sp,
-                fontFamily = FontFamily(Font(R.font.googlesansregular)),
-                fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Start,
-                color = Color.Black,
-                modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+                color = Color.Gray,
+                style = Typography.labelSmall
             )
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview
+@Composable
+fun PreviewGarageCard(){
+    GarageCard(garage = Garage(name = "Pak Wheels", city = "Lahore"))
+}
+
+//@Preview(showBackground = true)
 @Composable
 fun CustomerHomeScreenPreview() {
     GarageGuruFypUserTheme {
