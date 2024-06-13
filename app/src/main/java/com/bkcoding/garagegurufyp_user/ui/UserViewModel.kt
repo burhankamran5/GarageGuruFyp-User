@@ -8,6 +8,7 @@ import com.bkcoding.garagegurufyp_user.repository.Result
 import androidx.lifecycle.viewModelScope
 import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.dto.Customer
+import com.bkcoding.garagegurufyp_user.dto.NotificationData
 import com.bkcoding.garagegurufyp_user.dto.Request
 import com.bkcoding.garagegurufyp_user.repository.fcm.FcmRepository
 import com.bkcoding.garagegurufyp_user.repository.fcm.NotificationReq
@@ -31,6 +32,15 @@ class UserViewModel @Inject constructor(
     fun refreshFcmToken() = fcmRepository.refreshFcmToken()
     fun sendPushNotification(notificationReq: NotificationReq) = viewModelScope.launch {
         fcmRepository.sendPushNotification(notificationReq)
+    }
+    fun addPushNotificationOnDB(notificationData: NotificationData) = viewModelScope.launch {
+        userRepository.addPushNotificationOnDB(notificationData).collect {
+            if (it is Result.Success) {
+                //isLoading = false
+            } else if (it is Result.Failure) {
+                println(it.exception.message ?: "Error")
+            }
+        }
     }
 
     fun updateRequest(request: Request) =  userRepository.updateRequest(request)

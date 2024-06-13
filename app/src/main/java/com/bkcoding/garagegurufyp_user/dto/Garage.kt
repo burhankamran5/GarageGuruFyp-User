@@ -15,6 +15,7 @@ data class Garage(
     @get:Exclude val imageUris: List<Uri> = emptyList(),
     val images: List<String> = emptyList(),
     val city: String = "",
+    val description: String = "",
     val phoneNumber: String = "",
     val location: String = "",
     val rating: String = "",

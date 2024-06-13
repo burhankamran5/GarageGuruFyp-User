@@ -73,12 +73,18 @@ import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.dto.Bid
 import com.bkcoding.garagegurufyp_user.dto.BidStatus
 import com.bkcoding.garagegurufyp_user.dto.Garage
+import com.bkcoding.garagegurufyp_user.dto.NotificationAction
+import com.bkcoding.garagegurufyp_user.dto.NotificationData
 import com.bkcoding.garagegurufyp_user.dto.Request
 import com.bkcoding.garagegurufyp_user.dto.RequestStatus
 import com.bkcoding.garagegurufyp_user.repository.Result
+import com.bkcoding.garagegurufyp_user.repository.fcm.Message
+import com.bkcoding.garagegurufyp_user.repository.fcm.Notification
+import com.bkcoding.garagegurufyp_user.repository.fcm.NotificationReq
 import com.bkcoding.garagegurufyp_user.ui.UserViewModel
 import com.bkcoding.garagegurufyp_user.ui.theme.GarageGuruFypUserTheme
 import com.bkcoding.garagegurufyp_user.ui.theme.Typography
+import com.google.firebase.database.ServerValue
 import kotlinx.coroutines.launch
 
 @Composable
@@ -96,6 +102,24 @@ fun RequestDetailsScreen(
             scope.launch {
                 userViewModel.updateRequest(it).collect{ result ->
                     if (result is Result.Success){
+                        userViewModel.sendPushNotification(
+                            NotificationReq(
+                                Message(
+                                    token = it.assignedGarage?.token.orEmpty(),
+                                    notification = Notification(title = "Accept", body = "${it.customer.name} Accept your Request!")
+                                )
+                            )
+                        )
+                        userViewModel.addPushNotificationOnDB(
+                            NotificationData(
+                                from = it.customer.id,
+                                to = it.assignedGarage?.id.orEmpty(),
+                                thumbnail = it.images.getOrNull(0).orEmpty(),
+                                title = NotificationAction.BID_ACCEPTED.label,
+                                description = "${it.customer.name} Accept your Request!",
+                                sentAt = ServerValue.TIMESTAMP
+                            )
+                        )
                         latestRequest = it
                     }
                 }

@@ -22,15 +22,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -60,8 +65,8 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import com.bkcoding.garagegurufyp_user.R
-import com.bkcoding.garagegurufyp_user.dto.Conversation
 import com.bkcoding.garagegurufyp_user.dto.Garage
+import com.bkcoding.garagegurufyp_user.extensions.clickableWithOutRipple
 import com.bkcoding.garagegurufyp_user.extensions.showToast
 import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.repository.Result
@@ -129,20 +134,14 @@ fun CustomerHomeScreen(
         customerName = userStorageVM.getSavedCustomer()?.name.orEmpty(),
         garageList = garageList,
         onGarageClick = {
-            val conversation = Conversation(
-                seen = false,
-                createdAt = null,
-                userId = it.id,
-                userName = it.name,
-                profileImage = it.images.getOrNull(0).orEmpty()
-            )
-            navController.navigate(Screen.ChatScreen.route + "/${Uri.encode(Gson().toJson(conversation))}")
-        }
+            navController.navigate(Screen.GarageDetailsScreen.route + "/${Uri.encode(Gson().toJson(it))}")
+        },
+        onNotificationClick = { navController.navigate(Screen.NotificationScreen.route) }
     )
 }
 
 @Composable
-private fun CustomerHomeScreen(garageList: List<Garage>?, onGarageClick: (Garage) -> Unit, customerName: String) {
+private fun CustomerHomeScreen(garageList: List<Garage>?, onGarageClick: (Garage) -> Unit, customerName: String, onNotificationClick: () -> Unit) {
     Column(
         modifier = Modifier
             .background(color = colorResource(id = R.color.bright_gray))
@@ -151,18 +150,35 @@ private fun CustomerHomeScreen(garageList: List<Garage>?, onGarageClick: (Garage
             .verticalScroll(rememberScrollState()),
     ) {
         Spacer(modifier = Modifier.height(18.dp))
-        Column(modifier = Modifier.padding(start = 12.dp)) {
-            Text(
-                text = "Welcome",
-                style = Typography.bodyLarge,
-                textAlign = TextAlign.Start,
-                color = Color.Black
-            )
-            Text(
-                text = customerName,
-                style = Typography.titleLarge,
-                color = Color.Black
-            )
+        Row(
+            modifier = Modifier.padding(start = 12.dp, end = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Welcome",
+                    style = Typography.bodyLarge,
+                    textAlign = TextAlign.Start,
+                    color = Color.Black
+                )
+                Text(
+                    text = customerName,
+                    style = Typography.titleLarge,
+                    color = Color.Black
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .size(35.dp)
+                    .background(color = colorResource(id = R.color.orange), shape = CircleShape)
+                    .clickableWithOutRipple { onNotificationClick() }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Notifications,
+                    contentDescription = "",
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
         }
         Spacer(modifier = Modifier.height(30.dp))
         AutoSwipeViewPager(modifier = Modifier.fillMaxWidth())
@@ -308,6 +324,6 @@ fun PreviewGarageCard(){
 fun CustomerHomeScreenPreview() {
     GarageGuruFypUserTheme {
         CustomerHomeScreen(
-            garageList = emptyList(), onGarageClick = {}, customerName = "Burhan")
+            garageList = emptyList(), onGarageClick = {}, customerName = "Burhan", onNotificationClick = {})
     }
 }

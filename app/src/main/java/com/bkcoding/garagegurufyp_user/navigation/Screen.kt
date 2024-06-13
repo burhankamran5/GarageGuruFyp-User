@@ -28,6 +28,8 @@ sealed class Screen(
     data object GarageRequestScreen : Screen("GarageRequestScreen")
     data object RequestBidScreen : Screen("RequestBidScreen")
     data object MyRequestScreen : Screen("MyRequestScreen")
+    data object NotificationScreen : Screen("NotificationScreen")
+    data object GarageDetailsScreen : Screen("GarageDetailsScreen")
 }
 
 class GarageNavigationActions(private val navController: NavHostController) {

@@ -18,15 +18,19 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.bkcoding.garagegurufyp_user.dto.Conversation
+import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.dto.Request
 import com.bkcoding.garagegurufyp_user.ui.chat.ChatScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.ConversationsScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.CustomerHomeScreen
+import com.bkcoding.garagegurufyp_user.ui.customer.GarageDetailsScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.MoreScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.RequestDetailsScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.RequestScreen
 import com.bkcoding.garagegurufyp_user.ui.garage.GarageHomeScreen
 import com.bkcoding.garagegurufyp_user.ui.garage.GarageRequestScreen
+import com.bkcoding.garagegurufyp_user.ui.garage.MyRequestScreen
+import com.bkcoding.garagegurufyp_user.ui.garage.NotificationScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.GarageBottomNavigationBar
 import com.bkcoding.garagegurufyp_user.ui.login.LoginScreen
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
@@ -38,7 +42,6 @@ import com.bkcoding.garagegurufyp_user.ui.signup.SignUpConfirmationScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.UserSignUpScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.VerifyOtpScreen
 import com.bkcoding.garagegurufyp_user.ui.user.GarageScreen
-import com.bkcoding.garagegurufyp_user.ui.garage.MyRequestScreen
 import com.google.gson.Gson
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -178,6 +181,14 @@ fun Navigation(
         }
 
         composable(
+            route = Screen.NotificationScreen.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ) {
+            NotificationScreen(navController)
+        }
+
+        composable(
             route = Screen.CustomerHomeScreen.route,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }
@@ -249,6 +260,19 @@ fun Navigation(
                 Gson().fromJson(data, Request::class.java)
             }
             RequestDetailsScreen(navController = navController, request = requestResponse)
+        }
+
+        composable(
+            arguments = listOf(navArgument("garage") { type = NavType.StringType }),
+            route = Screen.GarageDetailsScreen.route + "/{garage}",
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ){
+            val garage = it.arguments?.getString("garage")
+            val garageResponse = garage?.let {data->
+                Gson().fromJson(data, Garage::class.java)
+            }
+            GarageDetailsScreen(navController = navController, garage = garageResponse)
         }
 
     }
