@@ -50,6 +50,8 @@ import com.bkcoding.garagegurufyp_user.ui.AuthViewModel
 import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
 import com.bkcoding.garagegurufyp_user.ui.theme.GarageGuruFypUserTheme
 
+import com.bkcoding.garagegurufyp_user.ui.theme.GarageGuruFypUserTheme
+
 @Composable
 fun GarageHomeScreen(
     navController: NavController,
@@ -64,6 +66,12 @@ fun GarageHomeScreen(
                 context.getString(R.string.request) -> navController.navigate(Screen.GarageRequestScreen.route)
                 context.getString(R.string.inbox) -> navController.navigate(Screen.ConversationsScreen.route)
                 context.getString(R.string.my_request) -> navController.navigate(Screen.MyRequestScreen.route)
+                context.getString(R.string.log_out) -> {
+                    navController.navigate(Screen.LoginScreen.route) {
+                        popUpTo(navController.graph.id)
+                    }
+                    authViewModel.signOutUser()
+                }
             }
         },
         onNotificationClick = { navController.navigate(Screen.NotificationScreen.route) }
@@ -75,9 +83,15 @@ private fun GarageHomeScreen(loginGarageInfo: Garage?, onMenuClick: (String) -> 
     val menuList = listOf(
         stringResource(id = R.string.request),
         stringResource(id = R.string.inbox),
-        stringResource(id = R.string.my_request)
+        stringResource(id = R.string.my_request),
+        stringResource(id = R.string.log_out)
     )
-    val iconList = listOf(R.drawable.ic_request_garage, R.drawable.ic_inbox, R.drawable.ic_inbox)
+    val iconList = listOf(
+        R.drawable.ic_all_request,
+        R.drawable.ic_inbox,
+        R.drawable.ic_my_request,
+        R.drawable.ic_logout
+    )
     Column(
         modifier = Modifier
             .fillMaxSize()
