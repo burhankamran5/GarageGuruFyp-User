@@ -8,6 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="orange">#EEA044</color>
+    <color name="orange_70">#B3EEA044</color>
     <color name="offWhite">#FAF9F6</color>
     <color name="offWhite_50">#80FAF9F6</color>
     <color name="lightGreen">#90EE90</color>
@@ -22,6 +23,7 @@
     <color name="white_semi_50">#80FFFFFF</color>
     <color name="white_semi_60">#99FFFFFF</color>
     <color name="white_semi_80">#CCFFFFFF</color>
+    <color name="bright_gray">#EFEFEF</color>
     <color name="cultured">#1AF5F5F5</color>
 
 

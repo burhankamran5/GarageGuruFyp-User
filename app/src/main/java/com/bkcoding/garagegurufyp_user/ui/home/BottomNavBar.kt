@@ -1,62 +1,47 @@
 package com.bkcoding.garagegurufyp_user.ui.home
 
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
+import com.bkcoding.garagegurufyp_user.R
+import com.bkcoding.garagegurufyp_user.dto.BottomNavigationItem
 import com.bkcoding.garagegurufyp_user.navigation.BOTTOM_MENU_LIST
 
 @Composable
-fun MobileScaffold(
-    navController: NavHostController,
-    content: @Composable (modifier: Modifier) -> Unit
+fun GarageBottomNavigationBar(
+    selectedDestination: String,
+    navigateToTopLevelDestination: (BottomNavigationItem) -> Unit
 ) {
-    Scaffold(
-        bottomBar = {
-            BottomNavigationScreen(
-                navController = navController
-            )
-        }
-    ) {
-        content(Modifier.padding(it))
-    }
-}
-
-
-@Composable
-private fun BottomNavigationScreen(navController: NavController) {
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.inversePrimary
+        modifier = Modifier.fillMaxWidth(),
+        containerColor = colorResource(id = R.color.orange).copy(alpha = 0.7f)
     ) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentDestination = navBackStackEntry?.destination
-        BOTTOM_MENU_LIST.forEach { screen ->
+        BOTTOM_MENU_LIST.forEach { garageBottomDestination ->
             NavigationBarItem(
-                selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                onClick = {
-                    navController.navigate(screen.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+                selected = selectedDestination == garageBottomDestination.route,
+                onClick = { navigateToTopLevelDestination(garageBottomDestination) },
+                icon = {
+                    Icon(
+                        painter = painterResource(id = garageBottomDestination.selectedIcon),
+                        contentDescription = ""
+                    )
                 },
-                icon = { Icon(painter = painterResource(id = screen.selectedIcon), contentDescription = null) },
-                label = { Text(screen.title) }
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = colorResource(id = R.color.orange),
+                    selectedTextColor = colorResource(id = R.color.orange),
+                    unselectedIconColor = colorResource(id = R.color.white),
+                    unselectedTextColor = colorResource(id = R.color.white),
+                    disabledIconColor = colorResource(id = R.color.white),
+                    disabledTextColor = colorResource(id = R.color.white)
+                )
             )
         }
     }
 }
+

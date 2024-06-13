@@ -14,8 +14,9 @@ data class Request(
     val customer: Customer = Customer(),
     val assignedGarage: Garage? = null,
     val bids: Map<String, Bid> = mapOf(),
-    val isRatedByCustomer: Boolean = false,
-    val acceptedBid: Bid? = null
+    val acceptedBid: Bid? = null,
+    val rating: Int? = null,
+    val review: String? = null
 )
 
 enum class RequestStatus {
