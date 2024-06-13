@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,17 +25,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.bkcoding.garagegurufyp_user.R
+import com.bkcoding.garagegurufyp_user.dto.Bid
+import com.bkcoding.garagegurufyp_user.dto.BidStatus
+import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.dto.Request
+import com.bkcoding.garagegurufyp_user.dto.RequestStatus
 import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.ui.UserViewModel
@@ -73,13 +82,18 @@ private fun RequestScreen(
     onPostRequestClick: () -> Unit,
     onRequestClick: (Request) -> Unit
 ){
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .background(color = colorResource(id = R.color.bright_gray))) {
         Text(
-            text = "Request Screen",
+            fontSize = 22.sp,
+            style = Typography.bodyLarge,
+            color = Color.Black,
+            text = "My Requests",
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 20.dp)
+                .padding(top = 24.dp)
         )
         Spacer(modifier = Modifier.height(20.dp))
         Row(
@@ -88,17 +102,12 @@ private fun RequestScreen(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = stringResource(id = R.string.all_request),
-                style = Typography.bodySmall,
-                color = Color.Black,
-                textAlign = TextAlign.Start,
-                modifier = Modifier.weight(1f)
-            )
             Box(
                 modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth(Alignment.End)
                     .background(
-                        color = Color.Blue,
+                        color = colorResource(id = R.color.orange50),
                         shape = RoundedCornerShape(12.dp)
                     )
                     .clickable { onPostRequestClick() }
@@ -130,18 +139,28 @@ private fun RequestScreen(
 fun RequestItem(request: Request, onRequestClick: (Request) -> Unit){
     Column(
         modifier = Modifier
-            .padding(horizontal = 15.dp)
-            .border(
-                width = 1.dp,
-                color = colorResource(id = R.color.orange),
+            .padding(horizontal = 14.dp, vertical = 4.dp)
+            .background(
+                color = Color.White,
                 shape = RoundedCornerShape(12.dp)
             )
             .clickable { onRequestClick(request) }
     ) {
-        AsyncImage(
+        SubcomposeAsyncImage(
+            contentScale = ContentScale.FillBounds,
+            loading = {
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = colorResource(id = R.color.bright_gray)))
+            },
             model = request.images.getOrNull(0),
             contentDescription = "",
-            modifier = Modifier.aspectRatio(12f / 6f)
+            modifier = Modifier
+                .aspectRatio(12f / 6f)
+                .padding(horizontal = 4.dp, vertical = 4.dp)
+                .clip(
+                    shape = RoundedCornerShape(12.dp)
+                )
         )
         Row(
             modifier = Modifier
@@ -150,10 +169,11 @@ fun RequestItem(request: Request, onRequestClick: (Request) -> Unit){
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = request.carModel,
-                style = Typography.bodySmall,
+                modifier = Modifier.padding(start = 10.dp),
+                text = request.carModel.uppercase(),
+                style = Typography.bodyLarge,
                 color = Color.Black,
-                textAlign = TextAlign.Start
+                textAlign = TextAlign.Start,
             )
             Text(
                 text = request.city,
@@ -164,13 +184,38 @@ fun RequestItem(request: Request, onRequestClick: (Request) -> Unit){
         }
         Text(
             text = request.description,
-            style = Typography.bodySmall,
-            color = Color.Black,
+            style = Typography.labelSmall,
+            fontSize = 14.sp,
+            color = Color.Gray,
             textAlign = TextAlign.Start,
-            modifier = Modifier.padding(start = 10.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)
-        )
+            modifier = Modifier
+                .padding(start = 18.dp, top = 4.dp, end = 10.dp, bottom = 10.dp)
+                .fillMaxWidth()        )
     }
 }
+
+@Preview
+@Composable
+fun PreviewRequestItem(){
+    val request = Request(
+        images = listOf("https://firebasestorage.googleapis.com/v0/b/garageguru-4528e.appspot.com/o/Request%20Images%2F-O-71rg_-t9UGk_4SB30?alt=media&token=bd0270be-ac48-4f48-bcc1-5e733929ac31"),
+        carModel = "honda City R",
+        description = "description",
+        city = "Lahore",
+        bids = mapOf(
+            "bidder1" to Bid(bidStatus = BidStatus.PENDING, id = "1",  price = "100.00", garage = Garage(name = "Pak Wheel", city = "Lahore")),
+            "bidder2" to Bid(bidStatus = BidStatus.PENDING, id = "1",  price = "100.00", garage = Garage(name = "Pak Wheel", city = "Lahore"))
+        ),
+//        acceptedBid = Bid(bidStatus = BidStatus.ACCEPTED, id = "1",  price = "100.00", garage = Garage(name = "Pak Wheel", city = "Lahore")),
+        status = RequestStatus.COMPLETED,
+        rating = 3,
+        review = "It was an amazing experience with the garage. Delivered amazing"
+    )
+    RequestItem(request = request) {
+        
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable

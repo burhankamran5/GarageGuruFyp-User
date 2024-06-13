@@ -1,4 +1,4 @@
-package com.bkcoding.garagegurufyp_user.ui.home
+package com.bkcoding.garagegurufyp_user.ui.customer
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Icon
