@@ -16,12 +16,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -37,10 +36,10 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -51,6 +50,7 @@ import com.bkcoding.garagegurufyp_user.dto.NotificationData
 import com.bkcoding.garagegurufyp_user.extensions.isVisible
 import com.bkcoding.garagegurufyp_user.extensions.progressBar
 import com.bkcoding.garagegurufyp_user.extensions.showToast
+import com.bkcoding.garagegurufyp_user.ui.theme.GarageGuruFypUserTheme
 import com.bkcoding.garagegurufyp_user.ui.theme.Typography
 import com.bkcoding.garagegurufyp_user.utils.convertMillisToDate
 import com.bkcoding.garagegurufyp_user.utils.getInboxRelativeTime
@@ -130,37 +130,52 @@ private fun NotificationCard(modifier: Modifier = Modifier, notificationData: No
             error = painterResource(id = R.drawable.ic_placeholder),
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .size(40.dp)
+                .size(60.dp)
                 .clip(CircleShape)
         )
-        Text(
-            text = buildAnnotatedString {
-                withStyle(
-                    style = SpanStyle(
-                        color = colorResource(id = R.color.black),
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily(Font(R.font.googlesansbold))
+        Column(modifier = Modifier.fillMaxWidth()){
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(
+                        style = SpanStyle(
+                            color = colorResource(id = R.color.black),
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = FontFamily(Font(R.font.googlesansbold))
                         )
-                ) {
-                    append("${notificationData.title}! ")
-                }
-                append(notificationData.description)
-                withStyle(
-                    style = SpanStyle(
-                        color = colorResource(id = R.color.orange),
-                        fontWeight = FontWeight.Normal,
-                        fontFamily = FontFamily(Font(R.font.poppinsmedium))
-                    )
-                ) {
-                    append("     ${getInboxRelativeTime(convertMillisToDate(notificationData.sentAt as? Long ?: 0))}")
-                }
-            },
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Normal,
-            style = Typography.bodySmall,
-            color = colorResource(id = R.color.black),
-            textAlign = TextAlign.Start,
-            modifier = Modifier.padding(start = 10.dp, end = 20.dp)
-        )
+                    ) {
+                        append("${notificationData.title}!\n")
+                    }
+                    append(notificationData.description)
+                },
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Normal,
+                style = Typography.bodySmall,
+                color = colorResource(id = R.color.black),
+                textAlign = TextAlign.Start,
+                modifier = Modifier.padding(start = 10.dp, end = 20.dp)
+            )
+            Text(
+                text = getInboxRelativeTime(convertMillisToDate(notificationData.sentAt as? Long ?: 0)),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Normal,
+                style = Typography.bodySmall,
+                color = colorResource(id = R.color.orange),
+                textAlign = TextAlign.Start,
+                modifier = Modifier
+                    .padding(top = 5.dp,end = 10.dp)
+                    .align(Alignment.End)
+            )
+        }
+    }
+    Divider(thickness = 1.dp, modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp, vertical = 5.dp))
+
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview
+@Composable
+fun NotificationScreenPreview(){
+    GarageGuruFypUserTheme {
+        NotificationScreen(notificationDataList = listOf(NotificationData(title = "Bid Accepted", description = "Ali Accept you Bid!")), onBackPress = {})
     }
 }

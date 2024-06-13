@@ -111,7 +111,7 @@ fun getInboxRelativeTime(firebaseTime: String): String {
     val apiDateTime = LocalDateTime.parse(firebaseTime, formatter)
 
     // Get the current time
-    val currentDateTime = LocalDateTime.now(ZoneId.of("UTC"))
+    val currentDateTime = LocalDateTime.now(ZoneId.of(TimeZone.getDefault().id))
 
     // Calculate the difference
     val years = ChronoUnit.YEARS.between(apiDateTime, currentDateTime)
