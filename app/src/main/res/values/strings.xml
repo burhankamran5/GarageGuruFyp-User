@@ -28,8 +28,9 @@
     <string name="enter_your_bid_amount">Enter Your Bid Amount…</string>
     <string name="bid">Bid</string>
     <string name="all_bids">All Bids</string>
-    <string name="accepted_bid">Accepted Bid</string>
-    <string name="request">Request</string>
-    <string name="my_request">My Request</string>
+    <string name="log_out">Log Out</string>
+    <string name="accepted_bid">Accepted Bid\n</string>
+    <string name="my_request">My Requests</string>
+    <string name="request">Requests\n</string>
     <string name="inbox">Inbox</string>
 </resources>
