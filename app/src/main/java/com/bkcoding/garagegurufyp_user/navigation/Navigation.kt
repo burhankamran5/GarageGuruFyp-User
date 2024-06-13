@@ -18,10 +18,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.bkcoding.garagegurufyp_user.dto.Conversation
+import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.dto.Request
 import com.bkcoding.garagegurufyp_user.ui.chat.ChatScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.ConversationsScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.CustomerHomeScreen
+import com.bkcoding.garagegurufyp_user.ui.customer.GarageDetailsScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.MoreScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.RequestDetailsScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.RequestScreen
@@ -258,6 +260,19 @@ fun Navigation(
                 Gson().fromJson(data, Request::class.java)
             }
             RequestDetailsScreen(navController = navController, request = requestResponse)
+        }
+
+        composable(
+            arguments = listOf(navArgument("garage") { type = NavType.StringType }),
+            route = Screen.GarageDetailsScreen.route + "/{garage}",
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ){
+            val garage = it.arguments?.getString("garage")
+            val garageResponse = garage?.let {data->
+                Gson().fromJson(data, Garage::class.java)
+            }
+            GarageDetailsScreen(navController = navController, garage = garageResponse)
         }
 
     }

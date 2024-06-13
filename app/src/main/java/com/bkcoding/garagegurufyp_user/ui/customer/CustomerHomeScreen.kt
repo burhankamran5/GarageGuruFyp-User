@@ -64,7 +64,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.bkcoding.garagegurufyp_user.R
-import com.bkcoding.garagegurufyp_user.dto.Conversation
 import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.extensions.clickableWithOutRipple
 import com.bkcoding.garagegurufyp_user.extensions.showToast
@@ -134,14 +133,7 @@ fun CustomerHomeScreen(
         customerName = userStorageVM.getSavedCustomer()?.name.orEmpty(),
         garageList = garageList,
         onGarageClick = {
-            val conversation = Conversation(
-                seen = false,
-                createdAt = null,
-                userId = it.id,
-                userName = it.name,
-                profileImage = it.images.getOrNull(0).orEmpty()
-            )
-            navController.navigate(Screen.ChatScreen.route + "/${Uri.encode(Gson().toJson(conversation))}")
+            navController.navigate(Screen.GarageDetailsScreen.route + "/${Uri.encode(Gson().toJson(it))}")
         },
         onNotificationClick = { navController.navigate(Screen.NotificationScreen.route) }
     )

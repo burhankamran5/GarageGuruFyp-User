@@ -166,7 +166,7 @@ private fun ChatScreen(
                 ChatTextFields(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
-                        .padding(bottom = 100.dp),
+                        .padding(bottom = 20.dp),
                     textValue = message,
                     onTextChange = { message = it },
                     onSendPress = {

@@ -33,6 +33,7 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
@@ -95,6 +96,7 @@ fun GarageSignUpScreen(
     var phoneNumber by rememberSaveable { mutableStateOf("") }
     var garageLocation by rememberSaveable { mutableStateOf("") }
     var garageEmployeeCount by rememberSaveable { mutableStateOf("") }
+    var garageDescription by rememberSaveable { mutableStateOf("") }
     var garageCity by rememberSaveable { mutableStateOf("") }
     var passwordVisibility: Boolean by rememberSaveable { mutableStateOf(false) }
     var isEmailValid by rememberSaveable { mutableStateOf(false) }
@@ -322,6 +324,28 @@ fun GarageSignUpScreen(
             singleLine = true,
             modifier = Modifier.fillMaxWidth(.9f)
         )
+
+        TextField(
+            value = garageDescription,
+            onValueChange = { garageDescription = it },
+            placeholder = {
+                Text(
+                    text = "Enter Garage Info",
+                    fontFamily = FontFamily(Font(R.font.googlesansregular)),
+                    fontWeight = FontWeight.Normal
+                )
+            },
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                cursorColor = Color.Black,
+                focusedIndicatorColor = Color.White,
+                unfocusedIndicatorColor = Color.White
+            ),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            leadingIcon = { Icon(Icons.Default.Info, "") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(.9f)
+        )
         
         Spacer(modifier = Modifier.height(5.dp))
         CityDropDown(
@@ -387,7 +411,8 @@ fun GarageSignUpScreen(
                     city = garageCity,
                     location = garageLocation,
                     employeeCount = garageEmployeeCount,
-                    imageUris = selectImages
+                    imageUris = selectImages,
+                    description = garageDescription
                 )
                 if (isInputValid(context, garage)) {
                     scope.launch {
@@ -430,7 +455,7 @@ private fun isInputValid(context: Context, garage: Garage): Boolean {
     var isInputValid = false
     when {
         garage.name.isEmpty() || garage.email.isEmpty() || garage.password.isEmpty() || garage.confirmPassword.isEmpty()
-                || garage.city.isEmpty() || garage.phoneNumber.isEmpty() || garage.imageUris.isEmpty() || garage.employeeCount.isEmpty() -> {
+                || garage.city.isEmpty() || garage.phoneNumber.isEmpty() || garage.imageUris.isEmpty() || garage.employeeCount.isEmpty() || garage.description.isEmpty() -> {
             context.showToast("Something is Missing")
         }
         !isValidEmail(garage.email) -> context.showToast("Invalid Email")
