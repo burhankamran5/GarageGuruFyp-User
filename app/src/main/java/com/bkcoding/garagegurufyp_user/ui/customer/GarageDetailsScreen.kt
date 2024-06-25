@@ -1,5 +1,6 @@
 package com.bkcoding.garagegurufyp_user.ui.customer
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -50,21 +51,31 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.bkcoding.garagegurufyp_user.R
+import com.bkcoding.garagegurufyp_user.dto.Conversation
 import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.extensions.clickableWithOutRipple
 import com.bkcoding.garagegurufyp_user.extensions.openDialPanel
 import com.bkcoding.garagegurufyp_user.extensions.openEmail
+import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.ui.component.GarageButton
 import com.bkcoding.garagegurufyp_user.ui.theme.GarageGuruFypUserTheme
 import com.bkcoding.garagegurufyp_user.ui.theme.Typography
+import com.google.firebase.database.ServerValue
+import com.google.gson.Gson
 
 @Composable
 fun GarageDetailsScreen(navController: NavController, garage: Garage?) {
-    GarageDetailsScreen(garage = garage, onBackPress = { navController.popBackStack() })
+    GarageDetailsScreen(
+        garage = garage,
+        onBackPress = { navController.popBackStack() },
+        onChatClick = {
+            navController.navigate(Screen.ChatScreen.route + "/${Uri.encode(Gson().toJson(it))}")
+        }
+    )
 }
 
 @Composable
-private fun GarageDetailsScreen(garage: Garage?, onBackPress: () -> Unit) {
+private fun GarageDetailsScreen(garage: Garage?, onBackPress: () -> Unit, onChatClick: (Conversation) -> Unit) {
     val context = LocalContext.current
     var selectImageIndex by rememberSaveable { mutableIntStateOf(0) }
 
@@ -319,7 +330,15 @@ private fun GarageDetailsScreen(garage: Garage?, onBackPress: () -> Unit) {
                     .padding(bottom = 20.dp),
                 buttonText = stringResource(id = R.string.chat_now)
             ) {
-
+                onChatClick(
+                    Conversation(
+                        seen = false,
+                        userId = garage?.id.orEmpty(),
+                        userName = garage?.name.orEmpty(),
+                        profileImage = garage?.images?.getOrNull(0).orEmpty(),
+                        createdAt = ServerValue.TIMESTAMP
+                    )
+                )
             }
             Box(
                 modifier = Modifier
@@ -356,7 +375,8 @@ fun GarageDetailsScreenPreview() {
             phoneNumber = "+923045593294",
             images = listOf("", "", "", "")
         ),
-            onBackPress = {}
+            onBackPress = {},
+            onChatClick = {}
         )
     }
 }

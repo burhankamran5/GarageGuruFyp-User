@@ -103,8 +103,11 @@ private fun ConversationsScreen(
             verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             items(conversationList.orEmpty()) { item ->
-                ConversationItem( chatViewModel = chatViewModel,
-                    modifier = Modifier.clickable { onMessageItemClick(item) }, conversation = item)
+                ConversationItem(
+                    chatViewModel = chatViewModel,
+                    modifier = Modifier.clickable { onMessageItemClick(item) },
+                    conversation = item
+                )
             }
         }
     }

@@ -168,19 +168,6 @@ fun Navigation(
         }
 
         composable(
-            arguments = listOf(navArgument("conversation") { type = NavType.StringType }),
-            route = Screen.ChatScreen.route + "/{conversation}",
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None }
-        ){
-            val conversation = it.arguments?.getString("conversation")
-            val conversationResponse = conversation?.let {data->
-                Gson().fromJson(data, Conversation::class.java)
-            }
-            ChatScreen(navController, conversationResponse)
-        }
-
-        composable(
             route = Screen.NotificationScreen.route,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }
