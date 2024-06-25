@@ -24,12 +24,13 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.extensions.clickableWithOutRipple
 import com.bkcoding.garagegurufyp_user.ui.theme.Typography
 
 @Composable
-fun AboutUsScreen() {
+fun AboutUsScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .padding(bottom = 30.dp)
@@ -45,7 +46,7 @@ fun AboutUsScreen() {
                 tint = colorResource(id = R.color.orange),
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "",
-                modifier = Modifier.clickableWithOutRipple {}
+                modifier = Modifier.clickableWithOutRipple {navController.popBackStack()}
             )
             Text(
                 text = "Garage Guru",

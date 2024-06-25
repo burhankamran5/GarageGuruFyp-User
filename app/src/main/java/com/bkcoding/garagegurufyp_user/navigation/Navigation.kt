@@ -21,6 +21,7 @@ import com.bkcoding.garagegurufyp_user.dto.Conversation
 import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.dto.Request
 import com.bkcoding.garagegurufyp_user.ui.chat.ChatScreen
+import com.bkcoding.garagegurufyp_user.ui.customer.AboutUsScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.ConversationsScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.CustomerHomeScreen
 import com.bkcoding.garagegurufyp_user.ui.customer.GarageDetailsScreen
@@ -234,6 +235,14 @@ fun Navigation(
             exitTransition = { ExitTransition.None }
         ){
             MoreScreen(navController = navController)
+        }
+
+        composable(
+            route = Screen.AboutUsScreen.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ){
+            AboutUsScreen(navController = navController)
         }
 
         composable(
