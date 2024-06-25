@@ -62,7 +62,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.dto.Garage
@@ -136,12 +135,19 @@ fun CustomerHomeScreen(
         onGarageClick = {
             navController.navigate(Screen.GarageDetailsScreen.route + "/${Uri.encode(Gson().toJson(it))}")
         },
-        onNotificationClick = { navController.navigate(Screen.NotificationScreen.route) }
+        onNotificationClick = { navController.navigate(Screen.NotificationScreen.route) },
+        onViewAllClick = { navController.navigate(Screen.GarageScreen.route) }
     )
 }
 
 @Composable
-private fun CustomerHomeScreen(garageList: List<Garage>?, onGarageClick: (Garage) -> Unit, customerName: String, onNotificationClick: () -> Unit) {
+private fun CustomerHomeScreen(
+    garageList: List<Garage>?,
+    onGarageClick: (Garage) -> Unit,
+    customerName: String,
+    onNotificationClick: () -> Unit,
+    onViewAllClick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .background(color = colorResource(id = R.color.bright_gray))
@@ -210,7 +216,8 @@ private fun CustomerHomeScreen(garageList: List<Garage>?, onGarageClick: (Garage
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.End,
                 lineHeight = 15.sp,
-                color = Color.Black
+                color = Color.Black,
+                modifier = Modifier.clickable{ onViewAllClick() }
             )
         }
         LazyRow(
@@ -270,9 +277,9 @@ fun AutoSwipeViewPager(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun GarageCard(modifier: Modifier = Modifier, garage: Garage) {
+fun GarageCard(modifier: Modifier = Modifier, garage: Garage) {
     Box(
-        modifier = modifier.background(color = Color.White, shape = RoundedCornerShape(12.dp))
+        modifier = modifier.background(color = Color.White, shape = RoundedCornerShape(8.dp))
     ) {
         Column(modifier = Modifier.padding(horizontal = 5.dp, vertical = 5.dp)) {
             SubcomposeAsyncImage(
@@ -283,12 +290,12 @@ private fun GarageCard(modifier: Modifier = Modifier, garage: Garage) {
                 },
                 model = garage.images.getOrNull(0),
                 contentDescription = "",
-                contentScale = ContentScale.FillBounds,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .padding(0.dp)
+                    .fillMaxWidth()
                     .width(150.dp)
-                    .height(100.dp)
-                    .clip(shape = RoundedCornerShape(12.dp))
+                    .height(110.dp)
+                    .clip(shape = RoundedCornerShape(8.dp))
             )
             Text(
                 text = garage.name,
@@ -319,11 +326,16 @@ fun PreviewGarageCard(){
     GarageCard(garage = Garage(name = "Pak Wheels", city = "Lahore"))
 }
 
-//@Preview(showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun CustomerHomeScreenPreview() {
     GarageGuruFypUserTheme {
         CustomerHomeScreen(
-            garageList = emptyList(), onGarageClick = {}, customerName = "Burhan", onNotificationClick = {})
+            garageList = emptyList(),
+            onGarageClick = {},
+            customerName = "Burhan",
+            onNotificationClick = {},
+            onViewAllClick = {}
+        )
     }
 }

@@ -41,7 +41,7 @@ import com.bkcoding.garagegurufyp_user.ui.signup.GarageSignUpScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.SignUpConfirmationScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.UserSignUpScreen
 import com.bkcoding.garagegurufyp_user.ui.signup.VerifyOtpScreen
-import com.bkcoding.garagegurufyp_user.ui.user.GarageScreen
+import com.bkcoding.garagegurufyp_user.ui.customer.GarageScreen
 import com.google.gson.Gson
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -217,7 +217,7 @@ fun Navigation(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }
         ){
-            GarageScreen()
+            GarageScreen(navController)
         }
 
         composable(
