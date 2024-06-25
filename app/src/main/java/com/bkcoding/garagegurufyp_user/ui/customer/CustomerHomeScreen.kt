@@ -136,7 +136,11 @@ fun CustomerHomeScreen(
             navController.navigate(Screen.GarageDetailsScreen.route + "/${Uri.encode(Gson().toJson(it))}")
         },
         onNotificationClick = { navController.navigate(Screen.NotificationScreen.route) },
-        onViewAllClick = { navController.navigate(Screen.GarageScreen.route) }
+        onViewAllClick = {
+            navController.navigate(Screen.GarageScreen.route) {
+                popUpTo(navController.graph.id)
+            }
+        }
     )
 }
 
