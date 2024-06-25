@@ -33,12 +33,14 @@ import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -142,7 +144,7 @@ private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onR
         Spacer(modifier = Modifier.height(16.dp))
         Row(modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 15.dp)) {
+            .padding(horizontal = 15.dp), horizontalArrangement = Arrangement.SpaceBetween) {
             Icon(
                 tint = colorResource(id = R.color.orange),
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -154,10 +156,13 @@ private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onR
                 style = Typography.titleLarge,
                 fontSize = 20.sp,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentWidth()
             )
-            
+            Icon(
+                tint = colorResource(id = R.color.orange),
+                imageVector = Icons.Filled.Delete,
+                contentDescription = "",
+                modifier = Modifier.clickableWithOutRipple {}.size(30.dp)
+            )
         }
         Spacer(modifier = Modifier.height(10.dp))
         SubcomposeAsyncImage(
