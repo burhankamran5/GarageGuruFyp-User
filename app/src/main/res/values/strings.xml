@@ -44,4 +44,12 @@
     <string name="phone">Phone</string>
     <string name="chat_now">Chat Now</string>
     <string name="garages">Garages</string>
+    <string name="about_us">GarageGuru is a user-friendly Android application designed to revolutionize the way car owners connect with garages and seek assistance for their automotive needs. Our app aims to provide a seamless experience for both car owners and garages, creating a reliable platform for efficient and convenient car maintenance and repair services.
+
+With GarageGuru, car owners can easily find a comprehensive list of garages in their area. These garages are verified and enlisted on the app, ensuring high-quality services. Garages have the option to pay for listing their services, enabling them to showcase their expertise and attract potential customers.
+When car owners encounter a problem with their vehicle, they can post the specific issue on GarageGuru. Garages registered on the app will then have the ability to view and approach the users with fair and competitive repair quotes. Users can make an informed decision by considering ratings, location, and price offers from the garages. This empowers car owners to choose the best-suited garage for their needs, ensuring quality repairs and peace of mind.
+
+Additionally, GarageGuru offers a convenient pickup feature. In situations where a user is involved in an accident or finds themselves stranded in a location without nearby garages, they can rely on the app to locate and contact the nearest garage for assistance. This feature ensures prompt response and support during critical times, enhancing user safety and convenience.
+
+</string>
 </resources>

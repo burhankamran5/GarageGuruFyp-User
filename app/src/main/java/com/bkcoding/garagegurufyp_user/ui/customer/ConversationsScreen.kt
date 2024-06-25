@@ -35,6 +35,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -89,7 +91,9 @@ private fun ConversationsScreen(
             .verticalScroll(rememberScrollState()),
     ) {
         Text(
-            text = "Chat", fontSize = 30.sp, fontWeight = FontWeight.ExtraBold,
+            text = "Chat", fontSize = 30.sp,
+            fontFamily = FontFamily(Font(R.font.googlesansbold)),
+            fontWeight = FontWeight.ExtraBold,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 12.dp),
