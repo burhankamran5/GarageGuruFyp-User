@@ -77,6 +77,7 @@ import com.bkcoding.garagegurufyp_user.dto.NotificationAction
 import com.bkcoding.garagegurufyp_user.dto.NotificationData
 import com.bkcoding.garagegurufyp_user.dto.Request
 import com.bkcoding.garagegurufyp_user.dto.RequestStatus
+import com.bkcoding.garagegurufyp_user.extensions.clickableWithOutRipple
 import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.repository.fcm.Message
 import com.bkcoding.garagegurufyp_user.repository.fcm.Notification
@@ -146,7 +147,7 @@ private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onR
                 tint = colorResource(id = R.color.orange),
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "",
-                modifier = Modifier.clickable { onBackPress() }
+                modifier = Modifier.clickableWithOutRipple { onBackPress() }
             )
             Text(
                 text = "Request Details",
@@ -156,6 +157,7 @@ private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onR
                     .fillMaxWidth()
                     .wrapContentWidth()
             )
+            
         }
         Spacer(modifier = Modifier.height(10.dp))
         SubcomposeAsyncImage(
@@ -263,13 +265,19 @@ private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onR
         }
     }
     Box(modifier = Modifier.fillMaxSize()) {
-        Box(modifier = Modifier.fillMaxSize().padding(top = 70.dp, end = 20.dp)
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 70.dp, end = 20.dp)
         ){
             Text(
                 modifier = Modifier
                     .clip(RoundedCornerShape(4.dp))
                     .background(Color.Gray)
-                    .border(color = Color.White, shape = RoundedCornerShape(size = 4.dp), width = 1.dp)
+                    .border(
+                        color = Color.White,
+                        shape = RoundedCornerShape(size = 4.dp),
+                        width = 1.dp
+                    )
                     .padding(6.dp)
                     .align(Alignment.TopEnd),
                 text = request.status.name,
@@ -300,7 +308,11 @@ private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onR
 fun BidItem(modifier: Modifier = Modifier, bid: Bid, onBidAction: (Boolean) -> Unit) {
 Card(modifier = Modifier
     .padding(horizontal = 8.dp, vertical = 5.dp)
-    .border(width = 1.dp, shape = RoundedCornerShape(8.dp), color = colorResource(id = R.color.orange)),
+    .border(
+        width = 1.dp,
+        shape = RoundedCornerShape(8.dp),
+        color = colorResource(id = R.color.orange)
+    ),
     colors = CardDefaults.cardColors(containerColor = Color.White)) {
     Row(
         modifier = modifier
@@ -503,7 +515,7 @@ private fun RatingView(initialRating :Int =0, isEnabled: Boolean = true, onRatin
                 contentDescription = null,
                 modifier = Modifier
                     .size(36.dp)
-                    .clickable {
+                    .clickableWithOutRipple {
                         if (isEnabled) {
                             rating = index + 1
                             onRatingChange(rating)

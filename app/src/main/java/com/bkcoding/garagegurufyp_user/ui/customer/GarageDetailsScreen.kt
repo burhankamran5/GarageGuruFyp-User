@@ -51,6 +51,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.dto.Garage
+import com.bkcoding.garagegurufyp_user.extensions.clickableWithOutRipple
 import com.bkcoding.garagegurufyp_user.extensions.openDialPanel
 import com.bkcoding.garagegurufyp_user.extensions.openEmail
 import com.bkcoding.garagegurufyp_user.ui.component.GarageButton
@@ -81,7 +82,7 @@ private fun GarageDetailsScreen(garage: Garage?, onBackPress: () -> Unit) {
             Box(modifier = Modifier
                 .size(30.dp)
                 .background(color = colorResource(id = R.color.orange), shape = CircleShape)
-                .clickable { onBackPress() }) {
+                .clickableWithOutRipple { onBackPress() }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                     contentDescription = "",

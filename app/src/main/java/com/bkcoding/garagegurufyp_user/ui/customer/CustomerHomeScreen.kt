@@ -227,12 +227,13 @@ private fun CustomerHomeScreen(
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
+                .clickableWithOutRipple { }
                 .heightIn(max = 800.dp),
             contentPadding = PaddingValues(bottom = 20.dp),
             horizontalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             items(garageList.orEmpty()) { item ->
-                GarageCard(modifier = Modifier.clickable { onGarageClick(item) }, item)
+                GarageCard(modifier = Modifier.clickableWithOutRipple { onGarageClick(item) }, item)
             }
         }
     }

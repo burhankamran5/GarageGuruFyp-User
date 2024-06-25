@@ -44,6 +44,7 @@ import com.bkcoding.garagegurufyp_user.dto.BidStatus
 import com.bkcoding.garagegurufyp_user.dto.Garage
 import com.bkcoding.garagegurufyp_user.dto.Request
 import com.bkcoding.garagegurufyp_user.dto.RequestStatus
+import com.bkcoding.garagegurufyp_user.extensions.clickableWithOutRipple
 import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.ui.UserViewModel
@@ -110,7 +111,7 @@ private fun RequestScreen(
                         color = colorResource(id = R.color.orange50),
                         shape = RoundedCornerShape(12.dp)
                     )
-                    .clickable { onPostRequestClick() }
+                    .clickableWithOutRipple { onPostRequestClick() }
             ) {
                 Text(
                     text = stringResource(id = R.string.new_request),
@@ -144,7 +145,7 @@ fun RequestItem(request: Request, onRequestClick: (Request) -> Unit){
                 color = Color.White,
                 shape = RoundedCornerShape(12.dp)
             )
-            .clickable { onRequestClick(request) }
+            .clickableWithOutRipple { onRequestClick(request) }
     ) {
         SubcomposeAsyncImage(
             contentScale = ContentScale.FillBounds,
