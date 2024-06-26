@@ -36,6 +36,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -89,17 +90,18 @@ private fun ConversationsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(colorResource(id = R.color.bright_gray))
             .verticalScroll(rememberScrollState()),
     ) {
         Text(
-            text = "Chat", fontSize = 40.sp,
+            text = stringResource(id = R.string.inbox),
+            fontSize = 30.sp,
             fontFamily = FontFamily(Font(R.font.googlesansbold)),
             fontWeight = FontWeight.ExtraBold,
+            textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 8.dp),
-            textAlign = TextAlign.Start
         )
         LazyColumn(
             modifier = Modifier

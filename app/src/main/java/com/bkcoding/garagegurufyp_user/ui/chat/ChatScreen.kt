@@ -47,6 +47,8 @@ import com.bkcoding.garagegurufyp_user.extensions.clickableWithOutRipple
 import com.bkcoding.garagegurufyp_user.extensions.showToast
 import com.bkcoding.garagegurufyp_user.ui.component.ChatTextFields
 import com.bkcoding.garagegurufyp_user.ui.theme.GarageGuruFypUserTheme
+import com.bkcoding.garagegurufyp_user.utils.getInboxRelativeTime
+import com.bkcoding.garagegurufyp_user.utils.getRelativeTime
 import com.google.firebase.database.ServerValue
 
 @Composable
@@ -108,6 +110,7 @@ private fun ChatScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(colorResource(id = R.color.bright_gray))
             .padding(horizontal = 5.dp)
     ) {
         Column(
@@ -147,12 +150,11 @@ private fun ChatScreen(
                 modifier = Modifier.weight(1f)
             ) {
                 LazyColumn(
+                    state = listState,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 180.dp)
-                        .heightIn(max = 700.dp),
-                    state = listState,
-                    contentPadding = PaddingValues(bottom = 80.dp),
+                        .padding(bottom = 80.dp),
+                    contentPadding = PaddingValues(bottom = 10.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(20.dp),
                 ) {
@@ -215,7 +217,7 @@ private fun MessageCard(
             )
         }
         Text(
-            text = chatMessage?.sentAt.toString(),
+            text = getRelativeTime(chatMessage?.sentAt.toString().toLong()),
             fontSize = 10.sp,
             fontWeight = FontWeight.Normal,
             color = Color.Gray,
