@@ -34,6 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -48,6 +49,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.dto.Conversation
+import com.bkcoding.garagegurufyp_user.extensions.clickableWithOutRipple
 import com.bkcoding.garagegurufyp_user.extensions.showToast
 import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.repository.Result
@@ -91,12 +93,12 @@ private fun ConversationsScreen(
             .verticalScroll(rememberScrollState()),
     ) {
         Text(
-            text = "Chat", fontSize = 30.sp,
+            text = "Chat", fontSize = 40.sp,
             fontFamily = FontFamily(Font(R.font.googlesansbold)),
             fontWeight = FontWeight.ExtraBold,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 12.dp),
+                .padding(horizontal = 12.dp, vertical = 8.dp),
             textAlign = TextAlign.Start
         )
         LazyColumn(
@@ -109,7 +111,7 @@ private fun ConversationsScreen(
             items(conversationList.orEmpty()) { item ->
                 ConversationItem(
                     chatViewModel = chatViewModel,
-                    modifier = Modifier.clickable { onMessageItemClick(item) },
+                    modifier = Modifier.clickableWithOutRipple { onMessageItemClick(item) },
                     conversation = item
                 )
             }
@@ -134,9 +136,12 @@ fun ConversationItem(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .height(70.dp)
+            .height(75.dp)
             .padding(horizontal = 10.dp, vertical = 4.dp)
-            .background(color = Color.LightGray, shape = RoundedCornerShape(12.dp)),
+            .background(
+                color = colorResource(id = R.color.offWhite),
+                shape = RoundedCornerShape(14.dp)
+            ),
         verticalArrangement = Arrangement.Center
     ) {
         Row(

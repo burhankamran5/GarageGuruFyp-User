@@ -43,6 +43,7 @@ import androidx.navigation.NavController
 import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.dto.ChatMessage
 import com.bkcoding.garagegurufyp_user.dto.Conversation
+import com.bkcoding.garagegurufyp_user.extensions.clickableWithOutRipple
 import com.bkcoding.garagegurufyp_user.extensions.showToast
 import com.bkcoding.garagegurufyp_user.ui.component.ChatTextFields
 import com.bkcoding.garagegurufyp_user.ui.theme.GarageGuruFypUserTheme
@@ -129,7 +130,7 @@ private fun ChatScreen(
                         modifier = Modifier
                             .size(30.dp)
                             .align(Alignment.TopStart)
-                            .clickable { onBackPress() }
+                            .clickableWithOutRipple { onBackPress() }
                     )
 
                     Text(
