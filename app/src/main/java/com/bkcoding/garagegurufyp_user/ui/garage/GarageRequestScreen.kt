@@ -75,7 +75,7 @@ fun GarageRequestScreen(
 
     GarageRequestScreen(
         isLoading = isLoading,
-        requestList = garageViewModel.getRequestResponse?.filter { it.city.equals(garageViewModel.userPreferences.getGarage()?.city, ignoreCase = true) }?.filter { !it.bids.containsKey(garageViewModel.userPreferences.getGarage()?.id) },
+        requestList = garageViewModel.getRequestResponse?.filter { !it.bids.containsKey(garageViewModel.userPreferences.getGarage()?.id) },
         onBackPress = { navController.popBackStack() },
         onBidClick = { requestId, bidAmount ->
             val bid = Bid(
@@ -215,6 +215,7 @@ private fun GarageRequestScreen(
 private fun FilterCityDropDown(modifier: Modifier = Modifier, onUserCitySelected: (City) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     val listOfCity = listOf(City.All, City.Lahore, City.Islamabad, City.Karachi, City.Multan)
+    var selectCity by rememberSaveable { mutableStateOf("") }
 
     Box(modifier = modifier.clickable { expanded = true }) {
         Row(
@@ -232,7 +233,7 @@ private fun FilterCityDropDown(modifier: Modifier = Modifier, onUserCitySelected
                 tint = Color.White
             )
             Text(
-                text = stringResource(id = R.string.filter),
+                text = selectCity.ifEmpty { stringResource(id = R.string.filter) },
                 style = Typography.bodySmall,
                 textAlign = TextAlign.Start,
                 color = Color.White,
@@ -252,6 +253,7 @@ private fun FilterCityDropDown(modifier: Modifier = Modifier, onUserCitySelected
             listOfCity.forEach {
                 DropdownMenuItem(onClick = {
                     expanded = false
+                    selectCity = it.name
                     onUserCitySelected(it)
                 },
                     text = {
