@@ -65,7 +65,7 @@ fun GarageNavigation(
             navController,
             startDestination
         )
-        if (BOTTOM_MENU_LIST.any { it.route == navController.currentDestination?.route }) {
+        if (BOTTOM_MENU_LIST.any { it.route == navController.currentDestination?.route } && navController.previousBackStackEntry?.destination?.route != Screen.GarageHomeScreen.route) {
             GarageBottomNavigationBar(
                 selectedDestination = selectedDestination,
                 navigateToTopLevelDestination = navigationActions::navigateTo
