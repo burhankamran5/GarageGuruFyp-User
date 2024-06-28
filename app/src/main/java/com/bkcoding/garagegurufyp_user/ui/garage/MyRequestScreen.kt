@@ -45,6 +45,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.dto.Request
+import com.bkcoding.garagegurufyp_user.dto.RequestStatus
 import com.bkcoding.garagegurufyp_user.extensions.showToast
 import com.bkcoding.garagegurufyp_user.ui.component.LinearProgress
 import com.bkcoding.garagegurufyp_user.ui.component.TabLayoutButton
@@ -118,7 +119,11 @@ private fun MyRequestScreen(
             )
             Spacer(modifier = Modifier.height(10.dp))
             if(isLoading) LinearProgress(modifier = Modifier.padding(start = 15.dp, top = 10.dp, end = 15.dp))
-            if(isOnGoingSelect == stringResource(id = R.string.requested)) RequestedItem(modifier = Modifier, requestList = requestList)
+            when(isOnGoingSelect){
+                stringResource(id = R.string.requested) -> RequestedItem(modifier = Modifier, requestList = requestList?.filter { it.status == RequestStatus.IN_PROGRESS })
+                stringResource(id = R.string.active) -> RequestedItem(modifier = Modifier, requestList = requestList?.filter { it.status == RequestStatus.OPEN })
+                stringResource(id = R.string.completed) -> RequestedItem(modifier = Modifier, requestList = requestList?.filter { it.status == RequestStatus.COMPLETED })
+            }
         }
     }
 }
