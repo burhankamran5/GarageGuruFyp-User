@@ -29,10 +29,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.bkcoding.garagegurufyp_user.R
+import com.bkcoding.garagegurufyp_user.navigation.Screen
+import com.bkcoding.garagegurufyp_user.ui.login.UserStorageVM
+import com.bkcoding.garagegurufyp_user.ui.login.UserType
 
 
 @Composable
-fun SignUpConfirmationScreen(navController: NavController, isGarage: Boolean) {
+fun SignUpConfirmationScreen(
+    navController: NavController,
+    isGarage: Boolean,
+    userStorageVM: UserStorageVM
+) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -62,7 +69,17 @@ fun SignUpConfirmationScreen(navController: NavController, isGarage: Boolean) {
         )
 
         OutlinedButton(
-            onClick = { },
+            onClick = {
+                if(userStorageVM.userType == UserType.Customer.name){
+                    navController.navigate(Screen.CustomerHomeScreen.route){
+                        popUpTo(navController.graph.id)
+                    }
+                }else{
+                    navController.navigate(Screen.LoginScreen.route){
+                        popUpTo(navController.graph.id)
+                    }
+                }
+            },
             modifier = Modifier
                 .height(70.dp)
                 .fillMaxWidth(.6f)

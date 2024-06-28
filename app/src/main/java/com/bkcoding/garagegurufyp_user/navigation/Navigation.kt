@@ -132,7 +132,7 @@ fun Navigation(
             arguments = listOf(navArgument("isGarage") { type = NavType.BoolType }),
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }) {backStackEntry ->
-            SignUpConfirmationScreen(navController, backStackEntry.arguments?.getBoolean("isGarage") ?: false)
+            SignUpConfirmationScreen(navController, backStackEntry.arguments?.getBoolean("isGarage") ?: false, userStorageVM)
         }
 
         //garage
