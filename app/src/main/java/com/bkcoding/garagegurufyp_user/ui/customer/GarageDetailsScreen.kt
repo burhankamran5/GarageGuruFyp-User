@@ -186,7 +186,7 @@ private fun GarageDetailsScreen(garage: Garage?, onBackPress: () -> Unit, onChat
                 tint = colorResource(id = R.color.orange50)
             )
             Text(
-                text = garage?.rating ?: "4.4",
+                text = garage?.rating ?: "0.0",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
                 style = Typography.bodySmall,
@@ -195,7 +195,7 @@ private fun GarageDetailsScreen(garage: Garage?, onBackPress: () -> Unit, onChat
                 modifier = Modifier.padding(start = 2.dp)
             )
             Text(
-                text = "(434 reviews)",
+                text = "(0 reviews)",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
                 style = Typography.bodySmall,

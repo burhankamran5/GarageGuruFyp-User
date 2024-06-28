@@ -1,6 +1,6 @@
 package com.bkcoding.garagegurufyp_user.ui.customer
 
-import androidx.compose.foundation.BorderStroke
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,8 +18,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -40,8 +37,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -80,6 +75,7 @@ import com.bkcoding.garagegurufyp_user.dto.NotificationData
 import com.bkcoding.garagegurufyp_user.dto.Request
 import com.bkcoding.garagegurufyp_user.dto.RequestStatus
 import com.bkcoding.garagegurufyp_user.extensions.clickableWithOutRipple
+import com.bkcoding.garagegurufyp_user.navigation.Screen
 import com.bkcoding.garagegurufyp_user.repository.Result
 import com.bkcoding.garagegurufyp_user.repository.fcm.Message
 import com.bkcoding.garagegurufyp_user.repository.fcm.Notification
@@ -88,6 +84,7 @@ import com.bkcoding.garagegurufyp_user.ui.UserViewModel
 import com.bkcoding.garagegurufyp_user.ui.theme.GarageGuruFypUserTheme
 import com.bkcoding.garagegurufyp_user.ui.theme.Typography
 import com.google.firebase.database.ServerValue
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
 @Composable
@@ -127,12 +124,15 @@ fun RequestDetailsScreen(
                     }
                 }
             }
+        },
+        onGarageBidClick = {
+            navController.navigate(Screen.GarageDetailsScreen.route + "/${Uri.encode(Gson().toJson(it))}")
         }
     )
 }
 
 @Composable
-private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onRequestUpdated: (Request) -> Unit) {
+private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onRequestUpdated: (Request) -> Unit, onGarageBidClick: (Garage) -> Unit) {
     request ?: return
     Column(
         modifier = Modifier
@@ -243,7 +243,7 @@ private fun RequestDetailsScreen(request: Request?, onBackPress: () -> Unit, onR
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 items(bids) { bid ->
-                    BidItem(modifier = Modifier, bid = bid) { accepted ->
+                    BidItem(modifier = Modifier.clickable{ bid.garage?.let { onGarageBidClick(it) } }, bid = bid) { accepted ->
                         if (accepted) {
                             val acceptedBid = bid.copy(bidStatus = BidStatus.ACCEPTED)
                             val updatedBids = request.bids.toMutableMap()
@@ -550,6 +550,6 @@ fun RequestBidScreenPreview() {
         review = "It was an amazing experience with the garage. Delivered amazing"
     )
     GarageGuruFypUserTheme {
-        RequestDetailsScreen(request = request, onBackPress = {}, onRequestUpdated = {})
+        RequestDetailsScreen(request = request, onBackPress = {}, onRequestUpdated = {}, onGarageBidClick = {})
     }
 }
