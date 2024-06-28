@@ -44,6 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.bkcoding.garagegurufyp_user.R
+import com.bkcoding.garagegurufyp_user.dto.BidStatus
 import com.bkcoding.garagegurufyp_user.dto.Request
 import com.bkcoding.garagegurufyp_user.dto.RequestStatus
 import com.bkcoding.garagegurufyp_user.extensions.showToast
@@ -121,7 +122,7 @@ private fun MyRequestScreen(
             if(isLoading) LinearProgress(modifier = Modifier.padding(start = 15.dp, top = 10.dp, end = 15.dp))
             when(isOnGoingSelect){
                 stringResource(id = R.string.requested) -> RequestedItem(modifier = Modifier, requestList = requestList?.filter { it.status == RequestStatus.IN_PROGRESS })
-                stringResource(id = R.string.active) -> RequestedItem(modifier = Modifier, requestList = requestList?.filter { it.status == RequestStatus.OPEN })
+                stringResource(id = R.string.active) -> RequestedItem(modifier = Modifier, requestList = requestList?.filter { it.status == RequestStatus.OPEN }?.filter { it.bids.any {bid-> bid.value.bidStatus != BidStatus.DECLINED } })
                 stringResource(id = R.string.completed) -> RequestedItem(modifier = Modifier, requestList = requestList?.filter { it.status == RequestStatus.COMPLETED })
             }
         }
@@ -144,7 +145,7 @@ private fun RequestedItem(modifier: Modifier = Modifier, requestList: List<Reque
                 Column(
                     modifier = Modifier
                         .background(
-                            color = colorResource(id = R.color.cultured),
+                            color = colorResource(id = R.color.offWhite),
                             shape = RoundedCornerShape(12.dp)
                         )
                 ) {
