@@ -121,8 +121,8 @@ private fun MyRequestScreen(
             Spacer(modifier = Modifier.height(10.dp))
             if(isLoading) LinearProgress(modifier = Modifier.padding(start = 15.dp, top = 10.dp, end = 15.dp))
             when(isOnGoingSelect){
-                stringResource(id = R.string.requested) -> RequestedItem(modifier = Modifier, requestList = requestList?.filter { it.status == RequestStatus.IN_PROGRESS })
-                stringResource(id = R.string.active) -> RequestedItem(modifier = Modifier, requestList = requestList?.filter { it.status == RequestStatus.OPEN }?.filter { it.bids.any {bid-> bid.value.bidStatus != BidStatus.DECLINED } })
+                stringResource(id = R.string.requested) -> RequestedItem(modifier = Modifier, requestList = requestList?.filter { it.status == RequestStatus.OPEN })
+                stringResource(id = R.string.active) -> RequestedItem(modifier = Modifier, requestList = requestList?.filter { it.status == RequestStatus.IN_PROGRESS }?.filter { it.bids.any {bid-> bid.value.bidStatus == BidStatus.ACCEPTED } })
                 stringResource(id = R.string.completed) -> RequestedItem(modifier = Modifier, requestList = requestList?.filter { it.status == RequestStatus.COMPLETED })
             }
         }
