@@ -1,6 +1,7 @@
 package com.bkcoding.garagegurufyp_user.ui.garage
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,6 +41,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,6 +55,7 @@ import com.bkcoding.garagegurufyp_user.R
 import com.bkcoding.garagegurufyp_user.dto.Bid
 import com.bkcoding.garagegurufyp_user.dto.Request
 import com.bkcoding.garagegurufyp_user.dto.RequestStatus
+import com.bkcoding.garagegurufyp_user.extensions.clickableWithOutRipple
 import com.bkcoding.garagegurufyp_user.extensions.showToast
 import com.bkcoding.garagegurufyp_user.ui.component.CircleProgressIndicator
 import com.bkcoding.garagegurufyp_user.ui.component.MinimalDialog
@@ -119,7 +123,7 @@ private fun GarageRequestScreen(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "",
-                    modifier = Modifier.clickable { onBackPress() }
+                    modifier = Modifier.clickableWithOutRipple { onBackPress() }
                 )
                 Text(
                     text = stringResource(id = R.string.all_request),
@@ -166,8 +170,10 @@ private fun GarageRequestScreen(
                     if (it.status == RequestStatus.OPEN) Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(color = Color.Gray, shape = RoundedCornerShape(10.dp))
-                            .clickable {
+                            .background(
+                                color = colorResource(id = R.color.offWhite))
+                            .border(width = 1.dp, color = colorResource(id = R.color.orange), shape = RoundedCornerShape(10.dp))
+                            .clickableWithOutRipple {
                                 showBidDialog = true
                                 selectRequestId = it.id
                             },
@@ -188,17 +194,19 @@ private fun GarageRequestScreen(
                         Column(modifier = Modifier.padding(vertical = 25.dp)) {
                             Text(
                                 text = it.carModel,
-                                fontSize = 16.sp,
+                                fontSize = 22.sp,
                                 fontWeight = FontWeight.Bold,
+                                fontFamily = FontFamily(Font(R.font.googlesansbold)),
                                 style = Typography.bodySmall,
-                                color = Color.White
+                                color = Color.Black
                             )
                             Text(
                                 text = it.description,
-                                fontSize = 12.sp,
+                                fontSize = 16.sp,
                                 fontWeight = FontWeight.Normal,
+                                fontFamily = FontFamily(Font(R.font.googlesansbold)),
                                 style = Typography.bodySmall,
-                                color = colorResource(id = R.color.white_semi_50),
+                                color = colorResource(id = R.color.black),
                                 modifier = Modifier.padding(top = 5.dp)
                             )
                         }
@@ -221,7 +229,7 @@ private fun FilterCityDropDown(modifier: Modifier = Modifier, onUserCitySelected
         Row(
             modifier = Modifier
                 .background(
-                    color = Color.Blue,
+                    color = colorResource(id = R.color.orange),
                     shape = RoundedCornerShape(12.dp)
                 ),
             verticalAlignment = Alignment.CenterVertically
